@@ -18,6 +18,14 @@ export namespace Type {
     throw "Not implemented";
   }
 
+  export function boolean(): Model<boolean> {
+    throw "Not implemented";
+  }
+
+  export function number(): Model<number> {
+    throw "Not implemented";
+  }
+
   export function union<TModelArray extends readonly Model<unknown>[]>(
     ...models: TModelArray
   ): Model<MappedTypeFromModel<TModelArray>[number]> {
