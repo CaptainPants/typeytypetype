@@ -1,43 +1,50 @@
-export interface Model<T> {
-  metadata: unknown;
-}
+import { MappedTypeFromModel, Model, TypeFromModel } from "./types";
 
-export type UnModel<TModel> = TModel extends Model<infer T> ? T : TModel;
-
-type UnModelArray<T> = { [TKey in keyof T]: UnModel<T[TKey]> };
-
-type MapModel<T> = {
-    [TKey in keyof T]: Model<T[TKey]>;
-}
-
-type Intersect<TArgs extends readonly unknown[], TDepth extends readonly unknown[] = []> =
-    TDepth['length'] extends 20 ? "Error" 
-    : TArgs['length'] extends 1 ? TArgs[0]
-    : TArgs extends [infer First, ...infer Rest] ? First & Intersect<Rest, [1, ...TDepth]> 
-    : never;
+type Intersect<
+  TArgs extends readonly unknown[],
+  TDepth extends readonly unknown[] = []
+> = TArgs extends [infer Only]
+  ? Only
+  : TArgs extends [infer First, ...infer Rest]
+  ? First & Intersect<Rest, [1, ...TDepth]>
+  : never;
 
 export namespace Type {
-  export function string<TString extends string = string>(
-    values?: TString
-  ): Model<TString> {
+  export function value<TValue>(value: TValue): Model<TValue> {
     throw "Not implemented";
   }
 
-  export function union<TArgs extends readonly Model<unknown>[]>(
-    ...models: TArgs
-  ): Model<UnModelArray<TArgs>[number]> {
+  export function string(): Model<string> {
     throw "Not implemented";
   }
 
-  export function intersect<TArgs extends readonly Model<unknown>[]>(
-    ...models: TArgs
-  ): MapModel<Intersect<UnModelArray<TArgs>>> {
+  export function union<TModelArray extends readonly Model<unknown>[]>(
+    ...models: TModelArray
+  ): Model<MappedTypeFromModel<TModelArray>[number]> {
     throw "Not implemented";
   }
 
-  export function object<TPropsModel extends Record<string, Model<unknown>>>(properties: TPropsModel) {
-    throw 'Not implemented';
+  export function intersect<TModelArray extends readonly Model<unknown>[]>(
+    ...models: TModelArray
+  ): Model<Intersect<MappedTypeFromModel<TModelArray>>> {
+    throw "Not implemented";
+  }
+
+  export function object<
+    TPropertyModels extends Record<string, Model<unknown>>
+  >(
+    properties: TPropertyModels
+  ): Model<{
+    [K in keyof TPropertyModels]: TypeFromModel<TPropertyModels[K]>;
+  }> {
+    throw "Not implemented";
+  }
+
+  export function array<TModel extends Model<unknown>>(
+    model: TModel
+  ): Model<Array<TypeFromModel<TModel>>> {
+    throw "Not implemented";
   }
 }
 
-// 
+//
