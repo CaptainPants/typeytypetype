@@ -9,7 +9,7 @@ const model3 = Type.object({
   test1: Type.value("Example"),
 });
 const model4 = Type.object({
-  test2: Type.value("Example"),
+  test2: Type.number(),
   complex: model2,
 });
 

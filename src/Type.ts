@@ -1,16 +1,19 @@
-import { MappedTypeFromModel, Model, TypeFromModel } from "./types";
+import { Model } from "./Model";
+import { MappedTypeFromModel, TypeFromModel } from "./types";
 
-type Intersect<
-  TArgs extends readonly unknown[],
-  TDepth extends readonly unknown[] = []
-> = TArgs extends [infer Only]
+type Intersect<TArgs extends readonly unknown[]> = TArgs extends [infer Only]
   ? Only
   : TArgs extends [infer First, ...infer Rest]
-  ? First & Intersect<Rest, [1, ...TDepth]>
+  ? First & Intersect<Rest>
   : never;
 
 export namespace Type {
-  export function value<TValue>(value: TValue): Model<TValue> {
+  export function value<TValue extends string | number | boolean | null>(
+    value: TValue
+  ): Model<TValue> {
+    throw "Not implemented";
+  }
+  export function absent(): Model<undefined> {
     throw "Not implemented";
   }
 
