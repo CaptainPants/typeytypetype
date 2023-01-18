@@ -1,3 +1,4 @@
+import { Model } from "./Model";
 import { Type } from "./Type";
 import { TypeFromModel } from "./types";
 
@@ -16,6 +17,8 @@ const model4 = Type.object({
 // There is no intersection here
 const model5 = Type.intersect(model3, model4);
 
-const model6 = Type.array(model5);
+const model6 = Type.array(Type.value(1));
 
 type X = TypeFromModel<typeof model6>;
+
+type Y = UnionToIntersection<{ test1: 1 } | { test2: 2 }>;
