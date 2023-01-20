@@ -1,14 +1,14 @@
-import { Model } from './Model'
+import { Model } from './Model';
 
 export class ArrayModel<TItemType> extends Model<TItemType[]> {
-  constructor (itemModel: Model<TItemType>) {
-    super()
-    this.#itemModel = itemModel
-  }
+    constructor(itemModel: Model<TItemType>) {
+        super();
+        this.#itemModel = itemModel;
+    }
 
-  #itemModel: Model<TItemType>
+    #itemModel: Model<TItemType>;
 
-  override toTypeString (): string {
-    return `Array<${this.#itemModel.toTypeString()}>`
-  }
+    override toTypeString(): string {
+        return `Array<${this.#itemModel.toTypeString()}>`;
+    }
 }

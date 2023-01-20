@@ -1,58 +1,56 @@
-import { Model } from './models/Model'
-import { ArrayModel } from './models/ArrayModel'
-import { NumberTypeModel } from './models/NumberTypeModel'
-import { StringTypeModel } from './models/StringTypeModel'
-import { ConstantModel } from './models/ConstantModel'
-import { BooleanTypeModel } from './models/BooleanTypeModel'
-import { UnionModel } from './models/UnionModel'
-import { IntersectModel } from './models/IntersectModel'
-import { ObjectModel } from './models/ObjectModel'
-import { MappedModel } from './internal/utilityTypes'
+import { Model } from './models/Model';
+import { ArrayModel } from './models/ArrayModel';
+import { NumberTypeModel } from './models/NumberTypeModel';
+import { StringTypeModel } from './models/StringTypeModel';
+import { ConstantModel } from './models/ConstantModel';
+import { BooleanTypeModel } from './models/BooleanTypeModel';
+import { UnionModel } from './models/UnionModel';
+import { IntersectModel } from './models/IntersectModel';
+import { ObjectModel } from './models/ObjectModel';
+import { MappedModel } from './internal/utilityTypes';
 
 export const Type = {
-  value<TValue extends string | number | boolean | null> (
-    value: TValue
-  ): ConstantModel<TValue> {
-    return new ConstantModel(value)
-  },
+    value<TValue extends string | number | boolean | null>(
+        value: TValue
+    ): ConstantModel<TValue> {
+        return new ConstantModel(value);
+    },
 
-  absent (): Model<undefined> {
-    return new ConstantModel(undefined)
-  },
+    absent(): Model<undefined> {
+        return new ConstantModel(undefined);
+    },
 
-  string (): StringTypeModel<string> {
-    return new StringTypeModel()
-  },
+    string(): StringTypeModel {
+        return new StringTypeModel();
+    },
 
-  boolean (): BooleanTypeModel<boolean> {
-    return new BooleanTypeModel()
-  },
+    boolean(): BooleanTypeModel {
+        return new BooleanTypeModel();
+    },
 
-  number (): NumberTypeModel<number> {
-    return new NumberTypeModel()
-  },
+    number(): NumberTypeModel {
+        return new NumberTypeModel();
+    },
 
-  union<TTypes extends readonly unknown[]> (
-    ...models: MappedModel<TTypes>
-  ) {
-    return new UnionModel(models)
-  },
+    union<TTypes extends readonly unknown[]>(...models: MappedModel<TTypes>) {
+        return new UnionModel(models);
+    },
 
-  intersect<TTypes extends readonly unknown[]> (
-    ...models: MappedModel<TTypes>
-  ) {
-    return new IntersectModel(models)
-  },
+    intersect<TTypes extends readonly unknown[]>(
+        ...models: MappedModel<TTypes>
+    ) {
+        return new IntersectModel(models);
+    },
 
-  object<TPropertyTypes extends Record<string, unknown>> (
-    propertyModels: MappedModel<TPropertyTypes>
-  ) {
-    return new ObjectModel(propertyModels)
-  },
+    object<TPropertyTypes extends Record<string, unknown>>(
+        propertyModels: MappedModel<TPropertyTypes>
+    ) {
+        return new ObjectModel(propertyModels);
+    },
 
-  array<IElementType> (
-    itemModel: Model<IElementType>
-  ): ArrayModel<IElementType> {
-    return new ArrayModel(itemModel)
-  }
-}
+    array<IElementType>(
+        itemModel: Model<IElementType>
+    ): ArrayModel<IElementType> {
+        return new ArrayModel(itemModel);
+    },
+};

@@ -4,5 +4,8 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"editor.indentSize": 4,
+		"javascript.preferences.quoteStyle": "single"
+	}
 }
