@@ -1,65 +1,58 @@
-import {
-  MappedTypeFromModel,
-  TupleToIntersection,
-} from "./internal/utilityTypes";
-import {
-  ArrayModel,
-  BooleanrTypeModel,
-  ConstantModel,
-  Model,
-  NumberTypeModel,
-  StringTypeModel,
-} from "./Model";
-import { TypeFromModel } from "./types";
+import { Model } from './models/Model'
+import { ArrayModel } from './models/ArrayModel'
+import { NumberTypeModel } from './models/NumberTypeModel'
+import { StringTypeModel } from './models/StringTypeModel'
+import { ConstantModel } from './models/ConstantModel'
+import { BooleanTypeModel } from './models/BooleanTypeModel'
+import { UnionModel } from './models/UnionModel'
+import { IntersectModel } from './models/IntersectModel'
+import { ObjectModel } from './models/ObjectModel'
+import { MappedModel } from './internal/utilityTypes'
 
-export namespace Type {
-  export function value<TValue extends string | number | boolean | null>(
+export const Type = {
+  value<TValue extends string | number | boolean | null> (
     value: TValue
   ): ConstantModel<TValue> {
-    return new ConstantModel(value);
-  }
+    return new ConstantModel(value)
+  },
 
-  export function absent(): Model<undefined> {
-    return new ConstantModel(undefined);
-  }
+  absent (): Model<undefined> {
+    return new ConstantModel(undefined)
+  },
 
-  export function string(): StringTypeModel<string> {
-    return new StringTypeModel();
-  }
+  string (): StringTypeModel<string> {
+    return new StringTypeModel()
+  },
 
-  export function boolean(): BooleanTypeModel<boolean> {
-    return new BooleanTypeModel();
-  }
+  boolean (): BooleanTypeModel<boolean> {
+    return new BooleanTypeModel()
+  },
 
-  export function number(): NumberTypeModel<number> {
-    return new NumberTypeModel();
-  }
+  number (): NumberTypeModel<number> {
+    return new NumberTypeModel()
+  },
 
-  export function union<TModelArray extends readonly Model<unknown>[]>(
-    ...models: TModelArray
-  ): Model<MappedTypeFromModel<TModelArray>[number]> {
-    throw "Not implemented";
-  }
+  union<TTypes extends readonly unknown[]> (
+    ...models: MappedModel<TTypes>
+  ) {
+    return new UnionModel(models)
+  },
 
-  export function intersect<TModelArray extends readonly Model<unknown>[]>(
-    ...models: TModelArray
-  ): Model<TupleToIntersection<MappedTypeFromModel<TModelArray>>> {
-    throw "Not implemented";
-  }
+  intersect<TTypes extends readonly unknown[]> (
+    ...models: MappedModel<TTypes>
+  ) {
+    return new IntersectModel(models)
+  },
 
-  export function object<
-    TPropertyModels extends Record<string, Model<unknown>>
-  >(
-    properties: TPropertyModels
-  ): Model<{
-    [K in keyof TPropertyModels]: TypeFromModel<TPropertyModels[K]>;
-  }> {
-    throw "Not implemented";
-  }
+  object<TPropertyTypes extends Record<string, unknown>> (
+    propertyModels: MappedModel<TPropertyTypes>
+  ) {
+    return new ObjectModel(propertyModels)
+  },
 
-  export function array<IElementType>(
+  array<IElementType> (
     itemModel: Model<IElementType>
   ): ArrayModel<IElementType> {
-    return new ArrayModel(itemModel);
+    return new ArrayModel(itemModel)
   }
 }
