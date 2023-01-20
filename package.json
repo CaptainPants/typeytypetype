@@ -10,7 +10,8 @@
         "pretty": "prettier --write .",
         "lint": "eslint src/**/*.ts --fix",
         "compile": "tsc",
-        "test": "ts-jest"
+        "test": "jest src",
+        "build": "yarn pretty && yarn lint && yarn compile"
     },
     "devDependencies": {
         "@jest/globals": "^29.3.1",

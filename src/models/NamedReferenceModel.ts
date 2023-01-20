@@ -1,3 +1,4 @@
+import { ResolutionContext } from '../ResolutionContext';
 import { Model } from './Model';
 
 /**
@@ -12,6 +13,15 @@ export class NamedReferenceModel extends Model<unknown> {
     }
 
     #name: string;
+
+    override validate(
+        resolutionContext: ResolutionContext,
+        value: unknown
+    ): boolean {
+        const model = resolutionContext.getModelFromName(this.#name);
+
+        return model.validate(resolutionContext, value);
+    }
 
     toTypeString(): string {
         return `Reference<${JSON.stringify(this.#name)}>`;
