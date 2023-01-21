@@ -44,10 +44,10 @@ export class ObjectModel<
             Object.entries(this.#modelProperties)
                 .map(
                     ([key, model]: [string, Model<unknown>]) =>
-                        `${JSON.stringify(key)}: ${model.toTypeString()}`
+                        `    ${JSON.stringify(key)}: ${model.toTypeString()};\r\n`
                 )
-                .join('\r\n') +
-            '\r\n}'
+                .join('') +
+            '}'
         );
     }
 }

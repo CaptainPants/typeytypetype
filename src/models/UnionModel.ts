@@ -17,8 +17,8 @@ export class UnionModel<TTypes extends readonly unknown[]> extends Model<
         value: unknown
     ): boolean {
         return (
-            this.#models.findIndex(
-                (model) => !model.validate(resolutionContext, value)
+            this.#models.findIndex((model) =>
+                model.validate(resolutionContext, value)
             ) >= 0
         );
     }

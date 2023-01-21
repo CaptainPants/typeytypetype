@@ -15,11 +15,11 @@ export class ArrayModel<TItemType> extends Model<TItemType[]> {
     ): boolean {
         if (!Array.isArray(value)) return false;
 
-        // And item doesn't validate against #itemModel
+        // Any item doesn't validate against #itemModel
         return (
             value.findIndex(
                 (x) => !this.#itemModel.validate(resolutionContext, x)
-            ) >= 0
+            ) < 0
         );
     }
 
