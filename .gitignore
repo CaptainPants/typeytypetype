@@ -1,5 +1,8 @@
 
 node_modules
 
-/dist
-/yarn-error.log
+# build output
+dist
+
+# error logs from yarn
+yarn-error.log
