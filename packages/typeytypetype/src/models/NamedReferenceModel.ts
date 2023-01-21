@@ -1,6 +1,6 @@
-import { deeper } from '../internal/deeper';
-import { ResolutionContext } from '../ResolutionContext';
-import { Model } from './Model';
+import { deeper } from '../internal/deeper.js';
+import { ResolutionContext } from '../ResolutionContext.js';
+import { Model } from './Model.js';
 
 /**
  * This is me attempting to experimentally support recursive structures. As we can't type inference in a circle,

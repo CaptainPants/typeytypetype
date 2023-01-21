@@ -1,5 +1,5 @@
-import { Type } from './Type';
-import { TypeFromModel } from './types';
+import { Type } from './Type.js';
+import { TypeFromModel } from './types.js';
 
 const model1 = Type.string();
 

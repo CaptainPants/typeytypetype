@@ -1,8 +1,8 @@
-import { deeper } from '../internal/deeper';
-import { MappedModel, UnionToIntersection } from '../internal/utilityTypes';
-import { ResolutionContext } from '../ResolutionContext';
+import { deeper } from '../internal/deeper.js';
+import { MappedModel, UnionToIntersection } from '../internal/utilityTypes.js';
+import { ResolutionContext } from '../ResolutionContext.js';
 import { TypeFromModel } from '../types';
-import { Model } from './Model';
+import { Model } from './Model.js';
 
 export class IntersectModel<TTypes extends readonly unknown[]> extends Model<
     UnionToIntersection<TypeFromModel<TTypes[number]>>

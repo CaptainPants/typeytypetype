@@ -1,5 +1,5 @@
-import { ResolutionContext } from '../ResolutionContext';
-import { Model } from './Model';
+import { ResolutionContext } from '../ResolutionContext.js';
+import { Model } from './Model.js';
 
 export class BooleanTypeModel extends Model<boolean> {
     override validateImplementation(

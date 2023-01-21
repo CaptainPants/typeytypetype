@@ -1,14 +1,14 @@
-import { Model } from './models/Model';
-import { ArrayModel } from './models/ArrayModel';
-import { NumberTypeModel } from './models/NumberTypeModel';
-import { StringTypeModel } from './models/StringTypeModel';
-import { ConstantModel } from './models/ConstantModel';
-import { BooleanTypeModel } from './models/BooleanTypeModel';
-import { UnionModel } from './models/UnionModel';
-import { IntersectModel } from './models/IntersectModel';
-import { ObjectModel } from './models/ObjectModel';
-import { MappedModel } from './internal/utilityTypes';
-import { NamedDataModel } from './models/NamedDataModel';
+import { Model } from './models/Model.js';
+import { ArrayModel } from './models/ArrayModel.js';
+import { NumberTypeModel } from './models/NumberTypeModel.js';
+import { StringTypeModel } from './models/StringTypeModel.js';
+import { ConstantModel } from './models/ConstantModel.js';
+import { BooleanTypeModel } from './models/BooleanTypeModel.js';
+import { UnionModel } from './models/UnionModel.js';
+import { IntersectModel } from './models/IntersectModel.js';
+import { ObjectModel } from './models/ObjectModel.js';
+import { MappedModel } from './internal/utilityTypes.js';
+import { NamedDataModel } from './models/NamedDataModel.js';
 
 export const Type = {
     constant<TValue extends string | number | boolean>(

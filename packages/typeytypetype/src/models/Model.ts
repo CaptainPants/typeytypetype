@@ -1,4 +1,4 @@
-import { ResolutionContext } from '../ResolutionContext';
+import { ResolutionContext } from '../ResolutionContext.js';
 
 export abstract class Model<T> {
     validate(

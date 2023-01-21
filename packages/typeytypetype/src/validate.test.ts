@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals';
-import { Type } from './Type';
-import { ResolutionContext } from './ResolutionContext';
+import { Type } from './Type.js';
+import { ResolutionContext } from './ResolutionContext.js';
 
 test('constant', () => {
     const resolutionContext: ResolutionContext = {

@@ -1,7 +1,7 @@
-import { deeper } from '../internal/deeper';
-import { MappedModel } from '../internal/utilityTypes';
-import { ResolutionContext } from '../ResolutionContext';
-import { Model } from './Model';
+import { deeper } from '../internal/deeper.js';
+import { MappedModel } from '../internal/utilityTypes.js';
+import { ResolutionContext } from '../ResolutionContext.js';
+import { Model } from './Model.js';
 
 export class ObjectModel<
     TPropertyTypes extends Record<string, unknown>
