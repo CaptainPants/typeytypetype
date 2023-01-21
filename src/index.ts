@@ -20,3 +20,13 @@ const model5 = Type.intersect(model3, model4);
 const model6 = Type.array(Type.value(1));
 
 type X = TypeFromModel<typeof model2>;
+
+interface Test {
+    id: number;
+    child: Test | null;
+}
+const TestModel = Type.delegated<Test>();
+TestModel.model = Type.object({
+    id: Type.number(),
+    child: Type.union(TestModel, Type.null()),
+});

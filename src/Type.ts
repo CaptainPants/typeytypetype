@@ -8,15 +8,20 @@ import { UnionModel } from './models/UnionModel';
 import { IntersectModel } from './models/IntersectModel';
 import { ObjectModel } from './models/ObjectModel';
 import { MappedModel } from './internal/utilityTypes';
+import { DelegatedModel } from './models/DelegatedModel';
 
 export const Type = {
-    value<TValue extends string | number | boolean | null>(
+    value<TValue extends string | number | boolean>(
         value: TValue
     ): ConstantModel<TValue> {
         return new ConstantModel(value);
     },
 
-    absent(): Model<undefined> {
+    null() {
+        return new ConstantModel(null);
+    },
+
+    undefined(): Model<undefined> {
         return new ConstantModel(undefined);
     },
 
@@ -52,5 +57,9 @@ export const Type = {
         itemModel: Model<IElementType>
     ): ArrayModel<IElementType> {
         return new ArrayModel(itemModel);
+    },
+
+    delegated<TType>(): DelegatedModel<TType> {
+        return new DelegatedModel<TType>();
     },
 };

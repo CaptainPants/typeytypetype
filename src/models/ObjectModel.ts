@@ -44,7 +44,9 @@ export class ObjectModel<
             Object.entries(this.#modelProperties)
                 .map(
                     ([key, model]: [string, Model<unknown>]) =>
-                        `    ${JSON.stringify(key)}: ${model.toTypeString()};\r\n`
+                        `    ${JSON.stringify(
+                            key
+                        )}: ${model.toTypeString()};\r\n`
                 )
                 .join('') +
             '}'

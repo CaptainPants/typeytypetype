@@ -103,7 +103,7 @@ test('object', () => {
     const model = Type.object({
         id: Type.number(),
         name: Type.string(),
-        roles: Type.array(Type.string())
+        roles: Type.array(Type.string()),
     });
 
     const resolutionContext: ResolutionContext = {
@@ -113,7 +113,11 @@ test('object', () => {
     };
 
     expect(
-        model.validate(resolutionContext, { id: 1, name: 'test', roles: ["Administrator"] })
+        model.validate(resolutionContext, {
+            id: 1,
+            name: 'test',
+            roles: ['Administrator'],
+        })
     ).toStrictEqual(true);
     expect(model.validate(resolutionContext, { id: 1 })).toStrictEqual(false);
     expect(model.toTypeString()).toMatchSnapshot();
