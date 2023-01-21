@@ -8,7 +8,7 @@ import { UnionModel } from './models/UnionModel';
 import { IntersectModel } from './models/IntersectModel';
 import { ObjectModel } from './models/ObjectModel';
 import { MappedModel } from './internal/utilityTypes';
-import { DelegatedModel } from './models/DelegatedModel';
+import { NamedDataModel } from './models/NamedDataModel';
 
 export const Type = {
     constant<TValue extends string | number | boolean>(
@@ -59,7 +59,7 @@ export const Type = {
         return new ArrayModel(itemModel);
     },
 
-    delegated<TType>(): DelegatedModel<TType> {
-        return new DelegatedModel<TType>();
+    named<TType>(name: string): NamedDataModel<TType> {
+        return new NamedDataModel<TType>(name);
     },
 };

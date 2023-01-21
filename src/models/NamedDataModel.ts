@@ -2,7 +2,13 @@ import { deeper } from '../internal/deeper';
 import { ResolutionContext } from '../ResolutionContext';
 import { Model } from './Model';
 
-export class DelegatedModel<T> extends Model<T> {
+export class NamedDataModel<T> extends Model<T> {
+    constructor(name: string) {
+        super();
+        this.name = name;
+    }
+
+    public name: string;
     public model: Model<T> | undefined;
 
     #get(): Model<T> {
@@ -24,6 +30,6 @@ export class DelegatedModel<T> extends Model<T> {
     }
 
     toTypeStringImplementation(depth: number): string {
-        return this.#get().toTypeStringImplementation(deeper(depth));
+        return this.name;
     }
 }
