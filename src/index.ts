@@ -25,7 +25,7 @@ interface Test {
     id: number;
     child: Test | null;
 }
-const TestModel = Type.named<Test>();
+const TestModel = Type.named<Test>('Test');
 TestModel.model = Type.object({
     id: Type.number(),
     child: Type.union(TestModel, Type.null()),
