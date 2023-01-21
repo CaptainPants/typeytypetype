@@ -3,10 +3,10 @@ import { TypeFromModel } from './types';
 
 const model1 = Type.string();
 
-const model2 = Type.union(Type.value('test1'), Type.value('test2'));
+const model2 = Type.union(Type.constant('test1'), Type.constant('test2'));
 
 const model3 = Type.object({
-    test1: Type.value('Example'),
+    test1: Type.constant('Example'),
 });
 
 const model4 = Type.object({
@@ -17,7 +17,7 @@ const model4 = Type.object({
 // There is no intersection here
 const model5 = Type.intersect(model3, model4);
 
-const model6 = Type.array(Type.value(1));
+const model6 = Type.array(Type.constant(1));
 
 type X = TypeFromModel<typeof model2>;
 

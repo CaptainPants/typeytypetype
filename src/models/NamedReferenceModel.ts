@@ -1,3 +1,4 @@
+import { deeper } from '../internal/deeper';
 import { ResolutionContext } from '../ResolutionContext';
 import { Model } from './Model';
 
@@ -14,16 +15,21 @@ export class NamedReferenceModel extends Model<unknown> {
 
     #name: string;
 
-    override validate(
+    override validateImplementation(
         resolutionContext: ResolutionContext,
-        value: unknown
+        value: unknown,
+        depth: number
     ): boolean {
         const model = resolutionContext.getModelFromName(this.#name);
 
-        return model.validate(resolutionContext, value);
+        return model.validateImplementation(
+            resolutionContext,
+            value,
+            deeper(depth)
+        );
     }
 
-    toTypeString(): string {
+    toTypeStringImplementation(depth: number): string {
         return `Reference<${JSON.stringify(this.#name)}>`;
     }
 }

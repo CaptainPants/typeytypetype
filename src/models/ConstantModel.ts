@@ -9,14 +9,15 @@ export class ConstantModel<T> extends Model<T> {
 
     #value: T;
 
-    override validate(
+    override validateImplementation(
         resolutionContext: ResolutionContext,
-        value: unknown
+        value: unknown,
+        depth: number
     ): boolean {
         return value === this.#value;
     }
 
-    override toTypeString(): string {
+    override toTypeStringImplementation(depth: number): string {
         return JSON.stringify(this.#value);
     }
 }

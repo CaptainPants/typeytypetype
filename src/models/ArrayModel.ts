@@ -1,3 +1,4 @@
+import { deeper } from '../internal/deeper';
 import { ResolutionContext } from '../ResolutionContext';
 import { Model } from './Model';
 
@@ -9,21 +10,29 @@ export class ArrayModel<TItemType> extends Model<TItemType[]> {
 
     #itemModel: Model<TItemType>;
 
-    override validate(
+    override validateImplementation(
         resolutionContext: ResolutionContext,
-        value: unknown
+        value: unknown,
+        depth: number
     ): boolean {
         if (!Array.isArray(value)) return false;
 
         // Any item doesn't validate against #itemModel
         return (
             value.findIndex(
-                (x) => !this.#itemModel.validate(resolutionContext, x)
+                (itemValue) =>
+                    !this.#itemModel.validateImplementation(
+                        resolutionContext,
+                        itemValue,
+                        deeper(depth)
+                    )
             ) < 0
         );
     }
 
-    override toTypeString(): string {
-        return `Array<${this.#itemModel.toTypeString()}>`;
+    override toTypeStringImplementation(depth: number): string {
+        return `Array<${this.#itemModel.toTypeStringImplementation(
+            deeper(depth)
+        )}>`;
     }
 }

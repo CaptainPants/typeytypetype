@@ -1,3 +1,4 @@
+import { deeper } from '../internal/deeper';
 import { MappedModel } from '../internal/utilityTypes';
 import { ResolutionContext } from '../ResolutionContext';
 import { Model } from './Model';
@@ -12,9 +13,10 @@ export class ObjectModel<
 
     #modelProperties: MappedModel<TPropertyTypes>;
 
-    override validate(
+    override validateImplementation(
         resolutionContext: ResolutionContext,
-        value: unknown
+        value: unknown,
+        depth: number
     ): boolean {
         if (typeof value !== 'object' || value === null) return false;
 
@@ -27,7 +29,13 @@ export class ObjectModel<
                 if (typeof property === 'undefined') return true; // this shouldn't happen
 
                 const propertyValue = asRecord[key];
-                if (!property.validate(resolutionContext, propertyValue)) {
+                if (
+                    !property.validateImplementation(
+                        resolutionContext,
+                        propertyValue,
+                        deeper(depth)
+                    )
+                ) {
                     return true;
                 }
 
@@ -38,7 +46,7 @@ export class ObjectModel<
         return failureIndex < 0;
     }
 
-    toTypeString(): string {
+    toTypeStringImplementation(depth: number): string {
         return (
             '{\r\n' +
             Object.entries(this.#modelProperties)
@@ -46,7 +54,9 @@ export class ObjectModel<
                     ([key, model]: [string, Model<unknown>]) =>
                         `    ${JSON.stringify(
                             key
-                        )}: ${model.toTypeString()};\r\n`
+                        )}: ${model.toTypeStringImplementation(
+                            deeper(depth)
+                        )};\r\n`
                 )
                 .join('') +
             '}'

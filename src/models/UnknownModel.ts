@@ -2,11 +2,15 @@ import { ResolutionContext } from '../ResolutionContext';
 import { Model } from './Model';
 
 export class UnknownModel extends Model<unknown> {
-    validate(resolutionContext: ResolutionContext, value: unknown): boolean {
+    validateImplementation(
+        resolutionContext: ResolutionContext,
+        value: unknown,
+        depth: number
+    ): boolean {
         return true;
     }
 
-    toTypeString(): string {
+    toTypeStringImplementation(depth: number): string {
         return 'unknown';
     }
 }

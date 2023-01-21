@@ -2,14 +2,15 @@ import { ResolutionContext } from '../ResolutionContext';
 import { Model } from './Model';
 
 export class NumberTypeModel extends Model<number> {
-    override validate(
+    override validateImplementation(
         resolutionContext: ResolutionContext,
-        value: unknown
+        value: unknown,
+        depth: number
     ): boolean {
         return typeof value === 'number';
     }
 
-    override toTypeString(): string {
+    override toTypeStringImplementation(depth: number): string {
         return 'number';
     }
 }

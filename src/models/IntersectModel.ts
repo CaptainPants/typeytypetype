@@ -1,3 +1,4 @@
+import { deeper } from '../internal/deeper';
 import { MappedModel, UnionToIntersection } from '../internal/utilityTypes';
 import { ResolutionContext } from '../ResolutionContext';
 import { TypeFromModel } from '../types';
@@ -13,20 +14,28 @@ export class IntersectModel<TTypes extends readonly unknown[]> extends Model<
 
     #models: MappedModel<TTypes>;
 
-    override validate(
+    override validateImplementation(
         resolutionContext: ResolutionContext,
-        value: unknown
+        value: unknown,
+        depth: number
     ): boolean {
         return (
             this.#models.findIndex(
-                (model) => !model.validate(resolutionContext, value)
+                (model) =>
+                    !model.validateImplementation(
+                        resolutionContext,
+                        value,
+                        deeper(depth)
+                    )
             ) < 0
         );
     }
 
-    toTypeString(): string {
+    toTypeStringImplementation(depth: number): string {
         return this.#models
-            .map((item) => `(${item.toTypeString()}})`)
+            .map(
+                (item) => `(${item.toTypeStringImplementation(deeper(depth))}})`
+            )
             .join(' & ');
     }
 }

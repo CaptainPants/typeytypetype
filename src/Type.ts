@@ -11,7 +11,7 @@ import { MappedModel } from './internal/utilityTypes';
 import { DelegatedModel } from './models/DelegatedModel';
 
 export const Type = {
-    value<TValue extends string | number | boolean>(
+    constant<TValue extends string | number | boolean>(
         value: TValue
     ): ConstantModel<TValue> {
         return new ConstantModel(value);

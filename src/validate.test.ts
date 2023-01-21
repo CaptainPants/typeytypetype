@@ -9,30 +9,30 @@ test('constant', () => {
         },
     };
 
-    expect(Type.value(1).validate(resolutionContext, 1)).toStrictEqual(true);
-    expect(Type.value(1).validate(resolutionContext, 2)).toStrictEqual(false);
-
-    expect(Type.value('yes').validate(resolutionContext, 'yes')).toStrictEqual(
-        true
-    );
-    expect(Type.value('yes').validate(resolutionContext, 'no')).toStrictEqual(
+    expect(Type.constant(1).validate(resolutionContext, 1)).toStrictEqual(true);
+    expect(Type.constant(1).validate(resolutionContext, 2)).toStrictEqual(
         false
     );
 
-    expect(Type.value(true).validate(resolutionContext, true)).toStrictEqual(
-        true
-    );
-    expect(Type.value(true).validate(resolutionContext, false)).toStrictEqual(
-        false
-    );
-    expect(Type.value(false).validate(resolutionContext, false)).toStrictEqual(
-        true
-    );
+    expect(
+        Type.constant('yes').validate(resolutionContext, 'yes')
+    ).toStrictEqual(true);
+    expect(
+        Type.constant('yes').validate(resolutionContext, 'no')
+    ).toStrictEqual(false);
 
-    expect(Type.value(null).validate(resolutionContext, null)).toStrictEqual(
+    expect(Type.constant(true).validate(resolutionContext, true)).toStrictEqual(
         true
     );
-    expect(Type.value(1).validate(resolutionContext, null)).toStrictEqual(
+    expect(
+        Type.constant(true).validate(resolutionContext, false)
+    ).toStrictEqual(false);
+    expect(
+        Type.constant(false).validate(resolutionContext, false)
+    ).toStrictEqual(true);
+
+    expect(Type.null().validate(resolutionContext, null)).toStrictEqual(true);
+    expect(Type.constant(1).validate(resolutionContext, null)).toStrictEqual(
         false
     );
 });
@@ -124,7 +124,7 @@ test('object', () => {
 });
 
 test('union', () => {
-    const model = Type.union(Type.value(1), Type.value(2), Type.value(null));
+    const model = Type.union(Type.constant(1), Type.constant(2), Type.null());
 
     const resolutionContext: ResolutionContext = {
         getModelFromName: () => {
