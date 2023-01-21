@@ -23,11 +23,7 @@ export class NamedDataModel<T> extends Model<T> {
         value: unknown,
         depth: number
     ): boolean {
-        return this.#get().doValidate(
-            resolutionContext,
-            value,
-            deeper(depth)
-        );
+        return this.#get().doValidate(resolutionContext, value, deeper(depth));
     }
 
     doToTypeString(depth: number): string {

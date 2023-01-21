@@ -2,5 +2,5 @@
 module.exports = {
     preset: 'ts-jest',
     testEnvironment: 'node',
-    resolver: "ts-jest-resolver",
+    resolver: 'ts-jest-resolver',
 };

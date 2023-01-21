@@ -20,20 +20,14 @@ export class UnionModel<TTypes extends readonly unknown[]> extends Model<
     ): boolean {
         return (
             this.#models.findIndex((model) =>
-                model.doValidate(
-                    resolutionContext,
-                    value,
-                    deeper(depth)
-                )
+                model.doValidate(resolutionContext, value, deeper(depth))
             ) >= 0
         );
     }
 
     doToTypeString(depth: number): string {
         return this.#models
-            .map(
-                (item) => `(${item.doToTypeString(deeper(depth))}})`
-            )
+            .map((item) => `(${item.doToTypeString(deeper(depth))}})`)
             .join(' | ');
     }
 }

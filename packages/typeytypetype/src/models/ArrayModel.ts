@@ -31,8 +31,6 @@ export class ArrayModel<TItemType> extends Model<TItemType[]> {
     }
 
     override doToTypeString(depth: number): string {
-        return `Array<${this.#itemModel.doToTypeString(
-            deeper(depth)
-        )}>`;
+        return `Array<${this.#itemModel.doToTypeString(deeper(depth))}>`;
     }
 }

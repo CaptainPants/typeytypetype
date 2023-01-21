@@ -52,9 +52,7 @@ export class ObjectModel<
             Object.entries(this.#modelProperties)
                 .map(
                     ([key, model]: [string, Model<unknown>]) =>
-                        `    ${JSON.stringify(
-                            key
-                        )}: ${model.doToTypeString(
+                        `    ${JSON.stringify(key)}: ${model.doToTypeString(
                             deeper(depth)
                         )};\r\n`
                 )
