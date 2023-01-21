@@ -2,7 +2,7 @@ import { ResolutionContext } from '../ResolutionContext.js';
 import { Model } from './Model.js';
 
 export class UnknownModel extends Model<unknown> {
-    validateImplementation(
+    doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         depth: number
@@ -10,7 +10,7 @@ export class UnknownModel extends Model<unknown> {
         return true;
     }
 
-    toTypeStringImplementation(depth: number): string {
+    doToTypeString(depth: number): string {
         return 'unknown';
     }
 }

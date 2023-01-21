@@ -6,20 +6,20 @@ export abstract class Model<T> {
         value: unknown,
         depth = 25
     ): boolean {
-        return this.validateImplementation(resolutionContext, value, depth);
+        return this.doValidate(resolutionContext, value, depth);
     }
 
-    abstract validateImplementation(
+    abstract doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         depth: number
     ): boolean;
 
     toTypeString(depth = 25): string {
-        return this.toTypeStringImplementation(depth);
+        return this.doToTypeString(depth);
     }
 
-    abstract toTypeStringImplementation(depth: number): string;
+    abstract doToTypeString(depth: number): string;
 
     /**
      * This is 100% here just to allow type inference to match the type.

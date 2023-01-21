@@ -3,9 +3,10 @@ import { ResolutionContext } from '../ResolutionContext.js';
 import { Model } from './Model.js';
 
 export class NamedDataModel<T> extends Model<T> {
-    constructor(name: string) {
+    constructor(name: string, model?: Model<T>) {
         super();
         this.name = name;
+        this.model = model;
     }
 
     public name: string;
@@ -17,19 +18,19 @@ export class NamedDataModel<T> extends Model<T> {
         return this.model;
     }
 
-    validateImplementation(
+    doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         depth: number
     ): boolean {
-        return this.#get().validateImplementation(
+        return this.#get().doValidate(
             resolutionContext,
             value,
             deeper(depth)
         );
     }
 
-    toTypeStringImplementation(depth: number): string {
+    doToTypeString(depth: number): string {
         return this.name;
     }
 }

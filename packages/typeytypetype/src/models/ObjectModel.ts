@@ -13,7 +13,7 @@ export class ObjectModel<
 
     #modelProperties: MappedModel<TPropertyTypes>;
 
-    override validateImplementation(
+    override doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         depth: number
@@ -30,7 +30,7 @@ export class ObjectModel<
 
                 const propertyValue = asRecord[key];
                 if (
-                    !property.validateImplementation(
+                    !property.doValidate(
                         resolutionContext,
                         propertyValue,
                         deeper(depth)
@@ -46,7 +46,7 @@ export class ObjectModel<
         return failureIndex < 0;
     }
 
-    toTypeStringImplementation(depth: number): string {
+    doToTypeString(depth: number): string {
         return (
             '{\r\n' +
             Object.entries(this.#modelProperties)
@@ -54,7 +54,7 @@ export class ObjectModel<
                     ([key, model]: [string, Model<unknown>]) =>
                         `    ${JSON.stringify(
                             key
-                        )}: ${model.toTypeStringImplementation(
+                        )}: ${model.doToTypeString(
                             deeper(depth)
                         )};\r\n`
                 )

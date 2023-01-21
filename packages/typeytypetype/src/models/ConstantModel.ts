@@ -9,7 +9,7 @@ export class ConstantModel<T> extends Model<T> {
 
     #value: T;
 
-    override validateImplementation(
+    override doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         depth: number
@@ -17,7 +17,7 @@ export class ConstantModel<T> extends Model<T> {
         return value === this.#value;
     }
 
-    override toTypeStringImplementation(depth: number): string {
+    override doToTypeString(depth: number): string {
         return JSON.stringify(this.#value);
     }
 }

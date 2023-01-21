@@ -13,14 +13,14 @@ export class UnionModel<TTypes extends readonly unknown[]> extends Model<
 
     #models: MappedModel<TTypes>;
 
-    override validateImplementation(
+    override doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         depth: number
     ): boolean {
         return (
             this.#models.findIndex((model) =>
-                model.validateImplementation(
+                model.doValidate(
                     resolutionContext,
                     value,
                     deeper(depth)
@@ -29,10 +29,10 @@ export class UnionModel<TTypes extends readonly unknown[]> extends Model<
         );
     }
 
-    toTypeStringImplementation(depth: number): string {
+    doToTypeString(depth: number): string {
         return this.#models
             .map(
-                (item) => `(${item.toTypeStringImplementation(deeper(depth))}})`
+                (item) => `(${item.doToTypeString(deeper(depth))}})`
             )
             .join(' | ');
     }

@@ -2,7 +2,7 @@ import { ResolutionContext } from '../ResolutionContext.js';
 import { Model } from './Model.js';
 
 export class BooleanTypeModel extends Model<boolean> {
-    override validateImplementation(
+    override doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         _depth: number
@@ -10,7 +10,7 @@ export class BooleanTypeModel extends Model<boolean> {
         return typeof value === 'boolean';
     }
 
-    override toTypeStringImplementation(depth: number): string {
+    override doToTypeString(depth: number): string {
         return 'boolean';
     }
 }

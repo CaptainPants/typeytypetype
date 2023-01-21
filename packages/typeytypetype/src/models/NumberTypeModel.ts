@@ -2,7 +2,7 @@ import { ResolutionContext } from '../ResolutionContext.js';
 import { Model } from './Model.js';
 
 export class NumberTypeModel extends Model<number> {
-    override validateImplementation(
+    override doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         depth: number
@@ -10,7 +10,7 @@ export class NumberTypeModel extends Model<number> {
         return typeof value === 'number';
     }
 
-    override toTypeStringImplementation(depth: number): string {
+    override doToTypeString(depth: number): string {
         return 'number';
     }
 }

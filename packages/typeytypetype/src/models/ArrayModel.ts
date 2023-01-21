@@ -10,7 +10,7 @@ export class ArrayModel<TItemType> extends Model<TItemType[]> {
 
     #itemModel: Model<TItemType>;
 
-    override validateImplementation(
+    override doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         depth: number
@@ -21,7 +21,7 @@ export class ArrayModel<TItemType> extends Model<TItemType[]> {
         return (
             value.findIndex(
                 (itemValue) =>
-                    !this.#itemModel.validateImplementation(
+                    !this.#itemModel.doValidate(
                         resolutionContext,
                         itemValue,
                         deeper(depth)
@@ -30,8 +30,8 @@ export class ArrayModel<TItemType> extends Model<TItemType[]> {
         );
     }
 
-    override toTypeStringImplementation(depth: number): string {
-        return `Array<${this.#itemModel.toTypeStringImplementation(
+    override doToTypeString(depth: number): string {
+        return `Array<${this.#itemModel.doToTypeString(
             deeper(depth)
         )}>`;
     }
