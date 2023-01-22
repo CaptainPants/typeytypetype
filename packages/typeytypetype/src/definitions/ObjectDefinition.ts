@@ -1,17 +1,17 @@
 import { deeper } from '../internal/deeper.js';
-import { MappedModel } from '../internal/utilityTypes.js';
+import { MappedDefinition } from '../internal/utilityTypes.js';
 import { ResolutionContext } from '../ResolutionContext.js';
-import { Model } from './Model.js';
+import { Definition } from './Definition.js';
 
-export class ObjectModel<
+export class ObjectDefinition<
     TPropertyTypes extends Record<string, unknown>
-> extends Model<TPropertyTypes> {
-    constructor(modelProperies: MappedModel<TPropertyTypes>) {
+> extends Definition<TPropertyTypes> {
+    constructor(modelProperies: MappedDefinition<TPropertyTypes>) {
         super();
-        this.#modelProperties = modelProperies;
+        this.#propertyDefinitions = modelProperies;
     }
 
-    #modelProperties: MappedModel<TPropertyTypes>;
+    #propertyDefinitions: MappedDefinition<TPropertyTypes>;
 
     override doValidate(
         resolutionContext: ResolutionContext,
@@ -23,9 +23,9 @@ export class ObjectModel<
         const asRecord = value as Record<string, unknown>;
 
         // Looking for validation failures
-        const failureIndex = Object.keys(this.#modelProperties).findIndex(
+        const failureIndex = Object.keys(this.#propertyDefinitions).findIndex(
             (key) => {
-                const property = this.#modelProperties[key];
+                const property = this.#propertyDefinitions[key];
                 if (typeof property === 'undefined') return true; // this shouldn't happen
 
                 const propertyValue = asRecord[key];
@@ -49,9 +49,9 @@ export class ObjectModel<
     doToTypeString(depth: number): string {
         return (
             '{\r\n' +
-            Object.entries(this.#modelProperties)
+            Object.entries(this.#propertyDefinitions)
                 .map(
-                    ([key, model]: [string, Model<unknown>]) =>
+                    ([key, model]: [string, Definition<unknown>]) =>
                         `    ${JSON.stringify(key)}: ${model.doToTypeString(
                             deeper(depth)
                         )};\r\n`

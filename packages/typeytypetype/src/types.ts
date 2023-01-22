@@ -1,3 +1,5 @@
-import { type Model } from './models/Model.js';
+import { type Definition } from './definitions/Definition.js';
 
-export type TypeFromModel<TModel> = TModel extends Model<infer T> ? T : TModel;
+export type TypeFromModel<TModel> = TModel extends Definition<infer T>
+    ? T
+    : TModel;

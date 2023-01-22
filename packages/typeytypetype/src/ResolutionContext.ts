@@ -1,5 +1,5 @@
-import { Model } from './models/Model.js';
+import { Definition } from './definitions/Definition.js';
 
 export interface ResolutionContext {
-    getModelFromName: (name: string) => Model<unknown>;
+    getModelFromName: (name: string) => Definition<unknown>;
 }

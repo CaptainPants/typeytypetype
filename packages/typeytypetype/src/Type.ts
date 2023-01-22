@@ -1,65 +1,67 @@
-import { Model } from './models/Model.js';
-import { ArrayModel } from './models/ArrayModel.js';
-import { NumberTypeModel } from './models/NumberTypeModel.js';
-import { StringTypeModel } from './models/StringTypeModel.js';
-import { ConstantModel } from './models/ConstantModel.js';
-import { BooleanTypeModel } from './models/BooleanTypeModel.js';
-import { UnionModel } from './models/UnionModel.js';
-import { IntersectModel } from './models/IntersectModel.js';
-import { ObjectModel } from './models/ObjectModel.js';
-import { MappedModel } from './internal/utilityTypes.js';
-import { NamedDataModel } from './models/NamedDataModel.js';
+import { Definition } from './definitions/Definition.js';
+import { ArrayDefinition } from './definitions/ArrayDefinition.js';
+import { NumberTypeDefinition } from './definitions/NumberTypeDefinition.js';
+import { StringTypeDefinition } from './definitions/StringTypeDefinition.js';
+import { ConstantDefinition } from './definitions/ConstantDefinition.js';
+import { BooleanTypeDefinition } from './definitions/BooleanTypeDefinition.js';
+import { UnionDefinition } from './definitions/UnionModel.js';
+import { IntersectionDefiniton } from './definitions/IntersectionDefiniton.js';
+import { ObjectDefinition } from './definitions/ObjectDefinition.js';
+import { MappedDefinition } from './internal/utilityTypes.js';
+import { NamedDefinition } from './definitions/NamedDefinition.js';
 
 export const Type = {
     constant<TValue extends string | number | boolean>(
         value: TValue
-    ): ConstantModel<TValue> {
-        return new ConstantModel(value);
+    ): ConstantDefinition<TValue> {
+        return new ConstantDefinition(value);
     },
 
     null() {
-        return new ConstantModel(null);
+        return new ConstantDefinition(null);
     },
 
-    undefined(): Model<undefined> {
-        return new ConstantModel(undefined);
+    undefined(): Definition<undefined> {
+        return new ConstantDefinition(undefined);
     },
 
-    string(): StringTypeModel {
-        return new StringTypeModel();
+    string(): StringTypeDefinition {
+        return new StringTypeDefinition();
     },
 
-    boolean(): BooleanTypeModel {
-        return new BooleanTypeModel();
+    boolean(): BooleanTypeDefinition {
+        return new BooleanTypeDefinition();
     },
 
-    number(): NumberTypeModel {
-        return new NumberTypeModel();
+    number(): NumberTypeDefinition {
+        return new NumberTypeDefinition();
     },
 
-    union<TTypes extends readonly unknown[]>(...models: MappedModel<TTypes>) {
-        return new UnionModel(models);
+    union<TTypes extends readonly unknown[]>(
+        ...models: MappedDefinition<TTypes>
+    ) {
+        return new UnionDefinition(models);
     },
 
     intersect<TTypes extends readonly unknown[]>(
-        ...models: MappedModel<TTypes>
+        ...models: MappedDefinition<TTypes>
     ) {
-        return new IntersectModel(models);
+        return new IntersectionDefiniton(models);
     },
 
     object<TPropertyTypes extends Record<string, unknown>>(
-        propertyModels: MappedModel<TPropertyTypes>
+        propertyModels: MappedDefinition<TPropertyTypes>
     ) {
-        return new ObjectModel(propertyModels);
+        return new ObjectDefinition(propertyModels);
     },
 
     array<IElementType>(
-        itemModel: Model<IElementType>
-    ): ArrayModel<IElementType> {
-        return new ArrayModel(itemModel);
+        itemModel: Definition<IElementType>
+    ): ArrayDefinition<IElementType> {
+        return new ArrayDefinition(itemModel);
     },
 
-    named<TType>(name: string): NamedDataModel<TType> {
-        return new NamedDataModel<TType>(name);
+    named<TType>(name: string): NamedDefinition<TType> {
+        return new NamedDefinition<TType>(name);
     },
 };

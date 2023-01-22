@@ -1,6 +1,6 @@
 import { ResolutionContext } from '../ResolutionContext.js';
 
-export abstract class Model<T> {
+export abstract class Definition<T> {
     validate(
         resolutionContext: ResolutionContext,
         value: unknown,

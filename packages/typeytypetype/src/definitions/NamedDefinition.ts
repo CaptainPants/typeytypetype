@@ -1,21 +1,21 @@
 import { deeper } from '../internal/deeper.js';
 import { ResolutionContext } from '../ResolutionContext.js';
-import { Model } from './Model.js';
+import { Definition } from './Definition.js';
 
-export class NamedDataModel<T> extends Model<T> {
-    constructor(name: string, model?: Model<T>) {
+export class NamedDefinition<T> extends Definition<T> {
+    constructor(name: string, model?: Definition<T>) {
         super();
         this.name = name;
-        this.model = model;
+        this.definition = model;
     }
 
     public name: string;
-    public model: Model<T> | undefined;
+    public definition: Definition<T> | undefined;
 
-    #get(): Model<T> {
-        if (typeof this.model === 'undefined')
+    #get(): Definition<T> {
+        if (typeof this.definition === 'undefined')
             throw new Error('Model not provided.');
-        return this.model;
+        return this.definition;
     }
 
     doValidate(

@@ -1,17 +1,17 @@
 import { deeper } from '../internal/deeper.js';
-import { MappedModel } from '../internal/utilityTypes.js';
+import { MappedDefinition } from '../internal/utilityTypes.js';
 import { ResolutionContext } from '../ResolutionContext.js';
-import { Model } from './Model.js';
+import { Definition } from './Definition.js';
 
-export class UnionModel<TTypes extends readonly unknown[]> extends Model<
-    TTypes[number]
-> {
-    constructor(models: MappedModel<TTypes>) {
+export class UnionDefinition<
+    TTypes extends readonly unknown[]
+> extends Definition<TTypes[number]> {
+    constructor(definitions: MappedDefinition<TTypes>) {
         super();
-        this.#models = models;
+        this.#definitions = definitions;
     }
 
-    #models: MappedModel<TTypes>;
+    #definitions: MappedDefinition<TTypes>;
 
     override doValidate(
         resolutionContext: ResolutionContext,
@@ -19,14 +19,14 @@ export class UnionModel<TTypes extends readonly unknown[]> extends Model<
         depth: number
     ): boolean {
         return (
-            this.#models.findIndex((model) =>
+            this.#definitions.findIndex((model) =>
                 model.doValidate(resolutionContext, value, deeper(depth))
             ) >= 0
         );
     }
 
     doToTypeString(depth: number): string {
-        return this.#models
+        return this.#definitions
             .map((item) => `(${item.doToTypeString(deeper(depth))}})`)
             .join(' | ');
     }

@@ -1,14 +1,14 @@
 import { deeper } from '../internal/deeper.js';
 import { ResolutionContext } from '../ResolutionContext.js';
-import { Model } from './Model.js';
+import { Definition } from './Definition.js';
 
-export class ArrayModel<TItemType> extends Model<TItemType[]> {
-    constructor(itemModel: Model<TItemType>) {
+export class ArrayDefinition<TItemType> extends Definition<TItemType[]> {
+    constructor(itemModel: Definition<TItemType>) {
         super();
-        this.#itemModel = itemModel;
+        this.#itemDefinition = itemModel;
     }
 
-    #itemModel: Model<TItemType>;
+    #itemDefinition: Definition<TItemType>;
 
     override doValidate(
         resolutionContext: ResolutionContext,
@@ -21,7 +21,7 @@ export class ArrayModel<TItemType> extends Model<TItemType[]> {
         return (
             value.findIndex(
                 (itemValue) =>
-                    !this.#itemModel.doValidate(
+                    !this.#itemDefinition.doValidate(
                         resolutionContext,
                         itemValue,
                         deeper(depth)
@@ -31,6 +31,6 @@ export class ArrayModel<TItemType> extends Model<TItemType[]> {
     }
 
     override doToTypeString(depth: number): string {
-        return `Array<${this.#itemModel.doToTypeString(deeper(depth))}>`;
+        return `Array<${this.#itemDefinition.doToTypeString(deeper(depth))}>`;
     }
 }

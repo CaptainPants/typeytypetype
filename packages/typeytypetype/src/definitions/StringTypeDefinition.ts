@@ -1,16 +1,16 @@
 import { ResolutionContext } from '../ResolutionContext.js';
-import { Model } from './Model.js';
+import { Definition } from './Definition.js';
 
-export class NumberTypeModel extends Model<number> {
+export class StringTypeDefinition extends Definition<string> {
     override doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         depth: number
     ): boolean {
-        return typeof value === 'number';
+        return typeof value === 'string';
     }
 
     override doToTypeString(depth: number): string {
-        return 'number';
+        return 'string';
     }
 }

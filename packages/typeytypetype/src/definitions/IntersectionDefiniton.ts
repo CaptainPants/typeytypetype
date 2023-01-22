@@ -1,18 +1,21 @@
 import { deeper } from '../internal/deeper.js';
-import { MappedModel, UnionToIntersection } from '../internal/utilityTypes.js';
+import {
+    MappedDefinition,
+    UnionToIntersection,
+} from '../internal/utilityTypes.js';
 import { ResolutionContext } from '../ResolutionContext.js';
 import { TypeFromModel } from '../types';
-import { Model } from './Model.js';
+import { Definition } from './Definition.js';
 
-export class IntersectModel<TTypes extends readonly unknown[]> extends Model<
-    UnionToIntersection<TypeFromModel<TTypes[number]>>
-> {
-    constructor(models: MappedModel<TTypes>) {
+export class IntersectionDefiniton<
+    TTypes extends readonly unknown[]
+> extends Definition<UnionToIntersection<TypeFromModel<TTypes[number]>>> {
+    constructor(models: MappedDefinition<TTypes>) {
         super();
         this.#models = models;
     }
 
-    #models: MappedModel<TTypes>;
+    #models: MappedDefinition<TTypes>;
 
     override doValidate(
         resolutionContext: ResolutionContext,

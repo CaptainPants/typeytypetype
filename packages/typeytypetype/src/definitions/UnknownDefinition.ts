@@ -1,7 +1,7 @@
 import { ResolutionContext } from '../ResolutionContext.js';
-import { Model } from './Model.js';
+import { Definition } from './Definition.js';
 
-export class UnknownModel extends Model<unknown> {
+export class UnknownDefinition extends Definition<unknown> {
     doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
