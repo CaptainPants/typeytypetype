@@ -1,6 +1,5 @@
+import React, { ReactElement } from 'react';
 
-import React from 'react';
-
-export function Placeholder() {
+export function Placeholder(): ReactElement {
     return <></>;
 }
