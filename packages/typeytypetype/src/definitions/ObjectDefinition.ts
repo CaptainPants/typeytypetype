@@ -1,4 +1,4 @@
-import { deeper } from '../internal/deeper.js';
+import { descend } from '../internal/descend.js';
 import { MappedDefinition } from '../internal/utilityTypes.js';
 import { ResolutionContext } from '../ResolutionContext.js';
 import { Definition } from './Definition.js';
@@ -33,7 +33,7 @@ export class ObjectDefinition<
                     !property.doValidate(
                         resolutionContext,
                         propertyValue,
-                        deeper(depth)
+                        descend(depth)
                     )
                 ) {
                     return true;
@@ -53,7 +53,7 @@ export class ObjectDefinition<
                 .map(
                     ([key, model]: [string, Definition<unknown>]) =>
                         `    ${JSON.stringify(key)}: ${model.doToTypeString(
-                            deeper(depth)
+                            descend(depth)
                         )};\r\n`
                 )
                 .join('') +

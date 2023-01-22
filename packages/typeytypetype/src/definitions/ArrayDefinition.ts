@@ -1,4 +1,4 @@
-import { deeper } from '../internal/deeper.js';
+import { descend } from '../internal/descend.js';
 import { ResolutionContext } from '../ResolutionContext.js';
 import { Definition } from './Definition.js';
 
@@ -24,13 +24,13 @@ export class ArrayDefinition<TItemType> extends Definition<TItemType[]> {
                     !this.#itemDefinition.doValidate(
                         resolutionContext,
                         itemValue,
-                        deeper(depth)
+                        descend(depth)
                     )
             ) < 0
         );
     }
 
     override doToTypeString(depth: number): string {
-        return `Array<${this.#itemDefinition.doToTypeString(deeper(depth))}>`;
+        return `Array<${this.#itemDefinition.doToTypeString(descend(depth))}>`;
     }
 }

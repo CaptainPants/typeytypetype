@@ -1,4 +1,4 @@
-import { deeper } from '../internal/deeper.js';
+import { descend } from '../internal/descend.js';
 import { MappedDefinition } from '../internal/utilityTypes.js';
 import { ResolutionContext } from '../ResolutionContext.js';
 import { Definition } from './Definition.js';
@@ -20,14 +20,14 @@ export class UnionDefinition<
     ): boolean {
         return (
             this.#definitions.findIndex((model) =>
-                model.doValidate(resolutionContext, value, deeper(depth))
+                model.doValidate(resolutionContext, value, descend(depth))
             ) >= 0
         );
     }
 
     doToTypeString(depth: number): string {
         return this.#definitions
-            .map((item) => `(${item.doToTypeString(deeper(depth))}})`)
+            .map((item) => `(${item.doToTypeString(descend(depth))}})`)
             .join(' | ');
     }
 }

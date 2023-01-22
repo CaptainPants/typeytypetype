@@ -1,4 +1,4 @@
-import { deeper } from '../internal/deeper.js';
+import { descend } from '../internal/descend.js';
 import {
     MappedDefinition,
     UnionToIntersection,
@@ -25,14 +25,14 @@ export class IntersectionDefiniton<
         return (
             this.#models.findIndex(
                 (model) =>
-                    !model.doValidate(resolutionContext, value, deeper(depth))
+                    !model.doValidate(resolutionContext, value, descend(depth))
             ) < 0
         );
     }
 
     doToTypeString(depth: number): string {
         return this.#models
-            .map((item) => `(${item.doToTypeString(deeper(depth))}})`)
+            .map((item) => `(${item.doToTypeString(descend(depth))}})`)
             .join(' & ');
     }
 }

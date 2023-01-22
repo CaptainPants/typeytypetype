@@ -1,4 +1,4 @@
-import { deeper } from '../internal/deeper.js';
+import { descend } from '../internal/descend.js';
 import { ResolutionContext } from '../ResolutionContext.js';
 import { Definition } from './Definition.js';
 
@@ -23,7 +23,7 @@ export class NamedDefinition<T> extends Definition<T> {
         value: unknown,
         depth: number
     ): boolean {
-        return this.#get().doValidate(resolutionContext, value, deeper(depth));
+        return this.#get().doValidate(resolutionContext, value, descend(depth));
     }
 
     doToTypeString(depth: number): string {
