@@ -38,27 +38,27 @@ export const Type = {
     },
 
     union<TTypes extends readonly unknown[]>(
-        ...models: MappedDefinition<TTypes>
+        ...definitions: MappedDefinition<TTypes>
     ) {
-        return new UnionDefinition(models);
+        return new UnionDefinition(definitions);
     },
 
     intersect<TTypes extends readonly unknown[]>(
-        ...models: MappedDefinition<TTypes>
+        ...definitions: MappedDefinition<TTypes>
     ) {
-        return new IntersectionDefiniton(models);
+        return new IntersectionDefiniton(definitions);
     },
 
     object<TPropertyTypes extends Record<string, unknown>>(
-        propertyModels: MappedDefinition<TPropertyTypes>
+        propertyDefinitions: MappedDefinition<TPropertyTypes>
     ) {
-        return new ObjectDefinition(propertyModels);
+        return new ObjectDefinition(propertyDefinitions);
     },
 
-    array<IElementType>(
-        itemModel: Definition<IElementType>
-    ): ArrayDefinition<IElementType> {
-        return new ArrayDefinition(itemModel);
+    array<TITemType>(
+        itemDefinition: Definition<TITemType>
+    ): ArrayDefinition<TITemType> {
+        return new ArrayDefinition(itemDefinition);
     },
 
     named<TType>(name: string): NamedDefinition<TType> {
