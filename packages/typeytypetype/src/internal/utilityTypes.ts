@@ -1,8 +1,8 @@
 import { Definition } from '../definitions/Definition';
-import { TypeFromModel } from '../types';
+import { TypeFromDefinition } from '../types';
 
 export type MappedTypeFromDefinition<T> = {
-    [TKey in keyof T]: TypeFromModel<T[TKey]>;
+    [TKey in keyof T]: TypeFromDefinition<T[TKey]>;
 };
 
 export type MappedDefinition<T> = {

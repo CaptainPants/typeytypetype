@@ -4,12 +4,12 @@ import {
     UnionToIntersection,
 } from '../internal/utilityTypes.js';
 import { ResolutionContext } from '../ResolutionContext.js';
-import { TypeFromModel } from '../types';
+import { TypeFromDefinition } from '../types';
 import { Definition } from './Definition.js';
 
 export class IntersectionDefiniton<
     TTypes extends readonly unknown[]
-> extends Definition<UnionToIntersection<TypeFromModel<TTypes[number]>>> {
+> extends Definition<UnionToIntersection<TypeFromDefinition<TTypes[number]>>> {
     constructor(models: MappedDefinition<TTypes>) {
         super();
         this.#models = models;

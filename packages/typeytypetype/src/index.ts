@@ -1,5 +1,5 @@
 import { Type } from './Type.js';
-import { TypeFromModel } from './types.js';
+import { TypeFromDefinition } from './types.js';
 
 const model1 = Type.string();
 
@@ -19,7 +19,7 @@ const model5 = Type.intersect(model3, model4);
 
 const model6 = Type.array(Type.constant(1));
 
-type X = TypeFromModel<typeof model2>;
+type X = TypeFromDefinition<typeof model2>;
 
 interface Test {
     id: number;
