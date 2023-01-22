@@ -1,11 +1,5 @@
 import { Definition } from '../definitions/Definition';
 
-type PropertyResult<T, TKey extends keyof T> = T extends readonly unknown[]
-    ? never
-    : T extends object
-    ? T[TKey]
-    : never;
-
 type ObjectKeys<T> = T extends object ? keyof T : never;
 
 export type Model<T> = {
