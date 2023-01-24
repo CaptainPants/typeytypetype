@@ -1,17 +1,19 @@
 import { Definition } from '../definitions/Definition';
 
-type ObjectKeys<T> = T extends object ? keyof T : never;
+type KeysIfObject<T> = T extends object ? keyof T : never;
 
-export type Model<T> = {
+type ElementType<T> = T extends ReadonlyArray<infer U> ? Definition<U> : never;
+
+export interface Model<T> {
     value: T;
     definition: Definition<T>;
 
-    element: () => T extends unknown[] ? Definition<T[number]> : never;
-    property: <TKey extends ObjectKeys<T>>(
-        key: TKey
-    ) => T[TKey];
+    element: () => ElementType<T>;
+    property: <TKey extends KeysIfObject<T>>(key: TKey) => Model<T[TKey]>;
 };
 
-type X = Model<string>;
-type Y = Model<string[]>;
-type ZZZ = Model<{ test: 1 }>;
+// type X = Model<string>;
+// type Y = Model<string[]>;
+// type ZZZ = Model<{ test: 1 }>;
+// let x : ZZZ;
+// x.property('test');

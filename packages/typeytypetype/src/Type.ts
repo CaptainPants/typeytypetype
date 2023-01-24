@@ -4,7 +4,7 @@ import { NumberTypeDefinition } from './definitions/NumberTypeDefinition.js';
 import { StringTypeDefinition } from './definitions/StringTypeDefinition.js';
 import { ConstantDefinition } from './definitions/ConstantDefinition.js';
 import { BooleanTypeDefinition } from './definitions/BooleanTypeDefinition.js';
-import { UnionDefinition } from './definitions/UnionModel.js';
+import { UnionDefinition } from './definitions/UnionDefinition.js';
 import { IntersectionDefiniton } from './definitions/IntersectionDefiniton.js';
 import { ObjectDefinition } from './definitions/ObjectDefinition.js';
 import { MappedDefinition } from './internal/utilityTypes.js';
