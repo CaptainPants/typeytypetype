@@ -1,12 +1,8 @@
 import { ResolutionContext } from '../ResolutionContext.js';
 
 export abstract class Definition<T> {
-    validate(
-        resolutionContext: ResolutionContext,
-        value: unknown,
-        depth = 25
-    ): boolean {
-        return this.doValidate(resolutionContext, value, depth);
+    validate(resolutionContext: ResolutionContext, value: unknown): boolean {
+        return this.doValidate(resolutionContext, value, 25);
     }
 
     abstract doValidate(
@@ -15,8 +11,8 @@ export abstract class Definition<T> {
         depth: number
     ): boolean;
 
-    toTypeString(depth = 25): string {
-        return this.doToTypeString(depth);
+    toTypeString(): string {
+        return this.doToTypeString(25);
     }
 
     abstract doToTypeString(depth: number): string;

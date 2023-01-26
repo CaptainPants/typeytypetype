@@ -4,6 +4,12 @@
     "workspaces": [
         "packages/*"
     ],
+    "scripts": {
+        "lint": "npx lerna run lint",
+        "format": "npx lerna run format",
+        "compile": "npx lerna run compile",
+        "build": "npx lerna run compile"
+    },
     "devDependencies": {
         "@jest/globals": "^29.3.1",
         "@typescript-eslint/eslint-plugin": "^5.48.2",

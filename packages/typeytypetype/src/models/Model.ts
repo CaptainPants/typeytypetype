@@ -1,16 +1,30 @@
 import { Definition } from '../definitions/Definition';
 
-type KeysIfObject<T> = T extends object ? keyof T : never;
+type ModelForKey<T, TKey> = TKey extends keyof T
+    ? Model<T[TKey]>
+    : Model<unknown>;
 
-type ElementType<T> = T extends ReadonlyArray<infer U> ? Definition<U> : never;
+type ElementType<T> = T extends ReadonlyArray<infer U>
+    ? Definition<U>
+    : undefined;
 
-export interface Model<T> {
-    value: T;
-    definition: Definition<T>;
+export class Model<T> {
+    constructor(value: T, definition: Definition<T>) {
+        this.#value = value;
+        this.#definition = definition;
+    }
 
-    element: () => ElementType<T>;
-    property: <TKey extends KeysIfObject<T>>(key: TKey) => Model<T[TKey]>;
-};
+    #value: T;
+    #definition: Definition<T>;
+
+    elements(): ElementType<T> {
+        throw new Error();
+    }
+
+    property<TKey extends string>(key: TKey): ModelForKey<T, TKey> {
+        throw new Error();
+    }
+}
 
 // type X = Model<string>;
 // type Y = Model<string[]>;
