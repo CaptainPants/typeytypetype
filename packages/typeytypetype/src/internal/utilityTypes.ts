@@ -8,6 +8,8 @@ export type MappedTypeFromDefinition<T> = {
 export type MappedDefinition<T> = {
     [TKey in keyof T]: Definition<T[TKey]>;
 };
+export type ArrayMappedDefinition<T extends readonly unknown[]> =
+    T extends ReadonlyArray<infer S> ? ReadonlyArray<Definition<S>> : never;
 
 export type Unspecialize<T extends Definition<unknown>> = T extends Definition<
     infer U
