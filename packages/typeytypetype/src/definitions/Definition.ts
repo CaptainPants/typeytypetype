@@ -18,28 +18,6 @@ export abstract class Definition<T> {
     abstract doToTypeString(depth: number): string;
 
     /**
-     * Returns the definition for array elements, or undefined if not supported.
-     * @param value
-     * @returns
-     */
-    arrayElementDefinition(value: number): Definition<unknown> | undefined {
-        return undefined;
-    }
-
-    /**
-     * Returns the definitoin of expando properties (used for RecordTypeDefinition).
-     * Otherwise undefined if not supported.
-     * @returns
-     */
-    expandoPropertyType(): Definition<unknown> | undefined {
-        return undefined;
-    }
-
-    fixedPropertyDefinition(key: string): Definition<unknown> | undefined {
-        return undefined;
-    }
-
-    /**
      * This is 100% here just to allow type inference to match the type.
      * @returns
      */

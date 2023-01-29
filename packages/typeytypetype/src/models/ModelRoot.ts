@@ -1,5 +1,5 @@
 import { Definition } from '../definitions/Definition';
-import { createModel } from './createModel';
+import { createModel } from './ModelFactory';
 import { Model } from './Model';
 
 export class ModelRoot<T> {

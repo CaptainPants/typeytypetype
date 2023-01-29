@@ -2,7 +2,7 @@ import { descend } from '../internal/descend';
 import { ResolutionContext } from '../ResolutionContext';
 import { Definition } from './Definition';
 
-export class MapTypeDefinition<TValue> extends Definition<
+export class RecordTypedDefinition<TValue> extends Definition<
     Record<string, TValue>
 > {
     constructor(valueDefinition: Definition<TValue>) {

@@ -1,6 +1,7 @@
 import { Definition } from '../definitions/Definition';
 import { descend } from '../internal/descend';
-import { createModel } from './createModel';
+import { ModelArchetype, Replacer } from '../types';
+import { createModel, ModelFactory } from './ModelFactory';
 
 export type ModelForObjectProperty<T, TKey> = TKey extends keyof T
     ? Model<T[TKey]>
@@ -10,72 +11,86 @@ export type ModelForElement<T> = T extends ReadonlyArray<infer S>
     ? Model<S>
     : undefined;
 
-export class Model<T> {
+export abstract class Model<T> {
     constructor(
         value: T,
         definition: Definition<T>,
-        replaced: (newValue: T) => Promise<void>,
-        depth: number
+        replace: Replacer<T>,
+        depth: number,
+        factory: ModelFactory
     ) {
         this.#value = value;
         this.#definition = definition;
-        this.#replaced = replaced;
+        this.#replace = replace;
         this.#depth = depth;
+        this.#factory = factory;
     }
 
     #value: T;
     #definition: Definition<T>;
-    #replaced: (newValue: T) => Promise<void>;
+    #replace: Replacer<T>;
     #depth: number;
+    #factory: ModelFactory;
 
     get value(): T {
         return this.#value;
     }
 
+    get type(): ModelArchetype;
+
     get definition(): Definition<T> {
         return this.#definition;
     }
 
-    get replaced(): (newValue: T) => Promise<void> {
-        return this.#replaced;
+    get replace(): (newValue: T) => Promise<void> {
+        return this.#replace;
     }
 
-    element(index: number): Model<unknown> | undefined {
-        if (!Array.isArray(this.value)) {
-            return undefined;
-        }
-
-        const element = this.value[index];
-
-        const definition = this.definition.arrayElementDefinition(element);
-        if (definition === undefined) {
-            throw new TypeError('Unexpected');
-        }
-
-        return createModel(
-            element,
-            definition,
-            async () => {},
-            descend(this.#depth)
-        );
+    get depth(): number {
+        return this.#depth;
     }
 
-    property(key: string): Model<unknown> | undefined {
-        if (typeof this.value !== 'object' || this.value === null) {
-            return undefined;
-        }
+    get factory(): ModelFactory {
+        return this.#factory;
+    }
 
-        const propertyValue = (this.value as Record<string, unknown>)[key];
-        const def = this.definition.fixedPropertyDefinition(key);
-        if (def === undefined) {
-            throw new TypeError('Unexpected.');
-        }
+    elementDefinition(): Definition<unknown> | undefined {
+        return undefined;
+    }
 
-        return createModel(
-            propertyValue,
-            def,
-            async () => {},
-            descend(this.#depth)
-        );
+    getElement(index: number): Model<unknown> | undefined {
+        return undefined;
+    }
+
+    async spliceElements(
+        index: number,
+        removeCount: number,
+        newElements: unknown[]
+    ): Promise<void> {
+        throw new TypeError('Not supported');
+    }
+
+    expandoPropertyDefinition(): Definition<unknown> | undefined {
+        return undefined;
+    }
+
+    getExpandoProperty(key: string): Model<unknown> | undefined {
+        return undefined;
+    }
+
+    async setExpandoProperty(key: string, value: unknown): Promise<void> {
+        throw new TypeError('Not supported');
+    }
+
+    async deleteExpandoProperty(key: stringn): Promise<void> {
+        throw new TypeError('Not supported');
+    }
+
+    fixedPropertyDefinition(key: string): Definition<unknown> | undefined {
+        return undefined;
+    }
+
+    getFixedProperty(key: string): Model<unknown> | undefined {
+        return undefined;
     }
 }

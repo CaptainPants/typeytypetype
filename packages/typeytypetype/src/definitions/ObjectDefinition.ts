@@ -61,9 +61,7 @@ export class ObjectDefinition<
         );
     }
 
-    override fixedPropertyDefinition(
-        key: string
-    ): Definition<unknown> | undefined {
+    public getDefinition(key: string): Definition<unknown> | undefined {
         const propertyDef = this.#propertyDefinitions[key];
 
         return propertyDef;
