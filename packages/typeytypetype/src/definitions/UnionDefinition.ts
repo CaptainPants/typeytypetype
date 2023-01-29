@@ -1,20 +1,23 @@
+import { createResolutionContext } from '../createResolutionContext.js';
 import { descend } from '../internal/descend.js';
-import { ArrayMappedDefinition } from '../internal/utilityTypes.js';
+import { MappedDefinition } from '../internal/utilityTypes.js';
 import { ResolutionContext } from '../ResolutionContext.js';
 import { Definition } from './Definition.js';
 
 export class UnionDefinition<
     TTypes extends readonly unknown[]
 > extends Definition<TTypes[number]> {
-    constructor(definitions: ArrayMappedDefinition<TTypes>) {
+    constructor(definitions: MappedDefinition<TTypes>) {
         super();
         this.#definitions = definitions;
     }
 
-    #definitions: ArrayMappedDefinition<TTypes>;
+    #definitions: MappedDefinition<TTypes>;
 
-    get definitions(): ArrayMappedDefinition<TTypes> {
-        return this.#definitions;
+    #getDefinition(value: unknown): Definition<unknown> | undefined {
+        const context = createResolutionContext();
+
+        return this.#definitions.find((x) => x.validate(context, value));
     }
 
     override doValidate(
@@ -29,9 +32,21 @@ export class UnionDefinition<
         );
     }
 
-    doToTypeString(depth: number): string {
+    override doToTypeString(depth: number): string {
         return this.#definitions
             .map((item) => `(${item.doToTypeString(descend(depth))}})`)
             .join(' | ');
+    }
+
+    override arrayElementDefinition(
+        value: number
+    ): Definition<unknown> | undefined {
+        const match = this.#getDefinition(value);
+
+        if (match === undefined) {
+            return undefined;
+        }
+
+        return match.arrayElementDefinition(value);
     }
 }

@@ -4,7 +4,8 @@ import { Model } from './Model';
 export function createModel<T>(
     value: T,
     definition: Definition<T>,
-    replaced: (newValue: T) => Promise<void>
+    replaced: (newValue: T) => Promise<void>,
+    depth: number
 ): Model<T> {
-    throw new Error('');
+    return new Model<T>(value, definition, replaced, depth);
 }

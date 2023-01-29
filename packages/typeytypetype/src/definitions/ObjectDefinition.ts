@@ -46,7 +46,7 @@ export class ObjectDefinition<
         return failureIndex < 0;
     }
 
-    doToTypeString(depth: number): string {
+    override doToTypeString(depth: number): string {
         return (
             '{\r\n' +
             Object.entries(this.#propertyDefinitions)
@@ -59,5 +59,13 @@ export class ObjectDefinition<
                 .join('') +
             '}'
         );
+    }
+
+    override fixedPropertyDefinition(
+        key: string
+    ): Definition<unknown> | undefined {
+        const propertyDef = this.#propertyDefinitions[key];
+
+        return propertyDef;
     }
 }

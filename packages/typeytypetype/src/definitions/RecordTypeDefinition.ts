@@ -12,7 +12,7 @@ export class MapTypeDefinition<TValue> extends Definition<
 
     #valueDefinition: Definition<TValue>;
 
-    doValidate(
+    override doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         depth: number
@@ -34,9 +34,13 @@ export class MapTypeDefinition<TValue> extends Definition<
         );
     }
 
-    doToTypeString(depth: number): string {
+    override doToTypeString(depth: number): string {
         return `Record<string, ${JSON.stringify(
             this.#valueDefinition.doToTypeString(descend(depth))
         )}>`;
+    }
+
+    override expandoPropertyType(): Definition<unknown> | undefined {
+        return this.#valueDefinition;
     }
 }

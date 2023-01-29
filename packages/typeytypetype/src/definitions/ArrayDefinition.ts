@@ -5,10 +5,10 @@ import { Definition } from './Definition.js';
 export class ArrayDefinition<TItemType> extends Definition<TItemType[]> {
     constructor(itemModel: Definition<TItemType>) {
         super();
-        this.#itemDefinition = itemModel;
+        this.#elementDefinition = itemModel;
     }
 
-    #itemDefinition: Definition<TItemType>;
+    #elementDefinition: Definition<TItemType>;
 
     override doValidate(
         resolutionContext: ResolutionContext,
@@ -21,7 +21,7 @@ export class ArrayDefinition<TItemType> extends Definition<TItemType[]> {
         return (
             value.findIndex(
                 (itemValue) =>
-                    !this.#itemDefinition.doValidate(
+                    !this.#elementDefinition.doValidate(
                         resolutionContext,
                         itemValue,
                         descend(depth)
@@ -31,6 +31,14 @@ export class ArrayDefinition<TItemType> extends Definition<TItemType[]> {
     }
 
     override doToTypeString(depth: number): string {
-        return `Array<${this.#itemDefinition.doToTypeString(descend(depth))}>`;
+        return `Array<${this.#elementDefinition.doToTypeString(
+            descend(depth)
+        )}>`;
+    }
+
+    override arrayElementDefinition(
+        value: unknown
+    ): Definition<unknown> | undefined {
+        return this.#elementDefinition;
     }
 }

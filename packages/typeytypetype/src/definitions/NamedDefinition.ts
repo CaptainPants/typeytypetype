@@ -18,7 +18,7 @@ export class NamedDefinition<T> extends Definition<T> {
         return this.definition;
     }
 
-    doValidate(
+    override doValidate(
         resolutionContext: ResolutionContext,
         value: unknown,
         depth: number
@@ -26,7 +26,13 @@ export class NamedDefinition<T> extends Definition<T> {
         return this.#get().doValidate(resolutionContext, value, descend(depth));
     }
 
-    doToTypeString(depth: number): string {
+    override doToTypeString(depth: number): string {
         return this.name;
+    }
+
+    override arrayElementDefinition(
+        value: unknown
+    ): Definition<unknown> | undefined {
+        return this.#get().arrayElementDefinition(value);
     }
 }

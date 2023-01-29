@@ -15,8 +15,6 @@ const model4 = Type.object({
 });
 
 // There is no intersection here
-const model5 = Type.intersect(model3, model4);
-
 const model6 = Type.array(Type.constant(1));
 
 type X = TypeFromDefinition<typeof model2>;

@@ -5,7 +5,6 @@ import { StringTypeDefinition } from './definitions/StringTypeDefinition.js';
 import { ConstantDefinition } from './definitions/ConstantDefinition.js';
 import { BooleanTypeDefinition } from './definitions/BooleanTypeDefinition.js';
 import { UnionDefinition } from './definitions/UnionDefinition.js';
-import { IntersectionDefiniton } from './definitions/IntersectionDefiniton.js';
 import { ObjectDefinition } from './definitions/ObjectDefinition.js';
 import { MappedDefinition } from './internal/utilityTypes.js';
 import { NamedDefinition } from './definitions/NamedDefinition.js';
@@ -40,13 +39,7 @@ export const Type = {
     union<TTypes extends readonly unknown[]>(
         ...definitions: MappedDefinition<TTypes>
     ) {
-        return new UnionDefinition(definitions);
-    },
-
-    intersect<TTypes extends readonly unknown[]>(
-        ...definitions: MappedDefinition<TTypes>
-    ) {
-        return new IntersectionDefiniton(definitions);
+        return new UnionDefinition<TTypes>(definitions);
     },
 
     object<TPropertyTypes extends Record<string, unknown>>(
