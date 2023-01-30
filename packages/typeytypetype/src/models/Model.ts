@@ -90,4 +90,6 @@ export abstract class Model<T, TDef extends Definition<T> = Definition<T>> {
     getFixedProperty(key: string): Model<unknown> | undefined {
         return undefined;
     }
+
+    abstract clone(replace: Replacer<T>): Model<T, TDef>;
 }

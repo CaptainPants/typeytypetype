@@ -5,9 +5,7 @@ import { Replacer } from '../types';
 import { Model } from './Model';
 import { ModelFactory } from './ModelFactory';
 
-type RemoveReadonlyArray<TArray> = TArray extends ReadonlyArray<infer S> ? S[] : TArray; 
-
-export class ArrayModel<TArray extends unknown[]> extends Model<TArray> {
+export class ArrayModel<TArray extends unknown[]> extends Model<TArray, ArrayDefinition<TArray>> {
     constructor(
         value: TArray,
         definition: ArrayDefinition<TArray>,
@@ -53,5 +51,15 @@ export class ArrayModel<TArray extends unknown[]> extends Model<TArray> {
         copy.splice(index, removeCount, ...newElements);
         // Type system is fighting me
         await this.replace(copy satisfies Array<TArray[number]> as TArray);
+    }
+
+    override clone(replace: Replacer<TArray>): Model<TArray, ArrayDefinition<TArray>> {
+        return new ArrayModel<TArray>(
+            this.value, 
+            this.definition, 
+            replace, 
+            this.depth, 
+            this.factory
+        );
     }
 }

@@ -1,6 +1,7 @@
 import { Definition } from '../definitions/Definition';
 import { UnionDefinition } from '../definitions/UnionDefinition';
 import { descend } from '../internal/descend';
+import { Replacer } from '../types';
 import { DelegatingModel } from './DelegatingModel';
 import { Model } from './Model';
 
@@ -24,5 +25,15 @@ export class UnionModel<
             throw new TypeError('Unexpected');
         }
         return res;
+    }
+
+    override clone(replace: Replacer<TTypes[number]>): Model<TTypes[number], UnionDefinition<TTypes>> {
+        return new UnionModel<TTypes>(
+            this.value, 
+            this.definition, 
+            replace, 
+            this.depth, 
+            this.factory
+        );
     }
 }

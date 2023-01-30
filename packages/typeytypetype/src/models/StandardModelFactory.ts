@@ -50,6 +50,8 @@ map.set(UnionDefinition, UnionModel);
 map.set(NamedDefinition, NamedModel);
 
 export class StandardModelFactory implements ModelFactory {
+    static readonly defaultMaxDepth = 25;
+
     create<T>(
         value: T,
         definition: Definition<T>,

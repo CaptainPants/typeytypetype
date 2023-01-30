@@ -1,13 +1,10 @@
 import { expect, test } from '@jest/globals';
 import { Type } from './Type.js';
 import { ResolutionContext } from './ResolutionContext.js';
+import { createResolutionContext } from './createResolutionContext.js';
 
 test('constant', () => {
-    const resolutionContext: ResolutionContext = {
-        getModelFromName: () => {
-            throw new Error();
-        },
-    };
+    const resolutionContext = createResolutionContext();
 
     expect(Type.constant(1).validate(resolutionContext, 1)).toStrictEqual(true);
     expect(Type.constant(1).validate(resolutionContext, 2)).toStrictEqual(
@@ -38,103 +35,79 @@ test('constant', () => {
 });
 
 test('string', () => {
-    const model = Type.string();
+    const definition = Type.string();
 
-    const resolutionContext: ResolutionContext = {
-        getModelFromName: () => {
-            throw new Error();
-        },
-    };
+    const resolutionContext = createResolutionContext();
 
-    expect(model.validate(resolutionContext, 'test')).toStrictEqual(true);
-    expect(model.validate(resolutionContext, false)).toStrictEqual(false);
-    expect(model.validate(resolutionContext, 123)).toStrictEqual(false);
-    expect(model.validate(resolutionContext, {})).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, 'test')).toStrictEqual(true);
+    expect(definition.validate(resolutionContext, false)).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, 123)).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, {})).toStrictEqual(false);
 });
 
 test('number', () => {
-    const model = Type.number();
+    const definition = Type.number();
 
-    const resolutionContext: ResolutionContext = {
-        getModelFromName: () => {
-            throw new Error();
-        },
-    };
+    const resolutionContext = createResolutionContext();
 
-    expect(model.validate(resolutionContext, 123)).toStrictEqual(true);
+    expect(definition.validate(resolutionContext, 123)).toStrictEqual(true);
 
-    expect(model.validate(resolutionContext, 'test')).toStrictEqual(false);
-    expect(model.validate(resolutionContext, false)).toStrictEqual(false);
-    expect(model.validate(resolutionContext, {})).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, 'test')).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, false)).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, {})).toStrictEqual(false);
 });
 
 test('boolean', () => {
-    const model = Type.boolean();
+    const definition = Type.boolean();
 
-    const resolutionContext: ResolutionContext = {
-        getModelFromName: () => {
-            throw new Error();
-        },
-    };
+    const resolutionContext = createResolutionContext();
 
-    expect(model.validate(resolutionContext, false)).toStrictEqual(true);
-    expect(model.validate(resolutionContext, true)).toStrictEqual(true);
+    expect(definition.validate(resolutionContext, false)).toStrictEqual(true);
+    expect(definition.validate(resolutionContext, true)).toStrictEqual(true);
 
-    expect(model.validate(resolutionContext, 'test')).toStrictEqual(false);
-    expect(model.validate(resolutionContext, 123)).toStrictEqual(false);
-    expect(model.validate(resolutionContext, {})).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, 'test')).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, 123)).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, {})).toStrictEqual(false);
 });
 
 test('array', () => {
-    const model = Type.array(Type.number());
+    const definition = Type.array(Type.number());
 
-    const resolutionContext: ResolutionContext = {
-        getModelFromName: () => {
-            throw new Error();
-        },
-    };
+    const resolutionContext = createResolutionContext();
 
-    expect(model.validate(resolutionContext, [1, 2])).toStrictEqual(true);
-    expect(model.validate(resolutionContext, ['test', 2])).toStrictEqual(false);
-    expect(model.validate(resolutionContext, 1)).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, [1, 2])).toStrictEqual(true);
+    expect(definition.validate(resolutionContext, ['test', 2])).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, 1)).toStrictEqual(false);
 });
 
 test('object', () => {
-    const model = Type.object({
+    const definition = Type.object({
         id: Type.number(),
         name: Type.string(),
         roles: Type.array(Type.string()),
     });
 
-    const resolutionContext: ResolutionContext = {
-        getModelFromName: () => {
-            throw new Error();
-        },
-    };
+    const resolutionContext = createResolutionContext();
 
     expect(
-        model.validate(resolutionContext, {
+        definition.validate(resolutionContext, {
             id: 1,
             name: 'test',
             roles: ['Administrator'],
         })
     ).toStrictEqual(true);
-    expect(model.validate(resolutionContext, { id: 1 })).toStrictEqual(false);
-    expect(model.toTypeString()).toMatchSnapshot();
+    expect(definition.validate(resolutionContext, { id: 1 })).toStrictEqual(false);
+    expect(definition.toTypeString()).toMatchSnapshot();
 });
 
 test('union', () => {
-    const model = Type.union(Type.constant(1), Type.constant(2), Type.null());
+    const definition = Type.union(Type.constant(1), Type.constant(2), Type.null());
 
-    const resolutionContext: ResolutionContext = {
-        getModelFromName: () => {
-            throw new Error();
-        },
-    };
+    const resolutionContext = createResolutionContext();
 
-    expect(model.validate(resolutionContext, 1)).toStrictEqual(true);
-    expect(model.validate(resolutionContext, 2)).toStrictEqual(true);
-    expect(model.validate(resolutionContext, null)).toStrictEqual(true);
+    expect(definition.validate(resolutionContext, 1)).toStrictEqual(true);
+    expect(definition.validate(resolutionContext, 2)).toStrictEqual(true);
+    expect(definition.validate(resolutionContext, null)).toStrictEqual(true);
 
-    expect(model.validate(resolutionContext, 3)).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, 3)).toStrictEqual(false);
 });

@@ -6,7 +6,7 @@ import { Replacer } from '../types';
 import { Model } from './Model';
 import { ModelFactory } from './ModelFactory';
 
-export class ObjectModel<T extends Record<string, unknown>> extends Model<T> {
+export class ObjectModel<T extends Record<string, unknown>> extends Model<T, ObjectDefinition<T>> {
     constructor(
         value: T,
         definition: ObjectDefinition<T>,
@@ -48,5 +48,15 @@ export class ObjectModel<T extends Record<string, unknown>> extends Model<T> {
 
     override getFixedProperty(key: string): Model<unknown> | undefined {
         return this.#propertyModels[key]?.value;
+    }
+
+    override clone(replace: Replacer<T>): Model<T, ObjectDefinition<T>> {
+        return new ObjectModel<T>(
+            this.value, 
+            this.definition, 
+            replace, 
+            this.depth, 
+            this.factory
+        );
     }
 }

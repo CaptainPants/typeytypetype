@@ -11,7 +11,7 @@ export abstract class DelegatingModel<
     constructor(
         value: T,
         definition: TDef,
-        replace: Replacer<unknown>,
+        replace: Replacer<T>,
         depth: number,
         factory: ModelFactory
     ) {
