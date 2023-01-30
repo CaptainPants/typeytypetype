@@ -1,7 +1,6 @@
 import { Definition } from '../definitions/Definition';
-import { descend } from '../internal/descend';
-import { ModelArchetype, Replacer } from '../types';
-import { createModel, ModelFactory } from './ModelFactory';
+import { Replacer } from '../types';
+import { ModelFactory } from './ModelFactory';
 
 export type ModelForObjectProperty<T, TKey> = TKey extends keyof T
     ? Model<T[TKey]>
@@ -11,10 +10,10 @@ export type ModelForElement<T> = T extends ReadonlyArray<infer S>
     ? Model<S>
     : undefined;
 
-export abstract class Model<T> {
+export abstract class Model<T, TDef extends Definition<T> = Definition<T>> {
     constructor(
         value: T,
-        definition: Definition<T>,
+        definition: TDef,
         replace: Replacer<T>,
         depth: number,
         factory: ModelFactory
@@ -27,7 +26,7 @@ export abstract class Model<T> {
     }
 
     #value: T;
-    #definition: Definition<T>;
+    #definition: TDef;
     #replace: Replacer<T>;
     #depth: number;
     #factory: ModelFactory;
@@ -36,9 +35,7 @@ export abstract class Model<T> {
         return this.#value;
     }
 
-    get type(): ModelArchetype;
-
-    get definition(): Definition<T> {
+    get definition(): TDef {
         return this.#definition;
     }
 
@@ -82,7 +79,7 @@ export abstract class Model<T> {
         throw new TypeError('Not supported');
     }
 
-    async deleteExpandoProperty(key: stringn): Promise<void> {
+    async deleteExpandoProperty(key: string): Promise<void> {
         throw new TypeError('Not supported');
     }
 

@@ -1,18 +1,17 @@
 import { ArrayDefinition } from '../definitions/ArrayDefinition';
-import { Definition } from '../definitions/Definition';
 import { descend } from '../internal/descend';
 import { Lazy } from '../Lazy';
 import { Replacer } from '../types';
 import { Model } from './Model';
 import { ModelFactory } from './ModelFactory';
 
-type ElementType<T> = T extends Array<infer S> ? S : never;
+type RemoveReadonlyArray<TArray> = TArray extends ReadonlyArray<infer S> ? S[] : TArray; 
 
-export class ArrayModel<T extends readonly unknown[]> extends Model<T> {
+export class ArrayModel<TArray extends unknown[]> extends Model<TArray> {
     constructor(
-        value: T,
-        definition: ArrayDefinition<T>,
-        replace: Replacer<T>,
+        value: TArray,
+        definition: ArrayDefinition<TArray>,
+        replace: Replacer<TArray>,
         depth: number,
         factory: ModelFactory
     ) {
@@ -45,9 +44,14 @@ export class ArrayModel<T extends readonly unknown[]> extends Model<T> {
         return this.#elementModels[index]?.value;
     }
 
-    override async spliceElements(index: number, removeCount: number, newElements: unknown[]): Promise<void> {
-        const copy = this.value.slice();
+    override async spliceElements(
+        index: number,
+        removeCount: number,
+        newElements: unknown[]
+    ): Promise<void> {
+        const copy = [...this.value];
         copy.splice(index, removeCount, ...newElements);
-        await this.replace(copy as any as T);
+        // Type system is fighting me
+        await this.replace(copy satisfies Array<TArray[number]> as TArray);
     }
 }

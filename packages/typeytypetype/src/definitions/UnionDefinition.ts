@@ -14,7 +14,11 @@ export class UnionDefinition<
 
     #definitions: MappedDefinition<TTypes>;
 
-    #getDefinition(value: unknown): Definition<unknown> | undefined {
+    get definitions(): MappedDefinition<TTypes> {
+        return this.#definitions;
+    }
+
+    getDefinition(value: unknown): Definition<unknown> | undefined {
         const context = createResolutionContext();
 
         return this.#definitions.find((x) => x.validate(context, value));
@@ -36,17 +40,5 @@ export class UnionDefinition<
         return this.#definitions
             .map((item) => `(${item.doToTypeString(descend(depth))}})`)
             .join(' | ');
-    }
-
-    override arrayElementDefinition(
-        value: number
-    ): Definition<unknown> | undefined {
-        const match = this.#getDefinition(value);
-
-        if (match === undefined) {
-            return undefined;
-        }
-
-        return match.arrayElementDefinition(value);
     }
 }

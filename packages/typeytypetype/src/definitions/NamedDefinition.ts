@@ -12,7 +12,7 @@ export class NamedDefinition<T> extends Definition<T> {
     public name: string;
     public definition: Definition<T> | undefined;
 
-    #getDefinition(): Definition<T> {
+    getDefinition(): Definition<T> {
         if (typeof this.definition === 'undefined')
             throw new Error('Model not provided.');
         return this.definition;
@@ -23,7 +23,7 @@ export class NamedDefinition<T> extends Definition<T> {
         value: unknown,
         depth: number
     ): boolean {
-        return this.#getDefinition().doValidate(
+        return this.getDefinition().doValidate(
             resolutionContext,
             value,
             descend(depth)
@@ -32,11 +32,5 @@ export class NamedDefinition<T> extends Definition<T> {
 
     override doToTypeString(depth: number): string {
         return this.name;
-    }
-
-    override arrayElementDefinition(
-        value: unknown
-    ): Definition<unknown> | undefined {
-        return this.#getDefinition().arrayElementDefinition(value);
     }
 }

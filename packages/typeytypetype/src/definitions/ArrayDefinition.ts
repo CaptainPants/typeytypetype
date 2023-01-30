@@ -3,7 +3,9 @@ import { ResolutionContext } from '../ResolutionContext.js';
 import { ElementType } from '../types.js';
 import { Definition } from './Definition.js';
 
-export class ArrayDefinition<T extends readonly unknown[]> extends Definition<T> {
+export class ArrayDefinition<
+    T extends readonly unknown[]
+> extends Definition<T> {
     constructor(itemModel: Definition<ElementType<T>>) {
         super();
         this.#elementDefinition = itemModel;

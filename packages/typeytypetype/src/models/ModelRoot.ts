@@ -1,16 +1,18 @@
 import { Definition } from '../definitions/Definition';
-import { createModel } from './ModelFactory';
 import { Model } from './Model';
+import { ModelFactory } from './ModelFactory';
 
 export class ModelRoot<T> {
-    constructor(root: T, definition: Definition<T>) {
-        this.#model = createModel(root, definition, this.#replacement, 25);
+    constructor(root: T, definition: Definition<T>, factory: ModelFactory) {
+        this.#model = factory.create(root, definition, this.#replacement, 25);
+        this.#factory = factory;
     }
 
     #model: Model<T>;
+    #factory: ModelFactory;
 
     #replacement = async (replacement: T): Promise<void> => {
-        const newRoot = createModel(
+        const newRoot = this.#factory.create(
             replacement,
             this.#model.definition,
             this.#replacement,

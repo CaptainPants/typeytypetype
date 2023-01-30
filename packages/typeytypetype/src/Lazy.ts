@@ -10,7 +10,9 @@ export class Lazy<T> {
     #value: T | undefined;
     #error: unknown;
 
-    get hasValue(): boolean { return this.#hasValue; }
+    get hasValue(): boolean {
+        return this.#hasValue;
+    }
 
     get value(): T {
         if (this.#error !== undefined) {
@@ -30,6 +32,4 @@ export class Lazy<T> {
     get hasFaulted(): boolean {
         return this.#error !== undefined;
     }
-
-
 }

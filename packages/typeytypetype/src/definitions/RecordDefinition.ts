@@ -2,7 +2,7 @@ import { descend } from '../internal/descend';
 import { ResolutionContext } from '../ResolutionContext';
 import { Definition } from './Definition';
 
-export class RecordTypedDefinition<TValue> extends Definition<
+export class RecordDefinition<TValue> extends Definition<
     Record<string, TValue>
 > {
     constructor(valueDefinition: Definition<TValue>) {
@@ -38,9 +38,5 @@ export class RecordTypedDefinition<TValue> extends Definition<
         return `Record<string, ${JSON.stringify(
             this.#valueDefinition.doToTypeString(descend(depth))
         )}>`;
-    }
-
-    override expandoPropertyType(): Definition<unknown> | undefined {
-        return this.#valueDefinition;
     }
 }
