@@ -1,17 +1,16 @@
 import { descend } from '../internal/descend.js';
 import { ResolutionContext } from '../ResolutionContext.js';
-import { ElementType } from '../types.js';
 import { Definition } from './Definition.js';
 
 export class ArrayDefinition<
-    T extends readonly unknown[]
-> extends Definition<T> {
-    constructor(itemModel: Definition<ElementType<T>>) {
+    TElement
+> extends Definition<TElement[]> {
+    constructor(elementDefinition: Definition<TElement>) {
         super();
-        this.#elementDefinition = itemModel;
+        this.#elementDefinition = elementDefinition;
     }
 
-    #elementDefinition: Definition<ElementType<T>>;
+    #elementDefinition: Definition<TElement>;
 
     override doValidate(
         resolutionContext: ResolutionContext,
@@ -39,7 +38,7 @@ export class ArrayDefinition<
         )}>`;
     }
 
-    getElementDefinition(): Definition<ElementType<T>> {
+    getElementDefinition(): Definition<TElement> {
         return this.#elementDefinition;
     }
 }

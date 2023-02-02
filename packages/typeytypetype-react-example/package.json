@@ -14,8 +14,8 @@
         "build": "yarn format && yarn lint && yarn test && yarn compile"
     },
     "dependencies": {
-        "@captainpants/typeytypetype": "workspace:*",
-        "@captainpants/typeytypetype-react": "workspace:*",
+        "@captainpants/typeytypetype": "*",
+        "@captainpants/typeytypetype-react": "*",
         "@types/react": "^18.0.27",
         "@types/react-dom": "^18.0.10"
     }

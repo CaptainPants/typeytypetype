@@ -2,14 +2,6 @@ import { Definition } from '../definitions/Definition';
 import { Replacer } from '../types';
 import { ModelFactory } from './ModelFactory';
 
-export type ModelForObjectProperty<T, TKey> = TKey extends keyof T
-    ? Model<T[TKey]>
-    : Model<unknown> | undefined;
-
-export type ModelForElement<T> = T extends ReadonlyArray<infer S>
-    ? Model<S>
-    : undefined;
-
 export abstract class Model<T, TDef extends Definition<T> = Definition<T>> {
     constructor(
         value: T,

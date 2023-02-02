@@ -48,8 +48,8 @@ export const Type = {
         return new ObjectDefinition(propertyDefinitions);
     },
 
-    array<T>(itemDefinition: Definition<T>): ArrayDefinition<T[]> {
-        return new ArrayDefinition(itemDefinition);
+    array<TElement>(elementDefinition: Definition<TElement>): ArrayDefinition<TElement> {
+        return new ArrayDefinition(elementDefinition);
     },
 
     named<TType>(name: string): NamedDefinition<TType> {

@@ -1,15 +1,16 @@
+
+import * as assert from 'typed-assert';
 import { ArrayDefinition } from '../definitions/ArrayDefinition';
 import { descend } from '../internal/descend';
-import { Lazy } from '../Lazy';
 import { Replacer } from '../types';
 import { Model } from './Model';
 import { ModelFactory } from './ModelFactory';
 
-export class ArrayModel<TArray extends unknown[]> extends Model<TArray, ArrayDefinition<TArray>> {
+export class ArrayModel<TElement> extends Model<TElement[], ArrayDefinition<TElement>> {
     constructor(
-        value: TArray,
-        definition: ArrayDefinition<TArray>,
-        replace: Replacer<TArray>,
+        value: TElement[],
+        definition: ArrayDefinition<TElement>,
+        replace: Replacer<TElement[]>,
         depth: number,
         factory: ModelFactory
     ) {
@@ -22,24 +23,29 @@ export class ArrayModel<TArray extends unknown[]> extends Model<TArray, ArrayDef
         for (let i = 0; i < value.length; ++i) {
             const capturedI = i;
 
-            const item = new Lazy(() => {
-                return factory.create(
-                    value[i],
-                    elementDefinition,
-                    async (newValue) => {
-                        await this.spliceElements(capturedI, 1, [newValue]);
-                    },
-                    descend(depth)
-                );
-            });
-            this.#elementModels.push(item);
+            const item = value[i];
+            assert.isNotUndefined(item);
+
+            const model = factory.create<TElement>(
+                item,
+                elementDefinition,
+                async (newValue) => {
+                    // use captured version of 'i'
+                    await this.spliceElements(capturedI, 1, [newValue]);
+                },
+                descend(depth)
+            );
+
+            this.#elementModels.push(model);
         }
     }
 
-    #elementModels: Array<Lazy<Model<unknown>>>;
+    #elementModels: Array<Model<TElement>>;
 
     override getElement(index: number): Model<unknown> | undefined {
-        return this.#elementModels[index]?.value;
+        const elementModel = this.#elementModels[index];
+
+        return elementModel as (Model<unknown> | undefined);
     }
 
     override async spliceElements(
@@ -48,18 +54,18 @@ export class ArrayModel<TArray extends unknown[]> extends Model<TArray, ArrayDef
         newElements: unknown[]
     ): Promise<void> {
         const copy = [...this.value];
-        copy.splice(index, removeCount, ...newElements);
+        copy.splice(index, removeCount, ...(newElements as TElement[]));
         // Type system is fighting me
-        await this.replace(copy satisfies Array<TArray[number]> as TArray);
+        await this.replace(copy);
     }
 
-    override clone(replace: Replacer<TArray>): Model<TArray, ArrayDefinition<TArray>> {
-        return new ArrayModel<TArray>(
+    override clone(replace: Replacer<TElement[]>): Model<TElement[], ArrayDefinition<TElement>> {
+        return new ArrayModel<TElement>(
             this.value, 
             this.definition, 
             replace, 
             this.depth, 
             this.factory
-        );
+        ) as any;
     }
 }
