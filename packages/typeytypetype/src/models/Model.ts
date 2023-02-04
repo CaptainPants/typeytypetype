@@ -1,37 +1,65 @@
 import { Definition } from '../definitions/Definition';
-import { ElementType, Replacer } from '../types';
 
-export type ModelOfElementType<T> = T extends unknown[] ? Model<ElementType<T>> : undefined;
-export type DefinitionOfElementType<T> = T extends unknown[] ? Definition<ElementType<T>> : undefined;
+type Maybe<T> = { [Key in keyof T]?: T[Key] };
 
-export interface Model<T, TDef extends Definition<T> = Definition<T>> {
-    get value(): T;
+type FixedPropertyType<T, TKey> = TKey extends keyof T ? T[TKey] : unknown;
 
-    get definition(): TDef;
+type ExpandoPropertyType<T> = T extends Record<string, infer S> ? S : unknown;
 
-    get replace(): (newValue: T) => Promise<void>;
+interface ArrayModelParts<TElementType> {
+    elementDefinition: () => Definition<TElementType>;
 
-    elementDefinition: () => DefinitionOfElementType<T>;
-
-    getElement: (index: number) => ModelOfElementType<T>| undefined;
+    getElement: (index: number) => Model<TElementType>;
 
     spliceElements: (
         index: number,
         removeCount: number,
-        newElements: Array<ElementType<T, unknown>>
-    ) => Promise<void>;
-
-    expandoPropertyDefinition: () => Definition<unknown> | undefined;
-
-    getExpandoProperty: (key: string) => Model<unknown> | undefined;
-
-    setExpandoProperty: (key: string, value: unknown) => Promise<void>;
-
-    deleteExpandoProperty: (key: string) => Promise<void>;
-
-    fixedPropertyDefinition: (key: string) => Definition<unknown> | undefined;
-
-    getFixedProperty: (key: string) => Model<unknown> | undefined;
-
-    clone: (replace: Replacer<T>) => Model<T, TDef>;
+        newElements: TElementType[]
+    ) => Promise<Model<TElementType[]>>;
 }
+
+interface ObjectModelParts<T> {
+    getFixedProperty: <TKey extends string>(
+        key: TKey
+    ) => Model<FixedPropertyType<T, TKey>>;
+
+    setFixedProperty: <TKey extends string>(
+        key: TKey,
+        value: FixedPropertyType<T, TKey>
+    ) => Promise<Model<T>>;
+
+    expandoPropertyDefinition: (
+        key: string
+    ) => Definition<ExpandoPropertyType<T>>;
+
+    getExpandoProperty: (
+        key: string
+    ) => Model<ExpandoPropertyType<T>> | undefined;
+
+    setExpandoProperty: (
+        key: string,
+        value: ExpandoPropertyType<T>
+    ) => Promise<Model<T>>;
+}
+
+type UnknownParts = Maybe<ArrayModelParts<unknown> & ObjectModelParts<unknown>>;
+
+export interface ModelCommon<T, TDef extends Definition<T>> {
+    readonly value: T;
+    readonly definition: TDef;
+    /**
+     * Basically just for the original definition when looking at a union.
+     */
+    readonly originalDefinition: Definition<T>;
+}
+
+export type Model<T, TDef extends Definition<T> = Definition<T>> = ModelCommon<
+    T,
+    TDef
+> &
+    (T extends Array<infer S>
+        ? ArrayModelParts<S>
+        : T extends object
+        ? ObjectModelParts<T>
+        : unknown) &
+    (unknown extends T ? UnknownParts : unknown);

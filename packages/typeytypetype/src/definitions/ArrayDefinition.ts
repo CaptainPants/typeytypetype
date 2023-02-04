@@ -2,9 +2,7 @@ import { descend } from '../internal/descend.js';
 import { ResolutionContext } from '../ResolutionContext.js';
 import { Definition } from './Definition.js';
 
-export class ArrayDefinition<
-    TElement
-> extends Definition<TElement[]> {
+export class ArrayDefinition<TElement> extends Definition<TElement[]> {
     constructor(elementDefinition: Definition<TElement>) {
         super();
         this.#elementDefinition = elementDefinition;

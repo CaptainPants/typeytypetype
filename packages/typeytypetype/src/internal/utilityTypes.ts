@@ -43,3 +43,10 @@ export type TupleToIntersection<TArgs extends readonly unknown[]> =
 //   : TArgs extends [infer First, ...infer Rest]
 //   ? First & Intersect<Rest>
 //   : never;
+
+export type If<
+    Subtype,
+    Supertype,
+    Success,
+    Failure = never
+> = Subtype extends Supertype ? Success : Failure;

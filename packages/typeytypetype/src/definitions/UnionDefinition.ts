@@ -18,10 +18,16 @@ export class UnionDefinition<
         return this.#definitions;
     }
 
-    getDefinition(value: unknown): Definition<unknown> | undefined {
+    getDefinition(
+        value: TTypes[number]
+    ): Definition<TTypes[number]> | undefined {
         const context = createResolutionContext();
 
-        return this.#definitions.find((x) => x.validate(context, value));
+        // This is showing as Definition<unknown> so I'm not sure why its not an error to return it as
+        // a Definition<TTypes[number]>
+        const match = this.#definitions.find((x) => x.validate(context, value));
+
+        return match;
     }
 
     override doValidate(

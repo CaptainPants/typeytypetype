@@ -17,7 +17,7 @@ module.exports = {
         tsconfigRootDir: __dirname,
     },
     rules: {
-        "typescript-eslint/promise-function-async": ["Off"]
+        'typescript-eslint/promise-function-async': ['Off'],
     },
     settings: {
         'import/resolver': {

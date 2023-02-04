@@ -1,7 +1,12 @@
 import { Definition } from '../definitions/Definition';
 import { Model } from './Model';
-import { ModelFactoryArgs } from './types';
+
+export interface ModelFactoryArgs<T> {
+    value: T;
+    definition: Definition<T>;
+    depth: number;
+}
 
 export interface ModelFactory {
-    create: <T, TDef extends Definition<T> = Definition<T>>(args: ModelFactoryArgs<T, TDef>) => Model<T, TDef>;
+    create: <T>(args: ModelFactoryArgs<T>) => Model<T>;
 }

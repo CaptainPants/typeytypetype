@@ -48,7 +48,9 @@ export const Type = {
         return new ObjectDefinition(propertyDefinitions);
     },
 
-    array<TElement>(elementDefinition: Definition<TElement>): ArrayDefinition<TElement> {
+    array<TElement>(
+        elementDefinition: Definition<TElement>
+    ): ArrayDefinition<TElement> {
         return new ArrayDefinition(elementDefinition);
     },
 

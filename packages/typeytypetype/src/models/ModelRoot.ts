@@ -4,7 +4,7 @@ import { ModelFactory } from './ModelFactory';
 
 export class ModelRoot<T> {
     constructor(root: T, definition: Definition<T>, factory: ModelFactory) {
-        this.#model = factory.create({ value: root, definition, replace: this.#replacement, depth: 25});
+        this.#model = factory.create({ value: root, definition, depth: 25 });
         this.#factory = factory;
     }
 
@@ -15,8 +15,7 @@ export class ModelRoot<T> {
         const newRoot = this.#factory.create({
             value: replacement,
             definition: this.#model.definition,
-            replace: this.#replacement,
-            depth: 25
+            depth: 25,
         });
         await this.onChange?.(newRoot);
         this.#model = newRoot;

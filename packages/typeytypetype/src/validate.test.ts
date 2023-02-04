@@ -1,6 +1,5 @@
 import { expect, test } from '@jest/globals';
 import { Type } from './Type.js';
-import { ResolutionContext } from './ResolutionContext.js';
 import { createResolutionContext } from './createResolutionContext.js';
 
 test('constant', () => {
@@ -76,7 +75,9 @@ test('array', () => {
     const resolutionContext = createResolutionContext();
 
     expect(definition.validate(resolutionContext, [1, 2])).toStrictEqual(true);
-    expect(definition.validate(resolutionContext, ['test', 2])).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, ['test', 2])).toStrictEqual(
+        false
+    );
     expect(definition.validate(resolutionContext, 1)).toStrictEqual(false);
 });
 
@@ -96,12 +97,18 @@ test('object', () => {
             roles: ['Administrator'],
         })
     ).toStrictEqual(true);
-    expect(definition.validate(resolutionContext, { id: 1 })).toStrictEqual(false);
+    expect(definition.validate(resolutionContext, { id: 1 })).toStrictEqual(
+        false
+    );
     expect(definition.toTypeString()).toMatchSnapshot();
 });
 
 test('union', () => {
-    const definition = Type.union(Type.constant(1), Type.constant(2), Type.null());
+    const definition = Type.union(
+        Type.constant(1),
+        Type.constant(2),
+        Type.null()
+    );
 
     const resolutionContext = createResolutionContext();
 
