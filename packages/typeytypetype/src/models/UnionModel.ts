@@ -9,7 +9,7 @@ import { ModelCreationArgs } from './types';
 
 export class UnionModel<
     TTypes extends readonly unknown[]
-> extends DelegatingModel<TTypes[number], Definition<unknown>> {
+> extends DelegatingModel<TTypes[number], Definition<TTypes[number]>> {
     constructor(
         args: ModelCreationArgs<TTypes[number], UnionDefinition<TTypes>>
     ) {
@@ -18,7 +18,7 @@ export class UnionModel<
             throw new TypeError('Unexpected');
         }
 
-        const model = args.factory.create({
+        const model = args.factory.create<TTypes[number], Definition<TTypes[number]>>({
             value: args.value,
             definition: matchingDefinition,
             replace: args.replace,
@@ -36,15 +36,11 @@ export class UnionModel<
     #originalDefinition: UnionDefinition<TTypes>;
     #depth: number;
     #factory: ModelFactory;
-    #replace: Replacer<TTypes>;
+    #replace: Replacer<TTypes[number]>;
 
-    get replace(): Replacer<unknown> { 
-        return async (newValue: unknown) => {
-            await this.#replace(newValue as TTypes);
-        };
-    }
+    get replace(): Replacer<TTypes[number]> { return this.#replace; }
 
-    override clone(replace: Replacer<TTypes[number]>): Model<TTypes[number], Definition<unknown>> {
+    override clone(replace: Replacer<TTypes[number]>): Model<TTypes[number], Definition<TTypes[number]>> {
         return new UnionModel<TTypes>({
             value: this.value, 
             definition: this.#originalDefinition, 

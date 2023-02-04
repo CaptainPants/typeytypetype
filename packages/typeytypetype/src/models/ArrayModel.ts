@@ -3,7 +3,7 @@ import * as assert from 'typed-assert';
 import { ArrayDefinition } from '../definitions/ArrayDefinition';
 import { descend } from '../internal/descend';
 import { Replacer } from '../types';
-import { Model } from './Model';
+import { Model, ModelOfElementType } from './Model';
 import { ModelBase } from './ModelBase';
 import { ModelCreationArgs } from './types';
 
@@ -39,9 +39,9 @@ export class ArrayModel<TElement> extends ModelBase<TElement[], ArrayDefinition<
 
     #elementModels: Array<Model<TElement>>;
 
-    override getElement(index: number): Model<TElement> | undefined {
+    override getElement(index: number): ModelOfElementType<TElement[]> | undefined {
         const elementModel = this.#elementModels[index];
-
+        
         return elementModel;
     }
 

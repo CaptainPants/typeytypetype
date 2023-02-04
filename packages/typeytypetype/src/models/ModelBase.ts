@@ -1,6 +1,6 @@
 import { Definition } from '../definitions/Definition';
 import { ElementType, Replacer } from '../types';
-import { Model } from './Model';
+import { DefinitionOfElementType, Model, ModelOfElementType } from './Model';
 import { ModelFactory } from './ModelFactory';
 import { ModelCreationArgs } from './types';
 
@@ -44,18 +44,19 @@ export abstract class ModelBase<T, TDef extends Definition<T> = Definition<T>> i
         return this.#factory;
     }
 
-    elementDefinition(): Definition<ElementType<T>> | undefined {
+    elementDefinition(): DefinitionOfElementType<T> {
+        // @ts-expect-error -- We're cheating the type system slightly here
         return undefined;
     }
 
-    getElement(index: number): Model<ElementType<T>> | undefined {
+    getElement(index: number): ModelOfElementType<T> | undefined {
         return undefined;
     }
 
     async spliceElements(
         index: number,
         removeCount: number,
-        newElements: Array<ElementType<T>>
+        newElements: Array<ElementType<T, unknown>>
     ): Promise<void> {
         throw new TypeError('Not supported');
     }

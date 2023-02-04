@@ -15,7 +15,7 @@ test('array', async () => {
 
     const input = [1, 2, 3];
 
-    const model = factory.create(input, definition, replace, StandardModelFactory.defaultMaxDepth);
+    const model = factory.create({ value: input, definition, replace, depth: StandardModelFactory.defaultMaxDepth });
 
     await model.spliceElements(1, 0, [6, 7]);
 

@@ -1,6 +1,6 @@
 import { Definition } from '../definitions/Definition';
 import { ElementType, Replacer } from '../types';
-import { Model } from './Model';
+import { DefinitionOfElementType, Model, ModelOfElementType } from './Model';
 export abstract class DelegatingModel<
     T,
     TDef extends Definition<T> = Definition<T>
@@ -17,18 +17,18 @@ export abstract class DelegatingModel<
     get definition(): TDef { return this.#model.definition; }
     abstract get replace(): Replacer<T>;
 
-    elementDefinition(): Definition<ElementType<T>> | undefined {
+    elementDefinition(): DefinitionOfElementType<T> {
         return this.#model.elementDefinition();
     }
 
-    getElement(index: number): Model<ElementType<T>> | undefined {
+    getElement(index: number): ModelOfElementType<T> | undefined {
         return this.#model.getElement(index);
     }
 
     async spliceElements(
         index: number,
         removeCount: number,
-        newElements: Array<ElementType<T>>
+        newElements: Array<ElementType<T, unknown>>
     ): Promise<void> {
         await this.#model.spliceElements(index, removeCount, newElements);
     }

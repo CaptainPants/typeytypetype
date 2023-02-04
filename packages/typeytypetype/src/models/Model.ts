@@ -1,6 +1,9 @@
 import { Definition } from '../definitions/Definition';
 import { ElementType, Replacer } from '../types';
 
+export type ModelOfElementType<T> = T extends unknown[] ? Model<ElementType<T>> : undefined;
+export type DefinitionOfElementType<T> = T extends unknown[] ? Definition<ElementType<T>> : undefined;
+
 export interface Model<T, TDef extends Definition<T> = Definition<T>> {
     get value(): T;
 
@@ -8,14 +11,14 @@ export interface Model<T, TDef extends Definition<T> = Definition<T>> {
 
     get replace(): (newValue: T) => Promise<void>;
 
-    elementDefinition: () => Definition<ElementType<T>> | undefined;
+    elementDefinition: () => DefinitionOfElementType<T>;
 
-    getElement: (index: number) => Model<ElementType<T>> | undefined;
+    getElement: (index: number) => ModelOfElementType<T>| undefined;
 
     spliceElements: (
         index: number,
         removeCount: number,
-        newElements: Array<ElementType<T>>
+        newElements: Array<ElementType<T, unknown>>
     ) => Promise<void>;
 
     expandoPropertyDefinition: () => Definition<unknown> | undefined;
