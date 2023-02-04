@@ -1,24 +1,19 @@
 import { Definition } from '../definitions/Definition';
+import { ExpandoPropertyType, FixedPropertyType, Maybe } from './internal/types';
 
-type Maybe<T> = { [Key in keyof T]?: T[Key] };
-
-type FixedPropertyType<T, TKey> = TKey extends keyof T ? T[TKey] : unknown;
-
-type ExpandoPropertyType<T> = T extends Record<string, infer S> ? S : unknown;
-
-interface ArrayModelParts<TElementType> {
+export interface ArrayModelParts<TElementType> {
     elementDefinition: () => Definition<TElementType>;
 
-    getElement: (index: number) => Model<TElementType>;
+    getElement: (index: number) => Model<TElementType> | undefined;
 
     spliceElements: (
-        index: number,
-        removeCount: number,
+        start: number,
+        deleteCount: number,
         newElements: TElementType[]
     ) => Promise<Model<TElementType[]>>;
 }
 
-interface ObjectModelParts<T> {
+export interface ObjectModelParts<T> {
     getFixedProperty: <TKey extends string>(
         key: TKey
     ) => Model<FixedPropertyType<T, TKey>>;
@@ -28,9 +23,7 @@ interface ObjectModelParts<T> {
         value: FixedPropertyType<T, TKey>
     ) => Promise<Model<T>>;
 
-    expandoPropertyDefinition: (
-        key: string
-    ) => Definition<ExpandoPropertyType<T>>;
+    expandoPropertyDefinition: () => Definition<ExpandoPropertyType<T>> | undefined;
 
     getExpandoProperty: (
         key: string
@@ -44,21 +37,20 @@ interface ObjectModelParts<T> {
 
 type UnknownParts = Maybe<ArrayModelParts<unknown> & ObjectModelParts<unknown>>;
 
-export interface ModelCommon<T, TDef extends Definition<T>> {
+export interface ModelCommon<T, TDefinition extends Definition<T> = Definition<T>> {
     readonly value: T;
-    readonly definition: TDef;
+    readonly definition: TDefinition;
     /**
      * Basically just for the original definition when looking at a union.
      */
     readonly originalDefinition: Definition<T>;
 }
 
-export type Model<T, TDef extends Definition<T> = Definition<T>> = ModelCommon<
-    T,
-    TDef
+export type Model<T> = ModelCommon<
+    T
 > &
-    (T extends Array<infer S>
-        ? ArrayModelParts<S>
+    (T extends Array<infer TElementType>
+        ? ArrayModelParts<TElementType>
         : T extends object
         ? ObjectModelParts<T>
         : unknown) &

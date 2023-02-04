@@ -14,9 +14,9 @@ test('array', async () => {
         definition,
         depth: StandardModelFactory.defaultMaxDepth,
     });
-    console.log(model);
-    // const result = await model.spliceElements(1, 0, [6, 7]);
+    
+    const result = await model.spliceElements(1, 0, [6, 7]);
 
-    // expect(input).toStrictEqual([1, 2, 3]);
-    // expect(result).toStrictEqual([1, 6, 7, 2, 3]);
+    expect(input).toStrictEqual([1, 2, 3]);
+    expect(result.value).toStrictEqual([1, 6, 7, 2, 3]);
 });
