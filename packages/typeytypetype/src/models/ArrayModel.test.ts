@@ -9,8 +9,12 @@ test('array', async () => {
 
     const input = [1, 2, 3];
 
-    const model = factory.create({ value: input, definition, depth: StandardModelFactory.defaultMaxDepth });
-console.log(model)
+    const model = factory.create({
+        value: input,
+        definition,
+        depth: StandardModelFactory.defaultMaxDepth,
+    });
+    console.log(model);
     // const result = await model.spliceElements(1, 0, [6, 7]);
 
     // expect(input).toStrictEqual([1, 2, 3]);

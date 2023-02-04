@@ -22,7 +22,7 @@ export class StandardModelFactory {
             definition = args.definition;
         }
 
-        const res: ModelCommon<T, Definition<T>> = {
+        const model: ModelCommon<T, Definition<T>> = {
             value: args.value,
             definition,
             originalDefinition: args.definition,
@@ -41,7 +41,7 @@ export class StandardModelFactory {
                 })
             );
 
-            Object.defineProperties(typedValue, {
+            Object.defineProperties(model, {
                 elementDefinition: {
                     configurable: false,
                     enumerable: true,
@@ -93,7 +93,7 @@ export class StandardModelFactory {
                 });
             }
 
-            Object.defineProperties(typedValue, {
+            Object.defineProperties(model, {
                 getFixedProperty: {
                     configurable: false,
                     enumerable: false,
@@ -149,7 +149,7 @@ export class StandardModelFactory {
             });
         }
 
-        return res as any;
+        return model as any;
     }
 
     static readonly defaultMaxDepth = 25;
