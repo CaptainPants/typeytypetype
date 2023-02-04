@@ -1,71 +1,66 @@
 import { Definition } from '../definitions/Definition';
-import { Lazy } from '../Lazy';
-import { Replacer } from '../types';
+import { ElementType, Replacer } from '../types';
 import { Model } from './Model';
-import { ModelFactory } from './ModelFactory';
-
 export abstract class DelegatingModel<
     T,
     TDef extends Definition<T> = Definition<T>
-> extends Model<T, TDef> {
+> implements Model<T, TDef> {
     constructor(
-        value: T,
-        definition: TDef,
-        replace: Replacer<T>,
-        depth: number,
-        factory: ModelFactory
+        model: Model<T, TDef>
     ) {
-        super(value, definition, replace, depth, factory);
-
-        this.#model = new Lazy(() => this.createModel());
+        this.#model = model;
     }
 
-    #model: Lazy<Model<unknown>>;
+    #model: Model<T, TDef>;
 
-    protected abstract createModel(): Model<unknown>;
+    get value(): T { return this.#model.value; }
+    get definition(): TDef { return this.#model.definition; }
+    abstract get replace(): Replacer<T>;
 
-    override elementDefinition(): Definition<unknown> | undefined {
-        return this.#model.value.elementDefinition();
+    elementDefinition(): Definition<ElementType<T>> | undefined {
+        return this.#model.elementDefinition();
     }
 
-    override getElement(index: number): Model<unknown> | undefined {
-        return this.#model.value.getElement(index);
+    getElement(index: number): Model<ElementType<T>> | undefined {
+        return this.#model.getElement(index);
     }
 
-    override async spliceElements(
+    async spliceElements(
         index: number,
         removeCount: number,
-        newElements: unknown[]
+        newElements: Array<ElementType<T>>
     ): Promise<void> {
-        await this.#model.value.spliceElements(index, removeCount, newElements);
+        await this.#model.spliceElements(index, removeCount, newElements);
     }
 
-    override expandoPropertyDefinition(): Definition<unknown> | undefined {
-        return this.#model.value.expandoPropertyDefinition();
+    expandoPropertyDefinition(): Definition<unknown> | undefined {
+        return this.#model.expandoPropertyDefinition();
     }
 
-    override getExpandoProperty(key: string): Model<unknown> | undefined {
-        return this.#model.value.getExpandoProperty(key);
+    getExpandoProperty(key: string): Model<unknown> | undefined {
+        return this.#model.getExpandoProperty(key);
     }
 
-    override async setExpandoProperty(
+    async setExpandoProperty(
         key: string,
         value: unknown
     ): Promise<void> {
-        await this.#model.value.setExpandoProperty(key, value);
+        await this.#model.setExpandoProperty(key, value);
     }
 
-    override async deleteExpandoProperty(key: string): Promise<void> {
-        await this.#model.value.deleteExpandoProperty(key);
+    async deleteExpandoProperty(key: string): Promise<void> {
+        await this.#model.deleteExpandoProperty(key);
     }
 
-    override fixedPropertyDefinition(
+    fixedPropertyDefinition(
         key: string
     ): Definition<unknown> | undefined {
-        return this.#model.value.fixedPropertyDefinition(key);
+        return this.#model.fixedPropertyDefinition(key);
     }
 
-    override getFixedProperty(key: string): Model<unknown> | undefined {
-        return this.#model.value.getFixedProperty(key);
+    getFixedProperty(key: string): Model<unknown> | undefined {
+        return this.#model.getFixedProperty(key);
     }
+
+    abstract clone(replacer: Replacer<T>): Model<T, TDef>;
 }

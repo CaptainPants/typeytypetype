@@ -1,6 +1,7 @@
 import { Definition } from '../definitions/Definition';
 import { Replacer } from '../types';
 import { Model } from './Model';
+import { ModelBase } from './ModelBase';
 import { ModelFactory } from './ModelFactory';
 
 type SimpleType = string | number | boolean | Date | undefined | null;
@@ -8,7 +9,7 @@ type SimpleConstructor<T extends SimpleType> = new (value: T, definition: Defini
 
 export abstract class SimpleModel<
     T extends SimpleType
-> extends Model<T> {
+> extends ModelBase<T> {
     override clone(replace: Replacer<T>): Model<T> {
         const Constructor = (this.constructor as (SimpleConstructor<T>));
         return new Constructor(

@@ -2,8 +2,9 @@ import { Definition } from '../definitions/Definition';
 import { RecordDefinition } from '../definitions/RecordDefinition';
 import { Replacer } from '../types';
 import { Model } from './Model';
+import { ModelBase } from './ModelBase';
 
-export class RecordModel<TValue> extends Model<Record<string, TValue>, RecordDefinition<TValue>> {
+export class RecordModel<TValue> extends ModelBase<Record<string, TValue>, RecordDefinition<TValue>> {
     override expandoPropertyDefinition(): Definition<unknown> | undefined {
         throw new Error();
     }
@@ -24,12 +25,12 @@ export class RecordModel<TValue> extends Model<Record<string, TValue>, RecordDef
     }
 
     override clone(replace: Replacer<Record<string, TValue>>): Model<Record<string, TValue>, RecordDefinition<TValue>> {
-        return new RecordModel<TValue>(
-            this.value, 
-            this.definition, 
+        return new RecordModel<TValue>({
+            value: this.value, 
+            definition: this.definition, 
             replace, 
-            this.depth, 
-            this.factory
-        );
+            depth: this.depth, 
+            factory: this.factory
+        });
     }
 }

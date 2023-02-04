@@ -1,87 +1,34 @@
 import { Definition } from '../definitions/Definition';
-import { Replacer } from '../types';
-import { ModelFactory } from './ModelFactory';
+import { ElementType, Replacer } from '../types';
 
-export abstract class Model<T, TDef extends Definition<T> = Definition<T>> {
-    constructor(
-        value: T,
-        definition: TDef,
-        replace: Replacer<T>,
-        depth: number,
-        factory: ModelFactory
-    ) {
-        this.#value = value;
-        this.#definition = definition;
-        this.#replace = replace;
-        this.#depth = depth;
-        this.#factory = factory;
-    }
+export interface Model<T, TDef extends Definition<T> = Definition<T>> {
+    get value(): T;
 
-    #value: T;
-    #definition: TDef;
-    #replace: Replacer<T>;
-    #depth: number;
-    #factory: ModelFactory;
+    get definition(): TDef;
 
-    get value(): T {
-        return this.#value;
-    }
+    get replace(): (newValue: T) => Promise<void>;
 
-    get definition(): TDef {
-        return this.#definition;
-    }
+    elementDefinition: () => Definition<ElementType<T>> | undefined;
 
-    get replace(): (newValue: T) => Promise<void> {
-        return this.#replace;
-    }
+    getElement: (index: number) => Model<ElementType<T>> | undefined;
 
-    get depth(): number {
-        return this.#depth;
-    }
-
-    get factory(): ModelFactory {
-        return this.#factory;
-    }
-
-    elementDefinition(): Definition<unknown> | undefined {
-        return undefined;
-    }
-
-    getElement(index: number): Model<unknown> | undefined {
-        return undefined;
-    }
-
-    async spliceElements(
+    spliceElements: (
         index: number,
         removeCount: number,
-        newElements: unknown[]
-    ): Promise<void> {
-        throw new TypeError('Not supported');
-    }
+        newElements: Array<ElementType<T>>
+    ) => Promise<void>;
 
-    expandoPropertyDefinition(): Definition<unknown> | undefined {
-        return undefined;
-    }
+    expandoPropertyDefinition: () => Definition<unknown> | undefined;
 
-    getExpandoProperty(key: string): Model<unknown> | undefined {
-        return undefined;
-    }
+    getExpandoProperty: (key: string) => Model<unknown> | undefined;
 
-    async setExpandoProperty(key: string, value: unknown): Promise<void> {
-        throw new TypeError('Not supported');
-    }
+    setExpandoProperty: (key: string, value: unknown) => Promise<void>;
 
-    async deleteExpandoProperty(key: string): Promise<void> {
-        throw new TypeError('Not supported');
-    }
+    deleteExpandoProperty: (key: string) => Promise<void>;
 
-    fixedPropertyDefinition(key: string): Definition<unknown> | undefined {
-        return undefined;
-    }
+    fixedPropertyDefinition: (key: string) => Definition<unknown> | undefined;
 
-    getFixedProperty(key: string): Model<unknown> | undefined {
-        return undefined;
-    }
+    getFixedProperty: (key: string) => Model<unknown> | undefined;
 
-    abstract clone(replace: Replacer<T>): Model<T, TDef>;
+    clone: (replace: Replacer<T>) => Model<T, TDef>;
 }

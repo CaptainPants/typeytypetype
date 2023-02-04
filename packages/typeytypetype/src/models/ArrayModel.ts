@@ -4,37 +4,34 @@ import { ArrayDefinition } from '../definitions/ArrayDefinition';
 import { descend } from '../internal/descend';
 import { Replacer } from '../types';
 import { Model } from './Model';
-import { ModelFactory } from './ModelFactory';
+import { ModelBase } from './ModelBase';
+import { ModelCreationArgs } from './types';
 
-export class ArrayModel<TElement> extends Model<TElement[], ArrayDefinition<TElement>> {
+export class ArrayModel<TElement> extends ModelBase<TElement[], ArrayDefinition<TElement>> {
     constructor(
-        value: TElement[],
-        definition: ArrayDefinition<TElement>,
-        replace: Replacer<TElement[]>,
-        depth: number,
-        factory: ModelFactory
+        args: ModelCreationArgs<TElement[], ArrayDefinition<TElement>>
     ) {
-        super(value, definition, replace, depth, factory);
+        super(args);
 
         this.#elementModels = [];
 
-        const elementDefinition = definition.getElementDefinition();
+        const elementDefinition = super.definition.getElementDefinition();
 
-        for (let i = 0; i < value.length; ++i) {
+        for (let i = 0; i < super.value.length; ++i) {
             const capturedI = i;
 
-            const item = value[i];
+            const item = super.value[i];
             assert.isNotUndefined(item);
 
-            const model = factory.create<TElement>(
-                item,
-                elementDefinition,
-                async (newValue) => {
+            const model = super.factory.create<TElement>({
+                value: item,
+                definition: elementDefinition,
+                replace: async (newValue) => {
                     // use captured version of 'i'
                     await this.spliceElements(capturedI, 1, [newValue]);
                 },
-                descend(depth)
-            );
+                depth: descend(super.depth)
+        });
 
             this.#elementModels.push(model);
         }
@@ -42,30 +39,30 @@ export class ArrayModel<TElement> extends Model<TElement[], ArrayDefinition<TEle
 
     #elementModels: Array<Model<TElement>>;
 
-    override getElement(index: number): Model<unknown> | undefined {
+    override getElement(index: number): Model<TElement> | undefined {
         const elementModel = this.#elementModels[index];
 
-        return elementModel as (Model<unknown> | undefined);
+        return elementModel;
     }
 
     override async spliceElements(
         index: number,
         removeCount: number,
-        newElements: unknown[]
+        newElements: TElement[]
     ): Promise<void> {
         const copy = [...this.value];
-        copy.splice(index, removeCount, ...(newElements as TElement[]));
+        copy.splice(index, removeCount, ...(newElements ));
         // Type system is fighting me
         await this.replace(copy);
     }
 
     override clone(replace: Replacer<TElement[]>): Model<TElement[], ArrayDefinition<TElement>> {
-        return new ArrayModel<TElement>(
-            this.value, 
-            this.definition, 
+        return new ArrayModel<TElement>({
+            value: this.value, 
+            definition: this.definition, 
             replace, 
-            this.depth, 
-            this.factory
-        ) as any;
+            depth: this.depth, 
+            factory: this.factory
+        });
     }
 }

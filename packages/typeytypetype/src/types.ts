@@ -14,4 +14,4 @@ export type ModelArchetype =
 
 export type Replacer<T> = (value: T) => Promise<void>;
 
-export type ElementType<T> = T extends Array<infer S> ? S : never;
+export type ElementType<T> = T extends Array<infer S> ? S : unknown;

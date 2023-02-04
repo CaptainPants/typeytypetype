@@ -1,11 +1,7 @@
 import { Definition } from '../definitions/Definition';
 import { Model } from './Model';
+import { ModelFactoryArgs } from './types';
 
 export interface ModelFactory {
-    create: <T>(
-        value: T,
-        definition: Definition<T>,
-        replaced: (newValue: T) => Promise<void>,
-        depth: number
-    ) => Model<T>;
+    create: <T, TDef extends Definition<T> = Definition<T>>(args: ModelFactoryArgs<T, TDef>) => Model<T, TDef>;
 }
