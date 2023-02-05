@@ -14,7 +14,7 @@ test('array', async () => {
         definition,
         depth: StandardModelFactory.defaultMaxDepth,
     });
-    
+
     const result = await model.spliceElements(1, 0, [6, 7]);
 
     expect(input).toStrictEqual([1, 2, 3]);

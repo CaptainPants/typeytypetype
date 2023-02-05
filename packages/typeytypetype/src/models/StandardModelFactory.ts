@@ -6,6 +6,7 @@ import { descend } from '../internal/descend';
 import { ArrayModelImpl } from './internal/ArrayModelImpl';
 import { ModelImpl } from './internal/ModelImpl';
 import { ObjectModelImpl } from './internal/ObjectModelImpl';
+import { RecordModelImpl } from './internal/RecordModelImpl';
 import { Model } from './Model';
 import { ModelFactoryArgs } from './ModelFactory';
 
@@ -33,8 +34,7 @@ export class StandardModelFactory {
                 descend(args.depth),
                 this
             ) as any;
-        }
-        else if (args.definition instanceof ObjectDefinition) {
+        } else if (args.definition instanceof ObjectDefinition) {
             return new ObjectModelImpl(
                 args.value,
                 definition as any,
@@ -42,8 +42,15 @@ export class StandardModelFactory {
                 descend(args.depth),
                 this
             ) as any;
-        }
-        else {
+        } else if (args.definition instanceof ObjectDefinition) {
+            return new RecordModelImpl<any>(
+                args.value as any,
+                definition as any,
+                args.definition,
+                descend(args.depth),
+                this
+            ) as any;
+        } else {
             return new ModelImpl(
                 args.value,
                 definition,
