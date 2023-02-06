@@ -1,5 +1,5 @@
-import { TypeFromDefinition } from '../../types.js';
-import { Definition } from '../Definition.js';
+import { type TypeFromDefinition } from '../../types.js';
+import { type Definition } from '../Definition.js';
 
 export type MappedTypeFromDefinition<T> = {
     [TKey in keyof T]: TypeFromDefinition<T[TKey]>;

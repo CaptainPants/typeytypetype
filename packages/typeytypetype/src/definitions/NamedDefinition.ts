@@ -1,6 +1,6 @@
 import { descend } from '../internal/descend.js';
 import { Definition } from './Definition.js';
-import { ResolutionContext } from './ResolutionContext.js';
+import { type ResolutionContext } from './ResolutionContext.js';
 
 export class NamedDefinition<T> extends Definition<T> {
     constructor(name: string, model?: Definition<T>) {

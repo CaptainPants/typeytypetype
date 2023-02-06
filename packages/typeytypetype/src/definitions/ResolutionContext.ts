@@ -1,4 +1,4 @@
-import { Definition } from './Definition.js';
+import { type Definition } from './Definition.js';
 
 export interface ResolutionContext {
     getDefinitionFromName: (name: string) => Definition<unknown>;

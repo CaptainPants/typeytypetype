@@ -1,9 +1,9 @@
 import { descend } from '../internal/descend.js';
-import { FixedPropertyType } from '../models/internal/types.js';
-import { ResolutionContext } from './ResolutionContext.js';
-import { Definition } from './Definition.js';
+import { type FixedPropertyType } from '../models/internal/types.js';
+import { type ResolutionContext } from './ResolutionContext.js';
+import { type Definition } from './Definition.js';
 import { ObjectDefinition } from './ObjectDefinition.js';
-import { MappedDefinition } from './internal/types.js';
+import { type MappedDefinition } from './internal/types.js';
 
 export class RigidObjectDefinition<
     TObject extends Record<string, unknown>

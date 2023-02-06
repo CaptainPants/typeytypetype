@@ -1,6 +1,6 @@
 import { descend } from '../internal/descend.js';
-import { MappedDefinition } from './internal/types.js';
-import { ResolutionContext } from './ResolutionContext.js';
+import { type MappedDefinition } from './internal/types.js';
+import { type ResolutionContext } from './ResolutionContext.js';
 import { Definition } from './Definition.js';
 
 export class UnionDefinition<

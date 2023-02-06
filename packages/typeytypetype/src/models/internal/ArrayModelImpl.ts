@@ -1,8 +1,8 @@
-import { ArrayDefinition } from '../../definitions/ArrayDefinition.js';
-import { Definition } from '../../definitions/Definition.js';
+import { type ArrayDefinition } from '../../definitions/ArrayDefinition.js';
+import { type Definition } from '../../definitions/Definition.js';
 import { descend } from '../../internal/descend.js';
-import { ArrayModelParts, Model } from '../Model.js';
-import { ModelFactory } from '../ModelFactory.js';
+import { type ArrayModelParts, type Model } from '../Model.js';
+import { type ModelFactory } from '../ModelFactory.js';
 import { ModelImpl } from './ModelImpl.js';
 
 export class ArrayModelImpl<TElement>

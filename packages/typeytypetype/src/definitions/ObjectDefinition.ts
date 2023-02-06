@@ -1,4 +1,4 @@
-import { FixedPropertyType } from '../models/internal/types.js';
+import { type FixedPropertyType } from '../models/internal/types.js';
 import { Definition } from './Definition.js';
 
 export abstract class ObjectDefinition<

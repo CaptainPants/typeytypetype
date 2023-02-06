@@ -1,4 +1,4 @@
-import { ResolutionContext } from './ResolutionContext.js';
+import { type ResolutionContext } from './ResolutionContext.js';
 
 export function createResolutionContext(): ResolutionContext {
     return {

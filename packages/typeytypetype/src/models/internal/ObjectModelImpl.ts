@@ -1,11 +1,11 @@
 import * as assert from 'typed-assert';
-import { Definition } from '../../definitions/Definition.js';
-import { ObjectDefinition } from '../../definitions/ObjectDefinition.js';
+import { type Definition } from '../../definitions/Definition.js';
+import { type ObjectDefinition } from '../../definitions/ObjectDefinition.js';
 import { descend } from '../../internal/descend.js';
-import { Model, ObjectModelParts } from '../Model.js';
-import { ModelFactory } from '../ModelFactory.js';
+import { type Model, type ObjectModelParts } from '../Model.js';
+import { type ModelFactory } from '../ModelFactory.js';
 import { ModelImpl } from './ModelImpl.js';
-import { FixedPropertyType } from './types.js';
+import { type FixedPropertyType } from './types.js';
 
 export class ObjectModelImpl<TObject extends Record<string, unknown>>
     extends ModelImpl<TObject, ObjectDefinition<TObject>>

@@ -1,4 +1,4 @@
-import { Definition } from './Definition.js';
+import { type Definition } from './Definition.js';
 import { ArrayDefinition } from './ArrayDefinition.js';
 import { NumberTypeDefinition } from './NumberTypeDefinition.js';
 import { StringTypeDefinition } from './StringTypeDefinition.js';
@@ -8,7 +8,7 @@ import { UnionDefinition } from './UnionDefinition.js';
 import { NamedDefinition } from './NamedDefinition.js';
 import { RigidObjectDefinition } from './RigidObjectDefinition.js';
 import { MapObjectDefinition } from './MapObjectDefinition.js';
-import { MappedDefinition } from './internal/types.js';
+import { type MappedDefinition } from './internal/types.js';
 
 export const Type = {
     constant<TValue extends string | number | boolean>(

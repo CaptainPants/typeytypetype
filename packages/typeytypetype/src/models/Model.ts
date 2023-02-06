@@ -1,7 +1,7 @@
-import { ArrayDefinition } from '../definitions/ArrayDefinition.js';
-import { Definition } from '../definitions/Definition.js';
-import { ObjectDefinition } from '../definitions/ObjectDefinition.js';
-import { FixedPropertyType, Maybe } from './internal/types.js';
+import { type ArrayDefinition } from '../definitions/ArrayDefinition.js';
+import { type Definition } from '../definitions/Definition.js';
+import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
+import { type FixedPropertyType, type Maybe } from './internal/types.js';
 
 export interface ModelCommon<
     T,

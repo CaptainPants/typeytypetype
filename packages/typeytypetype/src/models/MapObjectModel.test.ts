@@ -1,6 +1,6 @@
 import { expect, test } from '@jest/globals';
 import { Type } from '../definitions/Type.js';
-import { TypeFromDefinition } from '../types.js';
+import { type TypeFromDefinition } from '../types.js';
 import { StandardModelFactory } from './StandardModelFactory.js';
 
 test('map-object', async () => {

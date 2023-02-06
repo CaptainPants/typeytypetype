@@ -1,15 +1,15 @@
 import { createResolutionContext } from '../definitions/createResolutionContext.js';
 import { ArrayDefinition } from '../definitions/ArrayDefinition.js';
-import { Definition } from '../definitions/Definition.js';
+import { type Definition } from '../definitions/Definition.js';
 import { ObjectDefinition } from '../definitions/ObjectDefinition.js';
 import { UnionDefinition } from '../definitions/UnionDefinition.js';
 import { descend } from '../internal/descend.js';
 import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
 import { ModelImpl } from './internal/ModelImpl.js';
 import { ObjectModelImpl } from './internal/ObjectModelImpl.js';
-import { Model } from './Model.js';
-import { ModelFactoryArgs } from './ModelFactory.js';
-import { ResolutionContext } from '../definitions/ResolutionContext.js';
+import { type Model } from './Model.js';
+import { type ModelFactoryArgs } from './ModelFactory.js';
+import { type ResolutionContext } from '../definitions/ResolutionContext.js';
 
 export class StandardModelFactory {
     constructor() {

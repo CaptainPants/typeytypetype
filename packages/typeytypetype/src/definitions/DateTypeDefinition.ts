@@ -1,4 +1,4 @@
-import { ResolutionContext } from './ResolutionContext.js';
+import { type ResolutionContext } from './ResolutionContext.js';
 import { Definition } from './Definition.js';
 
 export class DateTypeDefinition extends Definition<string> {

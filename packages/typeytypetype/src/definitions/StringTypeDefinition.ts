@@ -1,5 +1,5 @@
 import { Definition } from './Definition.js';
-import { ResolutionContext } from './ResolutionContext.js';
+import { type ResolutionContext } from './ResolutionContext.js';
 
 export class StringTypeDefinition extends Definition<string> {
     override doValidate(
