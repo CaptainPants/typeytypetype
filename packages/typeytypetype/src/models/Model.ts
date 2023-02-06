@@ -1,7 +1,6 @@
 import { ArrayDefinition } from '../definitions/ArrayDefinition';
 import { Definition } from '../definitions/Definition';
 import { ObjectDefinition } from '../definitions/ObjectDefinition';
-import { RecordDefinition } from '../definitions/RecordDefinition';
 import { FixedPropertyType, Maybe } from './internal/types';
 
 export interface ModelCommon<
@@ -29,49 +28,30 @@ export interface ArrayModelParts<TElementType>
     ) => Promise<Model<TElementType[]>>;
 }
 
-export interface ObjectModelParts<TObject extends Record<string, unknown>>
-    extends ModelCommon<TObject, ObjectDefinition<TObject>> {
-        
-    getFixedProperty: <TKey extends string>(
+export interface ObjectModelParts<TProperties extends Record<string, unknown>>
+    extends ModelCommon<TProperties, ObjectDefinition<TProperties>> {
+    expandoPropertyDefinition?: () => Definition<unknown> | undefined;
+
+    getProperty: <TKey extends string>(
         key: TKey
-    ) => Model<FixedPropertyType<TObject, TKey>>;
+    ) => Model<FixedPropertyType<TProperties, TKey>>;
 
-    setFixedProperty: <TKey extends string>(
+    setPropertyValue: <TKey extends string>(
         key: TKey,
-        value: FixedPropertyType<TObject, TKey>
-    ) => Promise<Model<TObject>>;
-}
+        value: FixedPropertyType<TProperties, TKey>
+    ) => Promise<Model<TProperties>>;
 
-export interface RecordModelParts<TValue>
-    extends ModelCommon<Record<string, TValue>, RecordDefinition<TValue>> {
-    expandoPropertyDefinition: () => Definition<TValue> | undefined;
-
-    getExpandoProperty: (key: string) => Model<TValue> | undefined;
-
-    setExpandoProperty: (
-        key: string,
-        value: TValue
-    ) => Promise<Model<Record<string, TValue>>>;
-
-    deleteExpandoProperty: (
-        key: string
-    ) => Promise<Model<Record<string, TValue>>>;
+    deleteProperty: (key: string) => Promise<Model<TProperties>>;
 }
 
 export type UnknownParts = Maybe<
-    ArrayModelParts<unknown> &
-        ObjectModelParts<Record<string, unknown>> &
-        RecordModelParts<unknown>
+    ArrayModelParts<unknown> & ObjectModelParts<Record<string, unknown>>
 >;
 
 export type Model<T> = unknown extends T
     ? UnknownParts
     : T extends Array<infer TElementType>
     ? ArrayModelParts<TElementType>
-    : T extends Record<string, infer TRecordValue>
-    ? // Narrowing to Record<string, unknown> without matching object requires some gymnastics
-      // This checks if the key type is 'string' and not a subset type (which it would be for a typical object)
-      string extends keyof T
-        ? RecordModelParts<TRecordValue>
-        : ObjectModelParts<T>
+    : T extends Record<string, unknown>
+    ? ObjectModelParts<T>
     : ModelCommon<T>;

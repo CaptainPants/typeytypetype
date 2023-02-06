@@ -20,15 +20,20 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
     ) {
         super(value, definition, originalDefinition, depth, factory);
 
-        const fixedProperties = definition.getFixedPropertyNames();
+        this.#propertyModels = {};
 
-        this.#fixedPropertyDefinitionModels = {};
+        // TODO: check for missing properties
 
-        for (const name of fixedProperties) {
+        for (const name of Object.keys(value)) {
             const propertyDef = definition.getDefinition(name);
-            assert.isNotUndefined(propertyDef);
 
-            this.#fixedPropertyDefinitionModels[name] = factory.create({
+            if (propertyDef === undefined) {
+                throw new Error(
+                    `Unexpected value found at key ${name} when no expando definition provided.`
+                );
+            }
+
+            this.#propertyModels[name] = factory.create({
                 value: value[name],
                 definition: propertyDef,
                 depth: descend(depth),
@@ -36,27 +41,52 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         }
     }
 
-    #fixedPropertyDefinitionModels: Record<string, Model<unknown>>;
+    #propertyModels: Record<string, Model<unknown>>;
 
-    getFixedProperty<TKey extends string>(
+    expandoPropertyDefinition(): Definition<unknown> | undefined {
+        return this.definition.getExpandoDefinition();
+    }
+
+    getProperty<TKey extends string>(
         key: TKey
     ): Model<FixedPropertyType<TObject, TKey>> {
-        const result = this.#fixedPropertyDefinitionModels[key];
+        const result = this.#propertyModels[key];
         assert.isNotUndefined(result);
         return result as any;
     }
 
-    async setFixedProperty<TKey extends string>(
+    async setPropertyValue<TKey extends string>(
         key: TKey,
         value: FixedPropertyType<TObject, TKey>
     ): Promise<Model<TObject>> {
-        const prop = this.#fixedPropertyDefinitionModels[key];
+        const prop = this.#propertyModels[key];
         if (prop === undefined) throw new Error(`No property ${key} found.`);
 
         const copy = {
             ...this.value,
             [key]: value,
         };
+
+        return new ObjectModelImpl<TObject>(
+            copy,
+            this.definition,
+            this.originalDefinition,
+            this.depth,
+            this.factory
+        ) as any;
+    }
+
+    async deleteProperty<TKey extends string>(
+        key: TKey
+    ): Promise<Model<TObject>> {
+        if (!this.definition.supportsDelete()) {
+            throw new TypeError('Delete not supported.');
+        }
+
+        const copy = { ...this.value };
+        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+        delete copy[key];
+
         return new ObjectModelImpl<TObject>(
             copy,
             this.definition,

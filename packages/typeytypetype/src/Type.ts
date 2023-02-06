@@ -8,6 +8,8 @@ import { UnionDefinition } from './definitions/UnionDefinition.js';
 import { ObjectDefinition } from './definitions/ObjectDefinition.js';
 import { MappedDefinition } from './internal/utilityTypes.js';
 import { NamedDefinition } from './definitions/NamedDefinition.js';
+import { RigidObjectDefinition } from './definitions/RigidObjectDefinition.js';
+import { MapObjectDefinition } from './definitions/MapObjectDefinition.js';
 
 export const Type = {
     constant<TValue extends string | number | boolean>(
@@ -42,10 +44,14 @@ export const Type = {
         return new UnionDefinition<TTypes>(definitions);
     },
 
-    object<TPropertyTypes extends Record<string, unknown>>(
-        propertyDefinitions: MappedDefinition<TPropertyTypes>
+    object<TObject extends Record<string, unknown>>(
+        propertyDefinitions: MappedDefinition<TObject>
     ) {
-        return new ObjectDefinition(propertyDefinitions);
+        return new RigidObjectDefinition<TObject>(propertyDefinitions);
+    },
+
+    map<TValue>(valueDefinition: Definition<TValue>) {
+        return new MapObjectDefinition<TValue>(valueDefinition);
     },
 
     array<TElement>(
