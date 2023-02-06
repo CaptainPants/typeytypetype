@@ -47,12 +47,11 @@ export class ArrayModelImpl<TElement>
     ): Promise<Model<TElement[]>> {
         const copy = [...this.value];
         copy.splice(start, deleteCount, ...newElements);
-        return new ArrayModelImpl(
-            copy,
-            this.definition,
-            this.originalDefinition,
-            this.depth,
-            this.factory
-        );
+
+        return this.factory.create<TElement[]>({
+            value: copy,
+            definition: this.definition,
+            depth: this.depth,
+        });
     }
 }

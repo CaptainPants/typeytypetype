@@ -1,5 +1,5 @@
 import { descend } from '../internal/descend.js';
-import { ResolutionContext } from '../ResolutionContext.js';
+import { ResolutionContext } from './ResolutionContext.js';
 import { Definition } from './Definition.js';
 
 export class ArrayDefinition<TElement> extends Definition<TElement[]> {

@@ -1,4 +1,4 @@
-import { ResolutionContext } from '../ResolutionContext.js';
+import { ResolutionContext } from './ResolutionContext.js';
 import { Definition } from './Definition.js';
 
 export class NumberTypeDefinition extends Definition<number> {

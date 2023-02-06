@@ -1,15 +1,14 @@
-import { Definition } from './definitions/Definition.js';
-import { ArrayDefinition } from './definitions/ArrayDefinition.js';
-import { NumberTypeDefinition } from './definitions/NumberTypeDefinition.js';
-import { StringTypeDefinition } from './definitions/StringTypeDefinition.js';
-import { ConstantDefinition } from './definitions/ConstantDefinition.js';
-import { BooleanTypeDefinition } from './definitions/BooleanTypeDefinition.js';
-import { UnionDefinition } from './definitions/UnionDefinition.js';
-import { ObjectDefinition } from './definitions/ObjectDefinition.js';
-import { MappedDefinition } from './internal/utilityTypes.js';
-import { NamedDefinition } from './definitions/NamedDefinition.js';
-import { RigidObjectDefinition } from './definitions/RigidObjectDefinition.js';
-import { MapObjectDefinition } from './definitions/MapObjectDefinition.js';
+import { Definition } from './Definition.js';
+import { ArrayDefinition } from './ArrayDefinition.js';
+import { NumberTypeDefinition } from './NumberTypeDefinition.js';
+import { StringTypeDefinition } from './StringTypeDefinition.js';
+import { ConstantDefinition } from './ConstantDefinition.js';
+import { BooleanTypeDefinition } from './BooleanTypeDefinition.js';
+import { UnionDefinition } from './UnionDefinition.js';
+import { NamedDefinition } from './NamedDefinition.js';
+import { RigidObjectDefinition } from './RigidObjectDefinition.js';
+import { MapObjectDefinition } from './MapObjectDefinition.js';
+import { MappedDefinition } from './internal/types.js';
 
 export const Type = {
     constant<TValue extends string | number | boolean>(

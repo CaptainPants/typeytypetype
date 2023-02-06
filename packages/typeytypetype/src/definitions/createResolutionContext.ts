@@ -2,7 +2,7 @@ import { ResolutionContext } from './ResolutionContext';
 
 export function createResolutionContext(): ResolutionContext {
     return {
-        getModelFromName(name) {
+        getDefinitionFromName(name) {
             throw new Error('Not implemented');
         },
     };

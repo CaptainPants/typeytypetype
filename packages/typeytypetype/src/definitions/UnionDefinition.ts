@@ -1,7 +1,6 @@
-import { createResolutionContext } from '../createResolutionContext.js';
 import { descend } from '../internal/descend.js';
-import { MappedDefinition } from '../internal/utilityTypes.js';
-import { ResolutionContext } from '../ResolutionContext.js';
+import { MappedDefinition } from './internal/types.js';
+import { ResolutionContext } from './ResolutionContext.js';
 import { Definition } from './Definition.js';
 
 export class UnionDefinition<
@@ -19,13 +18,14 @@ export class UnionDefinition<
     }
 
     getDefinition(
+        resolutionContext: ResolutionContext,
         value: TTypes[number]
     ): Definition<TTypes[number]> | undefined {
-        const context = createResolutionContext();
-
         // This is showing as Definition<unknown> so I'm not sure why its not an error to return it as
         // a Definition<TTypes[number]>
-        const match = this.#definitions.find((x) => x.validate(context, value));
+        const match = this.#definitions.find((x) =>
+            x.validate(resolutionContext, value)
+        );
 
         return match;
     }

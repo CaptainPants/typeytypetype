@@ -1,5 +1,5 @@
 import { expect, test } from '@jest/globals';
-import { Type } from '../Type.js';
+import { Type } from '../definitions/Type.js';
 import { StandardModelFactory } from './StandardModelFactory.js';
 
 test('array', async () => {

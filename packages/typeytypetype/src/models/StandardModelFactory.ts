@@ -1,20 +1,31 @@
-import { ArrayDefinition } from '../definitions/ArrayDefinition';
-import { Definition } from '../definitions/Definition';
-import { ObjectDefinition } from '../definitions/ObjectDefinition';
-import { UnionDefinition } from '../definitions/UnionDefinition';
-import { descend } from '../internal/descend';
-import { ArrayModelImpl } from './internal/ArrayModelImpl';
-import { ModelImpl } from './internal/ModelImpl';
-import { ObjectModelImpl } from './internal/ObjectModelImpl';
-import { Model } from './Model';
-import { ModelFactoryArgs } from './ModelFactory';
+import { createResolutionContext } from '../definitions/createResolutionContext.js';
+import { ArrayDefinition } from '../definitions/ArrayDefinition.js';
+import { Definition } from '../definitions/Definition.js';
+import { ObjectDefinition } from '../definitions/ObjectDefinition.js';
+import { UnionDefinition } from '../definitions/UnionDefinition.js';
+import { descend } from '../internal/descend.js';
+import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
+import { ModelImpl } from './internal/ModelImpl.js';
+import { ObjectModelImpl } from './internal/ObjectModelImpl.js';
+import { Model } from './Model.js';
+import { ModelFactoryArgs } from './ModelFactory.js';
+import { ResolutionContext } from '../definitions/ResolutionContext.js';
 
 export class StandardModelFactory {
+    constructor() {
+        this.#resolutionContext = createResolutionContext();
+    }
+
+    #resolutionContext: ResolutionContext;
+
     create<T>({ value, definition, depth }: ModelFactoryArgs<T>): Model<T> {
         let selectedDefinition: Definition<T>;
 
         if (definition instanceof UnionDefinition) {
-            const match = definition.getDefinition(value);
+            const match = definition.getDefinition(
+                this.#resolutionContext,
+                value
+            );
             if (match === undefined) {
                 throw new Error(
                     `Could not find matching definition for value.`
@@ -22,6 +33,10 @@ export class StandardModelFactory {
             }
             selectedDefinition = match;
         } else {
+            if (!definition.validate(this.#resolutionContext, value)) {
+                throw new TypeError(`Invalid value.`);
+            }
+
             selectedDefinition = definition;
         }
 

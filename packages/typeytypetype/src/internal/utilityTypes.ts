@@ -1,27 +1,3 @@
-import { Definition } from '../definitions/Definition';
-import { TypeFromDefinition } from '../types';
-
-export type MappedTypeFromDefinition<T> = {
-    [TKey in keyof T]: TypeFromDefinition<T[TKey]>;
-};
-
-export type MappedDefinition<T> = {
-    [TKey in keyof T]: Definition<T[TKey]>;
-};
-
-export type Unspecialize<T extends Definition<unknown>> = T extends Definition<
-    infer U
->
-    ? Definition<U>
-    : T;
-export type UnspecializeObject<T extends Record<string, Definition<unknown>>> =
-    {
-        [K in keyof T]: Unspecialize<T[K]>;
-    };
-export type UnspecializeArray<T extends ReadonlyArray<Definition<unknown>>> = {
-    [K in keyof T]: Unspecialize<T[K]>;
-};
-
 /**
  * This is some true black magic: https://stackoverflow.com/questions/50374908/transform-union-type-to-intersection-type
  * Which references https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-8.html#distributive-conditional-types
@@ -43,10 +19,3 @@ export type TupleToIntersection<TArgs extends readonly unknown[]> =
 //   : TArgs extends [infer First, ...infer Rest]
 //   ? First & Intersect<Rest>
 //   : never;
-
-export type If<
-    Subtype,
-    Supertype,
-    Success,
-    Failure = never
-> = Subtype extends Supertype ? Success : Failure;

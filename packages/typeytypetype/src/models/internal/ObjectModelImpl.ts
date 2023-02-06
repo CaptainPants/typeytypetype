@@ -67,13 +67,11 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             [key]: value,
         };
 
-        return new ObjectModelImpl<TObject>(
-            copy,
-            this.definition,
-            this.originalDefinition,
-            this.depth,
-            this.factory
-        ) as any;
+        return this.factory.create<TObject>({
+            value: copy,
+            definition: this.originalDefinition,
+            depth: this.depth,
+        });
     }
 
     async deleteProperty<TKey extends string>(
@@ -87,12 +85,10 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete copy[key];
 
-        return new ObjectModelImpl<TObject>(
-            copy,
-            this.definition,
-            this.originalDefinition,
-            this.depth,
-            this.factory
-        ) as any;
+        return this.factory.create<TObject>({
+            value: copy,
+            definition: this.definition,
+            depth: this.depth,
+        });
     }
 }

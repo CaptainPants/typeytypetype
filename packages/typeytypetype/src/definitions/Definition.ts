@@ -1,4 +1,4 @@
-import { ResolutionContext } from '../ResolutionContext.js';
+import { ResolutionContext } from './ResolutionContext.js';
 
 export abstract class Definition<T> {
     validate(resolutionContext: ResolutionContext, value: unknown): boolean {
