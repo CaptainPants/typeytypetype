@@ -8,6 +8,8 @@ module.exports = {
         'prettier',
         'plugin:import/recommended',
         'plugin:import/typescript',
+        // Fix up typescript imports to have .js
+        "plugin:require-extensions/recommended"
     ],
     overrides: [],
     parserOptions: {
@@ -25,4 +27,7 @@ module.exports = {
             node: true,
         },
     },
+    plugins: [
+        "require-extensions"
+    ]
 };

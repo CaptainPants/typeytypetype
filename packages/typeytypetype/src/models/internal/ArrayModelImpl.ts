@@ -1,9 +1,9 @@
-import { ArrayDefinition } from '../../definitions/ArrayDefinition';
-import { Definition } from '../../definitions/Definition';
-import { descend } from '../../internal/descend';
-import { ArrayModelParts, Model } from '../Model';
-import { ModelFactory } from '../ModelFactory';
-import { ModelImpl } from './ModelImpl';
+import { ArrayDefinition } from '../../definitions/ArrayDefinition.js';
+import { Definition } from '../../definitions/Definition.js';
+import { descend } from '../../internal/descend.js';
+import { ArrayModelParts, Model } from '../Model.js';
+import { ModelFactory } from '../ModelFactory.js';
+import { ModelImpl } from './ModelImpl.js';
 
 export class ArrayModelImpl<TElement>
     extends ModelImpl<TElement[], ArrayDefinition<TElement>>

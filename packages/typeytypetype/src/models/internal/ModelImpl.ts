@@ -1,6 +1,6 @@
-import { Definition } from '../../definitions/Definition';
-import { ModelCommon } from '../Model';
-import { ModelFactory } from '../ModelFactory';
+import { Definition } from '../../definitions/Definition.js';
+import { ModelCommon } from '../Model.js';
+import { ModelFactory } from '../ModelFactory.js';
 
 export class ModelImpl<T, TDef extends Definition<T> = Definition<T>>
     implements ModelCommon<T>

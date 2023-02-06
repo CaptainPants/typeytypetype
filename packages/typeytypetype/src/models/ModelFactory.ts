@@ -1,5 +1,5 @@
-import { Definition } from '../definitions/Definition';
-import { Model } from './Model';
+import { Definition } from '../definitions/Definition.js';
+import { Model } from './Model.js';
 
 export interface ModelFactoryArgs<T> {
     value: T;
