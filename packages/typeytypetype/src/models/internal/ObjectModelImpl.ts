@@ -14,15 +14,12 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
     constructor(
         value: TObject,
         definition: ObjectDefinition<TObject>,
-        originalDefinition: Definition<TObject>,
         depth: number,
         factory: ModelFactory
     ) {
-        super(value, definition, originalDefinition, depth, factory);
+        super(value, definition, depth, factory);
 
         this.#propertyModels = {};
-
-        // TODO: check for missing properties
 
         for (const name of Object.keys(value)) {
             const propertyDef = definition.getDefinition(name);
@@ -59,9 +56,6 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         key: TKey,
         value: FixedPropertyType<TObject, TKey>
     ): Promise<Model<TObject>> {
-        const prop = this.#propertyModels[key];
-        if (prop === undefined) throw new Error(`No property ${key} found.`);
-
         const copy = {
             ...this.value,
             [key]: value,
@@ -69,7 +63,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
 
         return this.factory.create<TObject>({
             value: copy,
-            definition: this.originalDefinition,
+            definition: this.definition,
             depth: this.depth,
         });
     }

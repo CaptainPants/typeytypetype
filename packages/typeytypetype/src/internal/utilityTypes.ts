@@ -19,3 +19,11 @@ export type TupleToIntersection<TArgs extends readonly unknown[]> =
 //   : TArgs extends [infer First, ...infer Rest]
 //   ? First & Intersect<Rest>
 //   : never;
+
+// https://ghaiklor.github.io/type-challenges-solutions/en/medium-isunion.html
+// Voodoo magic in that T is distributed by the condition, so [T] will be a single element of a union vs [C] will be the whole union
+export type IsUnion<T, C = T> = T extends C
+    ? [C] extends [T]
+        ? false
+        : true
+    : never;

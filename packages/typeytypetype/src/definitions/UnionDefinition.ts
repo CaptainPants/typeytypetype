@@ -1,5 +1,8 @@
 import { descend } from '../internal/descend.js';
-import { type MappedDefinition } from './internal/types.js';
+import {
+    type SpreadDefinition,
+    type MappedDefinition,
+} from './internal/types.js';
 import { type ResolutionContext } from './ResolutionContext.js';
 import { Definition } from './Definition.js';
 
@@ -20,14 +23,15 @@ export class UnionDefinition<
     getDefinition(
         resolutionContext: ResolutionContext,
         value: TTypes[number]
-    ): Definition<TTypes[number]> | undefined {
+    ): SpreadDefinition<TTypes[number]> | undefined {
         // This is showing as Definition<unknown> so I'm not sure why its not an error to return it as
         // a Definition<TTypes[number]>
         const match = this.#definitions.find((x) =>
             x.validate(resolutionContext, value)
         );
 
-        return match;
+        // cheating the type system
+        return match as any;
     }
 
     override doValidate(

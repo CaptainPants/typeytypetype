@@ -12,11 +12,10 @@ export class ArrayModelImpl<TElement>
     constructor(
         value: TElement[],
         definition: ArrayDefinition<TElement>,
-        originalDefinition: Definition<TElement[]>,
         depth: number,
         factory: ModelFactory
     ) {
-        super(value, definition, originalDefinition, depth, factory);
+        super(value, definition, depth, factory);
 
         this.#elementDefinition = definition.getElementDefinition();
 

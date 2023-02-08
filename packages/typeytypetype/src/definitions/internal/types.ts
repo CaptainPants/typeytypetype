@@ -9,6 +9,10 @@ export type MappedDefinition<T> = {
     [TKey in keyof T]: Definition<T[TKey]>;
 };
 
+export type SpreadDefinition<TUnion> = TUnion extends any
+    ? Definition<TUnion>
+    : never;
+
 export type Unspecialize<T extends Definition<unknown>> = T extends Definition<
     infer U
 >

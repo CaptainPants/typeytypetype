@@ -1,6 +1,7 @@
 import { type ArrayDefinition } from '../definitions/ArrayDefinition.js';
 import { type Definition } from '../definitions/Definition.js';
 import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
+import { type IsUnion } from '../internal/utilityTypes.js';
 import { type FixedPropertyType, type Maybe } from './internal/types.js';
 
 export interface ModelCommon<
@@ -9,10 +10,6 @@ export interface ModelCommon<
 > {
     readonly value: T;
     readonly definition: TDefinition;
-    /**
-     * Basically just for the original definition when looking at a union.
-     */
-    readonly originalDefinition: Definition<T>;
 }
 
 export interface ArrayModelParts<TElementType>
@@ -44,12 +41,24 @@ export interface ObjectModelParts<TProperties extends Record<string, unknown>>
     deleteProperty: (key: string) => Promise<Model<TProperties>>;
 }
 
+export interface UnionModelParts<TUnion> extends ModelCommon<TUnion> {
+    readonly resolved: SpreadModel<TUnion>;
+
+    replace: (value: TUnion) => Promise<Model<TUnion>>;
+}
+
 export type UnknownParts = Maybe<
-    ArrayModelParts<unknown> & ObjectModelParts<Record<string, unknown>>
+    ArrayModelParts<unknown> &
+        ObjectModelParts<Record<string, unknown>> &
+        UnionModelParts<unknown>
 >;
+
+export type SpreadModel<T> = T extends any ? Model<T> : never;
 
 export type Model<T> = unknown extends T
     ? UnknownParts
+    : IsUnion<T> extends true
+    ? UnionModelParts<T>
     : T extends Array<infer TElementType>
     ? ArrayModelParts<TElementType>
     : T extends Record<string, unknown>
