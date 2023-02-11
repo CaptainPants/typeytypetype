@@ -1,4 +1,3 @@
-import { type ResolutionContext } from './ResolutionContext.js';
 import { Definition } from './Definition.js';
 
 export class ConstantDefinition<T> extends Definition<T> {
@@ -9,11 +8,7 @@ export class ConstantDefinition<T> extends Definition<T> {
 
     #value: T;
 
-    override doValidate(
-        resolutionContext: ResolutionContext,
-        value: unknown,
-        depth: number
-    ): boolean {
+    override doMatchesStructure(value: unknown, depth: number): boolean {
         return value === this.#value;
     }
 

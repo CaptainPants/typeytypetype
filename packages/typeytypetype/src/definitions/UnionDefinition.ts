@@ -1,6 +1,5 @@
 import { descend } from '../internal/descend.js';
 import { type SpreadDefinition } from './internal/types.js';
-import { type ResolutionContext } from './ResolutionContext.js';
 import { Definition } from './Definition.js';
 
 export class UnionDefinition<TUnion> extends Definition<TUnion> {
@@ -15,28 +14,19 @@ export class UnionDefinition<TUnion> extends Definition<TUnion> {
         return this.#definitions;
     }
 
-    getDefinition(
-        resolutionContext: ResolutionContext,
-        value: TUnion
-    ): SpreadDefinition<TUnion> | undefined {
+    getDefinition(value: TUnion): SpreadDefinition<TUnion> | undefined {
         // This is showing as Definition<unknown> so I'm not sure why its not an error to return it as
         // a Definition<TTypes[number]>
-        const match = this.#definitions.find((x) =>
-            x.validate(resolutionContext, value)
-        );
+        const match = this.#definitions.find((x) => x.matchesStructure(value));
 
         // cheating the type system
         return match;
     }
 
-    override doValidate(
-        resolutionContext: ResolutionContext,
-        value: unknown,
-        depth: number
-    ): boolean {
+    override doMatchesStructure(value: unknown, depth: number): boolean {
         return (
             this.#definitions.findIndex((model) =>
-                model.doValidate(resolutionContext, value, descend(depth))
+                model.doMatchesStructure(value, descend(depth))
             ) >= 0
         );
     }

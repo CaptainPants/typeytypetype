@@ -1,12 +1,7 @@
 import { Definition } from './Definition.js';
-import { type ResolutionContext } from './ResolutionContext.js';
 
 export class StringTypeDefinition extends Definition<string> {
-    override doValidate(
-        resolutionContext: ResolutionContext,
-        value: unknown,
-        depth: number
-    ): boolean {
+    override doMatchesStructure(value: unknown, depth: number): boolean {
         return typeof value === 'string';
     }
 

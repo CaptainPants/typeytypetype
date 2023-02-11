@@ -1,5 +1,4 @@
 import { descend } from '../internal/descend.js';
-import { type ResolutionContext } from './ResolutionContext.js';
 import { Definition } from './Definition.js';
 
 export class ArrayDefinition<TElement> extends Definition<TElement[]> {
@@ -10,19 +9,14 @@ export class ArrayDefinition<TElement> extends Definition<TElement[]> {
 
     #elementDefinition: Definition<TElement>;
 
-    override doValidate(
-        resolutionContext: ResolutionContext,
-        value: unknown,
-        depth: number
-    ): boolean {
+    override doMatchesStructure(value: unknown, depth: number): boolean {
         if (!Array.isArray(value)) return false;
 
         // Any item doesn't validate against #itemModel
         return (
             value.findIndex(
                 (itemValue) =>
-                    !this.#elementDefinition.doValidate(
-                        resolutionContext,
+                    !this.#elementDefinition.doMatchesStructure(
                         itemValue,
                         descend(depth)
                     )

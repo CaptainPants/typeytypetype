@@ -1,6 +1,5 @@
 import { descend } from '../internal/descend.js';
 import { type FixedPropertyType } from '../models/internal/types.js';
-import { type ResolutionContext } from './ResolutionContext.js';
 import { type Definition } from './Definition.js';
 import { ObjectDefinition } from './ObjectDefinition.js';
 
@@ -14,11 +13,7 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
 
     #propertyDefinition: Definition<TValue>;
 
-    override doValidate(
-        resolutionContext: ResolutionContext,
-        value: unknown,
-        depth: number
-    ): boolean {
+    override doMatchesStructure(value: unknown, depth: number): boolean {
         if (typeof value !== 'object' || value === null) return false;
 
         const asRecord = value as Record<string, unknown>;
@@ -30,8 +25,7 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
 
             const propertyValue = asRecord[key];
             if (
-                !this.#propertyDefinition.doValidate(
-                    resolutionContext,
+                !this.#propertyDefinition.doMatchesStructure(
                     propertyValue,
                     descend(depth)
                 )

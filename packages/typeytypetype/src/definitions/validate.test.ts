@@ -1,84 +1,57 @@
 import { expect, test } from '@jest/globals';
 import { Type } from './Type.js';
-import { createResolutionContext } from './createResolutionContext.js';
 
 test('constant', () => {
-    const resolutionContext = createResolutionContext();
+    expect(Type.constant(1).matchesStructure(1)).toStrictEqual(true);
+    expect(Type.constant(1).matchesStructure(2)).toStrictEqual(false);
 
-    expect(Type.constant(1).validate(resolutionContext, 1)).toStrictEqual(true);
-    expect(Type.constant(1).validate(resolutionContext, 2)).toStrictEqual(
-        false
-    );
+    expect(Type.constant('yes').matchesStructure('yes')).toStrictEqual(true);
+    expect(Type.constant('yes').matchesStructure('no')).toStrictEqual(false);
 
-    expect(
-        Type.constant('yes').validate(resolutionContext, 'yes')
-    ).toStrictEqual(true);
-    expect(
-        Type.constant('yes').validate(resolutionContext, 'no')
-    ).toStrictEqual(false);
+    expect(Type.constant(true).matchesStructure(true)).toStrictEqual(true);
+    expect(Type.constant(true).matchesStructure(false)).toStrictEqual(false);
+    expect(Type.constant(false).matchesStructure(false)).toStrictEqual(true);
 
-    expect(Type.constant(true).validate(resolutionContext, true)).toStrictEqual(
-        true
-    );
-    expect(
-        Type.constant(true).validate(resolutionContext, false)
-    ).toStrictEqual(false);
-    expect(
-        Type.constant(false).validate(resolutionContext, false)
-    ).toStrictEqual(true);
-
-    expect(Type.null().validate(resolutionContext, null)).toStrictEqual(true);
-    expect(Type.constant(1).validate(resolutionContext, null)).toStrictEqual(
-        false
-    );
+    expect(Type.null().matchesStructure(null)).toStrictEqual(true);
+    expect(Type.constant(1).matchesStructure(null)).toStrictEqual(false);
 });
 
 test('string', () => {
     const definition = Type.string();
 
-    const resolutionContext = createResolutionContext();
-
-    expect(definition.validate(resolutionContext, 'test')).toStrictEqual(true);
-    expect(definition.validate(resolutionContext, false)).toStrictEqual(false);
-    expect(definition.validate(resolutionContext, 123)).toStrictEqual(false);
-    expect(definition.validate(resolutionContext, {})).toStrictEqual(false);
+    expect(definition.matchesStructure('test')).toStrictEqual(true);
+    expect(definition.matchesStructure(false)).toStrictEqual(false);
+    expect(definition.matchesStructure(123)).toStrictEqual(false);
+    expect(definition.matchesStructure({})).toStrictEqual(false);
 });
 
 test('number', () => {
     const definition = Type.number();
 
-    const resolutionContext = createResolutionContext();
+    expect(definition.matchesStructure(123)).toStrictEqual(true);
 
-    expect(definition.validate(resolutionContext, 123)).toStrictEqual(true);
-
-    expect(definition.validate(resolutionContext, 'test')).toStrictEqual(false);
-    expect(definition.validate(resolutionContext, false)).toStrictEqual(false);
-    expect(definition.validate(resolutionContext, {})).toStrictEqual(false);
+    expect(definition.matchesStructure('test')).toStrictEqual(false);
+    expect(definition.matchesStructure(false)).toStrictEqual(false);
+    expect(definition.matchesStructure({})).toStrictEqual(false);
 });
 
 test('boolean', () => {
     const definition = Type.boolean();
 
-    const resolutionContext = createResolutionContext();
+    expect(definition.matchesStructure(false)).toStrictEqual(true);
+    expect(definition.matchesStructure(true)).toStrictEqual(true);
 
-    expect(definition.validate(resolutionContext, false)).toStrictEqual(true);
-    expect(definition.validate(resolutionContext, true)).toStrictEqual(true);
-
-    expect(definition.validate(resolutionContext, 'test')).toStrictEqual(false);
-    expect(definition.validate(resolutionContext, 123)).toStrictEqual(false);
-    expect(definition.validate(resolutionContext, {})).toStrictEqual(false);
+    expect(definition.matchesStructure('test')).toStrictEqual(false);
+    expect(definition.matchesStructure(123)).toStrictEqual(false);
+    expect(definition.matchesStructure({})).toStrictEqual(false);
 });
 
 test('array', () => {
     const definition = Type.array(Type.number());
 
-    const resolutionContext = createResolutionContext();
-
-    expect(definition.validate(resolutionContext, [1, 2])).toStrictEqual(true);
-    expect(definition.validate(resolutionContext, ['test', 2])).toStrictEqual(
-        false
-    );
-    expect(definition.validate(resolutionContext, 1)).toStrictEqual(false);
+    expect(definition.matchesStructure([1, 2])).toStrictEqual(true);
+    expect(definition.matchesStructure(['test', 2])).toStrictEqual(false);
+    expect(definition.matchesStructure(1)).toStrictEqual(false);
 });
 
 test('object', () => {
@@ -88,18 +61,14 @@ test('object', () => {
         roles: Type.array(Type.string()),
     });
 
-    const resolutionContext = createResolutionContext();
-
     expect(
-        definition.validate(resolutionContext, {
+        definition.matchesStructure({
             id: 1,
             name: 'test',
             roles: ['Administrator'],
         })
     ).toStrictEqual(true);
-    expect(definition.validate(resolutionContext, { id: 1 })).toStrictEqual(
-        false
-    );
+    expect(definition.matchesStructure({ id: 1 })).toStrictEqual(false);
     expect(definition.toTypeString()).toMatchSnapshot();
 });
 
@@ -110,11 +79,9 @@ test('union', () => {
         Type.null()
     );
 
-    const resolutionContext = createResolutionContext();
+    expect(definition.matchesStructure(1)).toStrictEqual(true);
+    expect(definition.matchesStructure(2)).toStrictEqual(true);
+    expect(definition.matchesStructure(null)).toStrictEqual(true);
 
-    expect(definition.validate(resolutionContext, 1)).toStrictEqual(true);
-    expect(definition.validate(resolutionContext, 2)).toStrictEqual(true);
-    expect(definition.validate(resolutionContext, null)).toStrictEqual(true);
-
-    expect(definition.validate(resolutionContext, 3)).toStrictEqual(false);
+    expect(definition.matchesStructure(3)).toStrictEqual(false);
 });

@@ -1,15 +1,17 @@
-import { type ResolutionContext } from './ResolutionContext.js';
-
 export abstract class Definition<T> {
-    validate(resolutionContext: ResolutionContext, value: unknown): boolean {
-        return this.doValidate(resolutionContext, value, 25);
+    matchesStructure(value: unknown): boolean {
+        return this.doMatchesStructure(value, 25);
     }
 
-    abstract doValidate(
-        resolutionContext: ResolutionContext,
-        value: unknown,
-        depth: number
-    ): boolean;
+    abstract doMatchesStructure(value: unknown, depth: number): boolean;
+
+    async validate(value: unknown): Promise<boolean> {
+        return await this.doValidate(value, 25);
+    }
+
+    async doValidate(value: unknown, depth: number): Promise<boolean> {
+        return this.doMatchesStructure(value, depth);
+    }
 
     toTypeString(): string {
         return this.doToTypeString(25);

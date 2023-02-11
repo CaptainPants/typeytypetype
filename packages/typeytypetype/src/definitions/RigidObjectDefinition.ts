@@ -1,6 +1,5 @@
 import { descend } from '../internal/descend.js';
 import { type FixedPropertyType } from '../models/internal/types.js';
-import { type ResolutionContext } from './ResolutionContext.js';
 import { type Definition } from './Definition.js';
 import { ObjectDefinition } from './ObjectDefinition.js';
 import { type MappedDefinition } from './internal/types.js';
@@ -15,11 +14,7 @@ export class RigidObjectDefinition<
 
     #propertyDefinitions: MappedDefinition<TObject>;
 
-    override doValidate(
-        resolutionContext: ResolutionContext,
-        value: unknown,
-        depth: number
-    ): boolean {
+    override doMatchesStructure(value: unknown, depth: number): boolean {
         if (typeof value !== 'object' || value === null) return false;
 
         const asRecord = value as Record<string, unknown>;
@@ -32,13 +27,7 @@ export class RigidObjectDefinition<
             if (typeof property === 'undefined') return true; // this shouldn't happen
 
             const propertyValue = asRecord[key];
-            if (
-                !property.doValidate(
-                    resolutionContext,
-                    propertyValue,
-                    descend(depth)
-                )
-            ) {
+            if (!property.doMatchesStructure(propertyValue, descend(depth))) {
                 return true;
             }
 
