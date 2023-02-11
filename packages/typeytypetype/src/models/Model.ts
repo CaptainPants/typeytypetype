@@ -102,19 +102,12 @@ export type UnknownModel = Maybe<
 
 export type SpreadModel<T> = T extends any ? Model<T> : never;
 
-type SingleSimpleModel<
-    TBase,
-    T extends TBase,
-    TConstantModel,
-    TTypeModel
-> = TBase extends T ? TTypeModel : TConstantModel;
-
 type SimpleModel<T> = T extends string
-    ? SingleSimpleModel<string, T, StringConstantModel, StringModel>
+    ? (string extends T ? StringModel : StringConstantModel)
     : T extends number
-    ? SingleSimpleModel<number, T, NumberConstantModel, NumberModel>
+    ? (number extends T ? NumberModel : NumberConstantModel)
     : T extends boolean
-    ? SingleSimpleModel<boolean, T, BooleanConstantModel, BooleanModel>
+    ? (boolean extends T ? BooleanModel : BooleanConstantModel)
     : never;
 
 export type Model<T> = unknown extends T
