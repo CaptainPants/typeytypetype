@@ -9,14 +9,14 @@ export class ArrayDefinition<TElement> extends Definition<TElement[]> {
 
     #elementDefinition: Definition<TElement>;
 
-    override doMatchesStructure(value: unknown, depth: number): boolean {
+    override doMatches(value: unknown, depth: number): boolean {
         if (!Array.isArray(value)) return false;
 
         // Any item doesn't validate against #itemModel
         return (
             value.findIndex(
                 (itemValue) =>
-                    !this.#elementDefinition.doMatchesStructure(
+                    !this.#elementDefinition.doMatches(
                         itemValue,
                         descend(depth)
                     )

@@ -1,7 +1,7 @@
 import { Definition } from './Definition.js';
 
 export class DateTypeDefinition extends Definition<string> {
-    override doMatchesStructure(value: unknown, depth: number): boolean {
+    override doMatches(value: unknown, depth: number): boolean {
         return typeof value === 'string';
     }
 

@@ -13,7 +13,7 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
 
     #propertyDefinition: Definition<TValue>;
 
-    override doMatchesStructure(value: unknown, depth: number): boolean {
+    override doMatches(value: unknown, depth: number): boolean {
         if (typeof value !== 'object' || value === null) return false;
 
         const asRecord = value as Record<string, unknown>;
@@ -25,7 +25,7 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
 
             const propertyValue = asRecord[key];
             if (
-                !this.#propertyDefinition.doMatchesStructure(
+                !this.#propertyDefinition.doMatches(
                     propertyValue,
                     descend(depth)
                 )

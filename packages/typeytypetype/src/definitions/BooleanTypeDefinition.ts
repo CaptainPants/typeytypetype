@@ -1,7 +1,7 @@
 import { Definition } from './Definition.js';
 
 export class BooleanTypeDefinition extends Definition<boolean> {
-    override doMatchesStructure(value: unknown, _depth: number): boolean {
+    override doMatches(value: unknown, _depth: number): boolean {
         return typeof value === 'boolean';
     }
 

@@ -17,8 +17,8 @@ export class NamedDefinition<T> extends Definition<T> {
         return this.definition;
     }
 
-    override doMatchesStructure(value: unknown, depth: number): boolean {
-        return this.getDefinition().doMatchesStructure(value, descend(depth));
+    override doMatches(value: unknown, depth: number): boolean {
+        return this.getDefinition().doMatches(value, descend(depth));
     }
 
     override doToTypeString(depth: number): string {

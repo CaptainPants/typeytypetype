@@ -1,16 +1,16 @@
 export abstract class Definition<T> {
-    matchesStructure(value: unknown): boolean {
-        return this.doMatchesStructure(value, 25);
+    matches(value: unknown): boolean {
+        return this.doMatches(value, 25);
     }
 
-    abstract doMatchesStructure(value: unknown, depth: number): boolean;
+    abstract doMatches(value: unknown, depth: number): boolean;
 
     async validate(value: unknown): Promise<boolean> {
         return await this.doValidate(value, 25);
     }
 
     async doValidate(value: unknown, depth: number): Promise<boolean> {
-        return this.doMatchesStructure(value, depth);
+        return this.doMatches(value, depth);
     }
 
     toTypeString(): string {

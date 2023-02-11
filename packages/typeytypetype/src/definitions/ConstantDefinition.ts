@@ -8,7 +8,7 @@ export class ConstantDefinition<T> extends Definition<T> {
 
     #value: T;
 
-    override doMatchesStructure(value: unknown, depth: number): boolean {
+    override doMatches(value: unknown, depth: number): boolean {
         return value === this.#value;
     }
 
