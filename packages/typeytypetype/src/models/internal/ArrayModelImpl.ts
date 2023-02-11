@@ -1,13 +1,13 @@
 import { type ArrayDefinition } from '../../definitions/ArrayDefinition.js';
 import { type Definition } from '../../definitions/Definition.js';
 import { descend } from '../../internal/descend.js';
-import { type ArrayModelParts, type Model } from '../Model.js';
+import { type ArrayModel, type Model } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 import { ModelImpl } from './ModelImpl.js';
 
 export class ArrayModelImpl<TElement>
     extends ModelImpl<TElement[], ArrayDefinition<TElement>>
-    implements ArrayModelParts<TElement>
+    implements ArrayModel<TElement>
 {
     constructor(
         value: TElement[],
@@ -27,6 +27,8 @@ export class ArrayModelImpl<TElement>
             })
         );
     }
+
+    readonly type = 'array';
 
     #elementDefinition: Definition<TElement>;
     #elementModels: Array<Model<TElement>>;

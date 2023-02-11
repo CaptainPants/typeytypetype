@@ -4,7 +4,9 @@ import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
 import { type IsUnion } from '../internal/utilityTypes.js';
 import { type FixedPropertyType, type Maybe } from './internal/types.js';
 
-export interface ModelCommon<
+export type ModelType = 'unknown' | 'union' | 'object' | 'array' | 'simple';
+
+export interface BaseModel<
     T,
     TDefinition extends Definition<T> = Definition<T>
 > {
@@ -12,8 +14,17 @@ export interface ModelCommon<
     readonly definition: TDefinition;
 }
 
-export interface ArrayModelParts<TElementType>
-    extends ModelCommon<TElementType[], ArrayDefinition<TElementType>> {
+export interface SimpleModel<
+    T,
+    TDefinition extends Definition<T> = Definition<T>
+> extends BaseModel<TDefinition> {
+    type: 'simple';
+}
+
+export interface ArrayModel<TElementType>
+    extends BaseModel<TElementType[], ArrayDefinition<TElementType>> {
+    type: 'array';
+
     elementDefinition: () => Definition<TElementType>;
 
     getElement: (index: number) => Model<TElementType> | undefined;
@@ -25,8 +36,10 @@ export interface ArrayModelParts<TElementType>
     ) => Promise<Model<TElementType[]>>;
 }
 
-export interface ObjectModelParts<TProperties extends Record<string, unknown>>
-    extends ModelCommon<TProperties, ObjectDefinition<TProperties>> {
+export interface ObjectModel<TProperties extends Record<string, unknown>>
+    extends BaseModel<TProperties, ObjectDefinition<TProperties>> {
+    type: 'object';
+
     expandoPropertyDefinition?: () => Definition<unknown> | undefined;
 
     getProperty: <TKey extends string>(
@@ -41,26 +54,31 @@ export interface ObjectModelParts<TProperties extends Record<string, unknown>>
     deleteProperty: (key: string) => Promise<Model<TProperties>>;
 }
 
-export interface UnionModelParts<TUnion> extends ModelCommon<TUnion> {
+export interface UnionModel<TUnion> extends BaseModel<TUnion> {
+    type: 'union';
+
     readonly resolved: SpreadModel<TUnion>;
+
+    castTo: <T>(definition: Definition<T>) => Model<T> | null;
 
     replace: (value: TUnion) => Promise<Model<TUnion>>;
 }
 
-export type UnknownParts = Maybe<
-    ArrayModelParts<unknown> &
-        ObjectModelParts<Record<string, unknown>> &
-        UnionModelParts<unknown>
+export type UnknownModel = Maybe<
+    ArrayModel<unknown> &
+        ObjectModel<Record<string, unknown>> &
+        UnionModel<unknown> &
+        SimpleModel<unknown>
 >;
 
 export type SpreadModel<T> = T extends any ? Model<T> : never;
 
 export type Model<T> = unknown extends T
-    ? UnknownParts
+    ? UnknownModel
     : IsUnion<T> extends true
-    ? UnionModelParts<T>
+    ? UnionModel<T>
     : T extends Array<infer TElementType>
-    ? ArrayModelParts<TElementType>
+    ? ArrayModel<TElementType>
     : T extends Record<string, unknown>
-    ? ObjectModelParts<T>
-    : ModelCommon<T>;
+    ? ObjectModel<T>
+    : SimpleModel<T>;

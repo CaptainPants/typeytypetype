@@ -6,11 +6,11 @@ import { descend } from '../internal/descend.js';
 import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
 import { ModelImpl } from './internal/ModelImpl.js';
 import { ObjectModelImpl } from './internal/ObjectModelImpl.js';
-import { type Model } from './Model.js';
+import { SpreadModel, UnionModel, type Model } from './Model.js';
 import { type ModelFactory, type ModelFactoryArgs } from './ModelFactory.js';
 import { type ResolutionContext } from '../definitions/ResolutionContext.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
-import { type SpreadDefinition } from '../definitions/index.js';
+import { Definition, type SpreadDefinition } from '../definitions/index.js';
 
 export class StandardModelFactory implements ModelFactory {
     constructor() {

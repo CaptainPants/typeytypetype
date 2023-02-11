@@ -2,14 +2,14 @@ import * as assert from 'typed-assert';
 import { type Definition } from '../../definitions/Definition.js';
 import { type ObjectDefinition } from '../../definitions/ObjectDefinition.js';
 import { descend } from '../../internal/descend.js';
-import { type Model, type ObjectModelParts } from '../Model.js';
+import { type Model, type ObjectModel } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 import { ModelImpl } from './ModelImpl.js';
 import { type FixedPropertyType } from './types.js';
 
 export class ObjectModelImpl<TObject extends Record<string, unknown>>
     extends ModelImpl<TObject, ObjectDefinition<TObject>>
-    implements ObjectModelParts<TObject>
+    implements ObjectModel<TObject>
 {
     constructor(
         value: TObject,
@@ -37,6 +37,8 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             });
         }
     }
+
+    readonly type = 'object';
 
     #propertyModels: Record<string, Model<unknown>>;
 

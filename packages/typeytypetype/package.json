@@ -14,7 +14,7 @@
         "./umd.min.js": "./dist/umd.min.js"
     },
     "scripts": {
-        "format": "npx prettier --config ../../.prettierrc.json --write .",
+        "format": "npx prettier --config ../../.prettierrc.json --write src",
         "lint": "npx eslint src/**/*.{ts,tsx} --fix",
         "compile": "tsc",
         "test": "npx jest src --silent=false",

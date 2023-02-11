@@ -1,9 +1,9 @@
 import { type Definition } from '../../definitions/Definition.js';
-import { type ModelCommon } from '../Model.js';
+import { type BaseModel } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 
 export class ModelImpl<T, TDef extends Definition<T> = Definition<T>>
-    implements ModelCommon<T>
+    implements BaseModel<T>
 {
     constructor(
         value: T,
