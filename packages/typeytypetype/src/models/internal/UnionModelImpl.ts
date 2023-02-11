@@ -45,7 +45,7 @@ export class UnionModelImpl<TTypes extends readonly []>
         return model;
     }
 
-    castTo<T>(definition: Definition<T>): Model<T> | null {
+    as<T>(definition: Definition<T>): Model<T> | null {
         const resolved = this.resolved;
         return resolved.definition === definition ? (resolved as any) : null;
     }

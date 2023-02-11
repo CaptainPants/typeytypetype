@@ -35,7 +35,7 @@ test('union', async () => {
 
     expect(resolved.type).toStrictEqual('object');
 
-    expect(model.castTo(a)).toStrictEqual(null);
-    expect(model.castTo(b)).not.toStrictEqual(null);
-    expect(model.castTo(c)).toStrictEqual(null);
+    expect(model.as(a)).toStrictEqual(null);
+    expect(model.as(b)).not.toStrictEqual(null);
+    expect(model.as(c)).toStrictEqual(null);
 });

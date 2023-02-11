@@ -59,7 +59,7 @@ export interface UnionModel<TUnion> extends BaseModel<TUnion> {
 
     readonly resolved: SpreadModel<TUnion>;
 
-    castTo: <T>(definition: Definition<T>) => Model<T> | null;
+    as: <T>(definition: Definition<T>) => Model<T> | null;
 
     replace: (value: TUnion) => Promise<Model<TUnion>>;
 }
