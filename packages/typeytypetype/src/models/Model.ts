@@ -1,6 +1,10 @@
 import { type ArrayDefinition } from '../definitions/ArrayDefinition.js';
+import { type BooleanTypeDefinition } from '../definitions/BooleanTypeDefinition.js';
+import { type ConstantDefinition } from '../definitions/ConstantDefinition.js';
 import { type Definition } from '../definitions/Definition.js';
+import { type NumberTypeDefinition } from '../definitions/NumberTypeDefinition.js';
 import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
+import { type StringTypeDefinition } from '../definitions/StringTypeDefinition.js';
 import { type IsUnion } from '../internal/utilityTypes.js';
 import { type FixedPropertyType, type Maybe } from './internal/types.js';
 
@@ -14,11 +18,31 @@ export interface BaseModel<
     readonly definition: TDefinition;
 }
 
-export interface SimpleModel<
-    T,
-    TDefinition extends Definition<T> = Definition<T>
-> extends BaseModel<TDefinition> {
-    type: 'simple';
+export interface StringModel extends BaseModel<string, StringTypeDefinition> {
+    readonly type: 'string';
+}
+
+export interface NumberModel extends BaseModel<number, NumberTypeDefinition> {
+    readonly type: 'number';
+}
+
+export interface BooleanModel
+    extends BaseModel<boolean, BooleanTypeDefinition> {
+    readonly type: 'boolean';
+}
+
+export interface ConstantModel<T> extends BaseModel<T, ConstantDefinition<T>> {}
+
+export interface StringConstantModel extends ConstantModel<string> {
+    readonly type: 'string';
+}
+
+export interface NumberConstantModel extends ConstantModel<number> {
+    readonly type: 'number';
+}
+
+export interface BooleanConstantModel extends ConstantModel<boolean> {
+    readonly type: 'boolean';
 }
 
 export interface ArrayModel<TElementType>
@@ -68,10 +92,30 @@ export type UnknownModel = Maybe<
     ArrayModel<unknown> &
         ObjectModel<Record<string, unknown>> &
         UnionModel<unknown> &
-        SimpleModel<unknown>
+        StringModel &
+        NumberModel &
+        BooleanModel &
+        StringConstantModel &
+        NumberConstantModel &
+        BooleanConstantModel
 >;
 
 export type SpreadModel<T> = T extends any ? Model<T> : never;
+
+type SingleSimpleModel<
+    TBase,
+    T extends TBase,
+    TConstantModel,
+    TTypeModel
+> = TBase extends T ? TTypeModel : TConstantModel;
+
+type SimpleModel<T> = T extends string
+    ? SingleSimpleModel<string, T, StringConstantModel, StringModel>
+    : T extends number
+    ? SingleSimpleModel<number, T, NumberConstantModel, NumberModel>
+    : T extends boolean
+    ? SingleSimpleModel<boolean, T, BooleanConstantModel, BooleanModel>
+    : never;
 
 export type Model<T> = unknown extends T
     ? UnknownModel
@@ -81,4 +125,6 @@ export type Model<T> = unknown extends T
     ? ArrayModel<TElementType>
     : T extends Record<string, unknown>
     ? ObjectModel<T>
-    : SimpleModel<T>;
+    : T extends string | number | boolean
+    ? SimpleModel<T>
+    : never;

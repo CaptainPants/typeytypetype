@@ -4,7 +4,6 @@ export * from './Definition.js';
 export * from './ArrayDefinition.js';
 export * from './BooleanTypeDefinition.js';
 export * from './ConstantDefinition.js';
-export * from './DateTypeDefinition.js';
 export * from './MapObjectDefinition.js';
 export * from './RigidObjectDefinition.js';
 export * from './NamedDefinition.js';
