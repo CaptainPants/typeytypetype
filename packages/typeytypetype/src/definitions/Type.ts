@@ -40,7 +40,8 @@ export const Type = {
     union<TTypes extends readonly unknown[]>(
         ...definitions: MappedDefinition<TTypes>
     ) {
-        return new UnionDefinition<TTypes>(definitions);
+        // making the type system unhappy here
+        return new UnionDefinition<TTypes[number]>(definitions as any);
     },
 
     object<TObject extends Record<string, unknown>>(

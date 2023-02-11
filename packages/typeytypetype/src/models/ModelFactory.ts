@@ -12,8 +12,8 @@ export interface ModelFactoryArgs<T> {
 export interface ModelFactory {
     create: <T>(args: ModelFactoryArgs<T>) => Model<T>;
 
-    choose: <TTypes extends readonly unknown[]>(
-        value: unknown,
-        definition: UnionDefinition<TTypes>
-    ) => SpreadDefinition<TTypes[number]> | undefined;
+    choose: <TUnion>(
+        value: TUnion,
+        definition: UnionDefinition<TUnion>
+    ) => SpreadDefinition<TUnion> | undefined;
 }

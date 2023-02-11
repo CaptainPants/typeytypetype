@@ -1,29 +1,24 @@
 import { descend } from '../internal/descend.js';
-import {
-    type SpreadDefinition,
-    type MappedDefinition,
-} from './internal/types.js';
+import { type SpreadDefinition } from './internal/types.js';
 import { type ResolutionContext } from './ResolutionContext.js';
 import { Definition } from './Definition.js';
 
-export class UnionDefinition<
-    TTypes extends readonly unknown[]
-> extends Definition<TTypes[number]> {
-    constructor(definitions: MappedDefinition<TTypes>) {
+export class UnionDefinition<TUnion> extends Definition<TUnion> {
+    constructor(definitions: Array<SpreadDefinition<TUnion>>) {
         super();
         this.#definitions = definitions;
     }
 
-    #definitions: MappedDefinition<TTypes>;
+    #definitions: Array<SpreadDefinition<TUnion>>;
 
-    get definitions(): MappedDefinition<TTypes> {
+    get definitions(): Array<SpreadDefinition<TUnion>> {
         return this.#definitions;
     }
 
     getDefinition(
         resolutionContext: ResolutionContext,
-        value: TTypes[number]
-    ): SpreadDefinition<TTypes[number]> | undefined {
+        value: TUnion
+    ): SpreadDefinition<TUnion> | undefined {
         // This is showing as Definition<unknown> so I'm not sure why its not an error to return it as
         // a Definition<TTypes[number]>
         const match = this.#definitions.find((x) =>
@@ -31,7 +26,7 @@ export class UnionDefinition<
         );
 
         // cheating the type system
-        return match as any;
+        return match;
     }
 
     override doValidate(
