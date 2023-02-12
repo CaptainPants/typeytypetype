@@ -8,10 +8,10 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
 > {
     constructor(propertyDefinition: Definition<TValue>) {
         super();
-        this.#propertyDefinition = propertyDefinition;
+        this.propertyDefinition = propertyDefinition;
     }
 
-    #propertyDefinition: Definition<TValue>;
+    readonly propertyDefinition: Definition<TValue>;
 
     override doMatches(value: unknown, depth: number): boolean {
         if (typeof value !== 'object' || value === null) return false;
@@ -25,7 +25,7 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
 
             const propertyValue = asRecord[key];
             if (
-                !this.#propertyDefinition.doMatches(
+                !this.propertyDefinition.doMatches(
                     propertyValue,
                     descend(depth)
                 )
@@ -40,7 +40,7 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
     }
 
     override doToTypeString(depth: number): string {
-        return `Record<string, ${this.#propertyDefinition.doToTypeString(
+        return `Record<string, ${this.propertyDefinition.doToTypeString(
             descend(depth)
         )}>`;
     }
@@ -48,6 +48,6 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
     public override getDefinition<Key extends string>(
         key: Key
     ): Definition<FixedPropertyType<Record<string, TValue>, Key>> | undefined {
-        return this.#propertyDefinition as any;
+        return this.propertyDefinition as any;
     }
 }

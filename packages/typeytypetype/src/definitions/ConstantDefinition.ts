@@ -3,16 +3,16 @@ import { Definition } from './Definition.js';
 export class ConstantDefinition<T> extends Definition<T> {
     constructor(value: T) {
         super();
-        this.#value = value;
+        this.value = value;
     }
 
-    #value: T;
+    readonly value: T;
 
     override doMatches(value: unknown, depth: number): boolean {
-        return value === this.#value;
+        return value === this.value;
     }
 
     override doToTypeString(depth: number): string {
-        return JSON.stringify(this.#value);
+        return JSON.stringify(this.value);
     }
 }

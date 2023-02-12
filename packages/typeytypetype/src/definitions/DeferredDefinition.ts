@@ -8,7 +8,7 @@ export class DeferredDefinition<T> extends Definition<T> {
         this.definition = null;
     }
 
-    public name: string;
+    public readonly name: string;
     public definition: Definition<T> | null;
 
     getDefinition(): Definition<T> {

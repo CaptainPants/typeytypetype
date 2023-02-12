@@ -4,10 +4,10 @@ import { Definition } from './Definition.js';
 export class ArrayDefinition<TElement> extends Definition<TElement[]> {
     constructor(elementDefinition: Definition<TElement>) {
         super();
-        this.#elementDefinition = elementDefinition;
+        this.elementDefinition = elementDefinition;
     }
 
-    #elementDefinition: Definition<TElement>;
+    public readonly elementDefinition: Definition<TElement>;
 
     override doMatches(value: unknown, depth: number): boolean {
         if (!Array.isArray(value)) return false;
@@ -16,21 +16,18 @@ export class ArrayDefinition<TElement> extends Definition<TElement[]> {
         return (
             value.findIndex(
                 (itemValue) =>
-                    !this.#elementDefinition.doMatches(
-                        itemValue,
-                        descend(depth)
-                    )
+                    !this.elementDefinition.doMatches(itemValue, descend(depth))
             ) < 0
         );
     }
 
     override doToTypeString(depth: number): string {
-        return `Array<${this.#elementDefinition.doToTypeString(
+        return `Array<${this.elementDefinition.doToTypeString(
             descend(depth)
         )}>`;
     }
 
     getElementDefinition(): Definition<TElement> {
-        return this.#elementDefinition;
+        return this.elementDefinition;
     }
 }

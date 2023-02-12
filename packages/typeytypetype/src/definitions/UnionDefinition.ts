@@ -5,19 +5,15 @@ import { Definition } from './Definition.js';
 export class UnionDefinition<TUnion> extends Definition<TUnion> {
     constructor(definitions: Array<SpreadDefinition<TUnion>>) {
         super();
-        this.#definitions = definitions;
+        this.definitions = definitions;
     }
 
-    #definitions: Array<SpreadDefinition<TUnion>>;
-
-    get definitions(): Array<SpreadDefinition<TUnion>> {
-        return this.#definitions;
-    }
+    readonly definitions: Array<SpreadDefinition<TUnion>>;
 
     getDefinition(value: TUnion): SpreadDefinition<TUnion> | undefined {
         // This is showing as Definition<unknown> so I'm not sure why its not an error to return it as
         // a Definition<TTypes[number]>
-        const match = this.#definitions.find((x) => x.matches(value));
+        const match = this.definitions.find((x) => x.matches(value));
 
         // cheating the type system
         return match;
@@ -25,14 +21,14 @@ export class UnionDefinition<TUnion> extends Definition<TUnion> {
 
     override doMatches(value: unknown, depth: number): boolean {
         return (
-            this.#definitions.findIndex((model) =>
+            this.definitions.findIndex((model) =>
                 model.doMatches(value, descend(depth))
             ) >= 0
         );
     }
 
     override doToTypeString(depth: number): string {
-        return this.#definitions
+        return this.definitions
             .map((item) => `(${item.doToTypeString(descend(depth))}})`)
             .join(' | ');
     }

@@ -9,10 +9,10 @@ export class RigidObjectDefinition<
 > extends ObjectDefinition<TObject> {
     constructor(propertyDefinitions: MappedDefinition<TObject>) {
         super();
-        this.#propertyDefinitions = propertyDefinitions;
+        this.propertyDefinitions = propertyDefinitions;
     }
 
-    #propertyDefinitions: MappedDefinition<TObject>;
+    readonly propertyDefinitions: MappedDefinition<TObject>;
 
     override doMatches(value: unknown, depth: number): boolean {
         if (typeof value !== 'object' || value === null) return false;
@@ -21,9 +21,9 @@ export class RigidObjectDefinition<
 
         // Looking for validation failures
         const fixedPropertiesFailureIndex = Object.keys(
-            this.#propertyDefinitions
+            this.propertyDefinitions
         ).findIndex((key) => {
-            const property = this.#propertyDefinitions[key];
+            const property = this.propertyDefinitions[key];
             if (typeof property === 'undefined') return true; // this shouldn't happen
 
             const propertyValue = asRecord[key];
@@ -40,7 +40,7 @@ export class RigidObjectDefinition<
     override doToTypeString(depth: number): string {
         return (
             '{\r\n' +
-            Object.entries(this.#propertyDefinitions)
+            Object.entries(this.propertyDefinitions)
                 .map(
                     ([key, model]: [string, Definition<unknown>]) =>
                         `    ${JSON.stringify(key)}: ${model.doToTypeString(
@@ -53,13 +53,13 @@ export class RigidObjectDefinition<
     }
 
     public override getFixedPropertyNames(): string[] {
-        return Object.keys(this.#propertyDefinitions);
+        return Object.keys(this.propertyDefinitions);
     }
 
     public override getDefinition<Key extends string>(
         key: Key
     ): Definition<FixedPropertyType<TObject, Key>> | undefined {
-        const propertyDef = this.#propertyDefinitions[key];
+        const propertyDef = this.propertyDefinitions[key];
 
         return propertyDef as any;
     }
