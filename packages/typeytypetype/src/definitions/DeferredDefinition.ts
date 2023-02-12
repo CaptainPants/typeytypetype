@@ -12,8 +12,7 @@ export class DeferredDefinition<T> extends Definition<T> {
     public definition: Definition<T> | null;
 
     getDefinition(): Definition<T> {
-        if (!this.definition)
-            throw new Error('Model not provided.');
+        if (this.definition === null) throw new Error('Model not provided.');
         return this.definition;
     }
 
