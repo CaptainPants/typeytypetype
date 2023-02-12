@@ -1,18 +1,18 @@
 import { descend } from '../internal/descend.js';
 import { Definition } from './Definition.js';
 
-export class NamedDefinition<T> extends Definition<T> {
-    constructor(name: string, model?: Definition<T>) {
+export class DeferredDefinition<T> extends Definition<T> {
+    constructor(name: string) {
         super();
         this.name = name;
-        this.definition = model;
+        this.definition = null;
     }
 
     public name: string;
-    public definition: Definition<T> | undefined;
+    public definition: Definition<T> | null;
 
     getDefinition(): Definition<T> {
-        if (typeof this.definition === 'undefined')
+        if (!this.definition)
             throw new Error('Model not provided.');
         return this.definition;
     }

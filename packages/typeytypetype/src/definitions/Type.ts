@@ -5,7 +5,7 @@ import { StringTypeDefinition } from './StringTypeDefinition.js';
 import { ConstantDefinition } from './ConstantDefinition.js';
 import { BooleanTypeDefinition } from './BooleanTypeDefinition.js';
 import { UnionDefinition } from './UnionDefinition.js';
-import { NamedDefinition } from './NamedDefinition.js';
+import { DeferredDefinition } from './DeferredDefinition.js';
 import { RigidObjectDefinition } from './RigidObjectDefinition.js';
 import { MapObjectDefinition } from './MapObjectDefinition.js';
 import { type MappedDefinition } from './internal/types.js';
@@ -60,7 +60,7 @@ export const Type = {
         return new ArrayDefinition(elementDefinition);
     },
 
-    named<TType>(name: string): NamedDefinition<TType> {
-        return new NamedDefinition<TType>(name);
+    named<TType>(name: string): DeferredDefinition<TType> {
+        return new DeferredDefinition<TType>(name);
     },
 };

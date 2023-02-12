@@ -6,7 +6,7 @@ export * from './BooleanTypeDefinition.js';
 export * from './ConstantDefinition.js';
 export * from './MapObjectDefinition.js';
 export * from './RigidObjectDefinition.js';
-export * from './NamedDefinition.js';
+export * from './DeferredDefinition.js';
 export * from './NumberTypeDefinition.js';
 export * from './StringTypeDefinition.js';
 export * from './UnionDefinition.js';
