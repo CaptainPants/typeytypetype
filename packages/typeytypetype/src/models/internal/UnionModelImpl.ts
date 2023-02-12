@@ -1,4 +1,3 @@
-import { type Definition } from '../../definitions/index.js';
 import { type UnionDefinition } from '../../definitions/UnionDefinition.js';
 import { descend } from '../../internal/descend.js';
 import { type SpreadModel, type Model, type UnionModel } from '../Model.js';
@@ -45,6 +44,8 @@ export class UnionModelImpl<TUnion>
 
     as<T>(definition: Definition<T>): Model<T> | null {
         const resolved = this.resolved;
-        return resolved.definition === definition ? (resolved as any) : null;
+        return resolved.definition === (definition as any)
+            ? (resolved as any)
+            : null;
     }
 }

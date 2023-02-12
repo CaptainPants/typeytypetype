@@ -20,6 +20,7 @@ module.exports = {
     },
     rules: {
         'typescript-eslint/promise-function-async': ['Off'],
+        'n/no-callback-literal': ['Off']
     },
     settings: {
         'import/resolver': {

@@ -32,7 +32,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
 
             this.#propertyModels[name] = factory.create({
                 value: value[name],
-                definition: propertyDef,
+                definition: propertyDef as any,
                 depth: descend(depth),
             });
         }

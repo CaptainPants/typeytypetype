@@ -1,14 +1,20 @@
-import { type ValidationResult, type Validator } from './Validator.js';
+import { deepFreeze } from '../internal/deepFreeze.js';
+import { type Validator, type ValidationResult } from './Validator.js';
 
 export abstract class Definition<T> {
-    readonly validators: Validator[] = [];
+    readonly validators: Array<Validator<T>> = [];
 
-    freeze(): this {
-        Object.freeze(this);
+    setup(callback: (self: this) => void): this {
+        callback(this);
         return this;
     }
 
-    addValidator(validator: Validator): this {
+    freeze(): this {
+        deepFreeze(this);
+        return this;
+    }
+
+    addValidator(validator: Validator<T>): this {
         this.validators.push(validator);
         return this;
     }
@@ -19,11 +25,11 @@ export abstract class Definition<T> {
 
     abstract doMatches(value: unknown, depth: number): boolean;
 
-    async validate(value: unknown): Promise<ValidationResult> {
+    async validate(value: T): ValidationResult {
         return await this.doValidate(value, 25);
     }
 
-    async doValidate(value: unknown, depth: number): Promise<ValidationResult> {
+    async doValidate(value: T, depth: number): ValidationResult {
         const isMatch = this.doMatches(value, depth);
 
         if (!isMatch) {
