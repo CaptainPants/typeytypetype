@@ -17,8 +17,12 @@
         "format": "npx prettier --config ../../.prettierrc.json --write src",
         "lint": "npx eslint src/**/*.{ts,tsx} --fix",
         "compile": "tsc",
-        "test": "npx jest src --silent=false",
+        "test": "npx jest --silent=false src",
+        "test:only": "npx jest --silent=false",
         "build": "yarn format && yarn lint && yarn test && yarn compile"
     },
-    "devDependencies": {}
+    "devDependencies": {},
+    "dependencies": {
+        "fast-equals": "^4.0.3"
+    }
 }
