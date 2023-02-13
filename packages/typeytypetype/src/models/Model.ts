@@ -1,6 +1,5 @@
 import { type ArrayDefinition } from '../definitions/ArrayDefinition.js';
 import { type BooleanTypeDefinition } from '../definitions/BooleanTypeDefinition.js';
-import { type ConstantDefinition } from '../definitions/ConstantDefinition.js';
 import { type Definition } from '../definitions/Definition.js';
 import { type NumberTypeDefinition } from '../definitions/NumberTypeDefinition.js';
 import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
@@ -28,20 +27,6 @@ export interface NumberModel extends BaseModel<number, NumberTypeDefinition> {
 
 export interface BooleanModel
     extends BaseModel<boolean, BooleanTypeDefinition> {
-    readonly type: 'boolean';
-}
-
-export interface ConstantModel<T> extends BaseModel<T, ConstantDefinition<T>> {}
-
-export interface StringConstantModel extends ConstantModel<string> {
-    readonly type: 'string';
-}
-
-export interface NumberConstantModel extends ConstantModel<number> {
-    readonly type: 'number';
-}
-
-export interface BooleanConstantModel extends ConstantModel<boolean> {
     readonly type: 'boolean';
 }
 
@@ -94,26 +79,17 @@ export type UnknownModel = Maybe<
         UnionModel<unknown> &
         StringModel &
         NumberModel &
-        BooleanModel &
-        StringConstantModel &
-        NumberConstantModel &
-        BooleanConstantModel
+        BooleanModel
 >;
 
 export type SpreadModel<T> = T extends any ? Model<T> : never;
 
 type SimpleModel<T> = T extends string
-    ? string extends T
-        ? StringModel
-        : StringConstantModel
+    ? StringModel
     : T extends number
-    ? number extends T
-        ? NumberModel
-        : NumberConstantModel
+    ? NumberModel
     : T extends boolean
-    ? boolean extends T
-        ? BooleanModel
-        : BooleanConstantModel
+    ? BooleanModel
     : never;
 
 export type Model<T> = unknown extends T

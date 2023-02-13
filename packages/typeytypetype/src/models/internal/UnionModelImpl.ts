@@ -1,3 +1,4 @@
+import { type Definition } from '../../definitions/Definition.js';
 import { type UnionDefinition } from '../../definitions/UnionDefinition.js';
 import { descend } from '../../internal/descend.js';
 import { type SpreadModel, type Model, type UnionModel } from '../Model.js';
