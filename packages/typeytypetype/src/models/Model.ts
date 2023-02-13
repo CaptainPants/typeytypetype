@@ -5,7 +5,6 @@ import { type NumberTypeDefinition } from '../definitions/NumberTypeDefinition.j
 import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
 import { type StringTypeDefinition } from '../definitions/StringTypeDefinition.js';
 import { type IsUnion } from '../internal/utilityTypes.js';
-import { type ElementType } from '../types.js';
 import { type FixedPropertyType, type Maybe } from './internal/types.js';
 
 export type ModelType = 'unknown' | 'union' | 'object' | 'array' | 'simple';
@@ -31,19 +30,19 @@ export interface BooleanModel
     readonly type: 'boolean';
 }
 
-export interface ArrayModel<TArray extends readonly unknown[]>
-    extends BaseModel<TArray, ArrayDefinition<TArray>> {
+export interface ArrayModel<TElement>
+    extends BaseModel<TElement[], ArrayDefinition<TElement>> {
     type: 'array';
 
-    elementDefinition: () => Definition<ElementType<TArray>>;
+    elementDefinition: () => Definition<TElement>;
 
-    getElement: (index: number) => Model<ElementType<TArray>> | undefined;
+    getElement: (index: number) => Model<TElement> | undefined;
 
     spliceElements: (
         start: number,
         deleteCount: number,
-        newElements: Array<ElementType<TArray>>
-    ) => Promise<Model<TArray>>;
+        newElements: TElement[]
+    ) => Promise<Model<TElement[]>>;
 }
 
 export interface ObjectModel<TProperties extends Record<string, unknown>>
@@ -75,7 +74,7 @@ export interface UnionModel<TUnion> extends BaseModel<TUnion> {
 }
 
 export type UnknownModel = Maybe<
-    ArrayModel<unknown[]> &
+    ArrayModel<unknown> &
         ObjectModel<Record<string, unknown>> &
         UnionModel<unknown> &
         StringModel &
@@ -97,8 +96,8 @@ export type Model<T> = unknown extends T
     ? UnknownModel
     : IsUnion<T> extends true
     ? UnionModel<T>
-    : T extends unknown[]
-    ? ArrayModel<T>
+    : T extends Array<infer TElement>
+    ? ArrayModel<TElement>
     : T extends Record<string, unknown>
     ? ObjectModel<T>
     : T extends string | number | boolean

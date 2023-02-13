@@ -56,9 +56,7 @@ export class StandardModelFactory implements ModelFactory {
         value: TUnion,
         definition: UnionDefinition<TUnion>
     ): SpreadDefinition<TUnion> | undefined {
-        const match = definition.getDefinition(value);
-        // cheating the type system
-        return match;
+        return definition.getDefinition(value);
     }
 
     static readonly defaultMaxDepth = 25;

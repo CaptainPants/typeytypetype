@@ -3,6 +3,7 @@ import { type FixedPropertyType } from '../models/internal/types.js';
 import { type BaseDefinition } from './BaseDefinition.js';
 import { ObjectDefinition } from './ObjectDefinition.js';
 import { type MappedDefinition } from './internal/types.js';
+import { type Definition } from './Definition.js';
 
 export class RigidObjectDefinition<
     TObject extends Record<string, unknown>
@@ -58,7 +59,7 @@ export class RigidObjectDefinition<
 
     public override getDefinition<Key extends string>(
         key: Key
-    ): BaseDefinition<FixedPropertyType<TObject, Key>> | undefined {
+    ): Definition<FixedPropertyType<TObject, Key>> | undefined {
         const propertyDef = this.propertyDefinitions[key];
 
         return propertyDef as any;

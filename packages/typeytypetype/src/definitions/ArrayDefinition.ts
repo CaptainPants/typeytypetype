@@ -1,24 +1,22 @@
 import { descend } from '../internal/descend.js';
-import { type ElementType } from '../types.js';
 import { BaseDefinition } from './BaseDefinition.js';
+import { type Definition } from './Definition.js';
 
-export class ArrayDefinition<
-    TArray extends readonly unknown[]
-> extends BaseDefinition<TArray> {
-    constructor(elementDefinition: BaseDefinition<ElementType<TArray>>) {
+export class ArrayDefinition<TElement> extends BaseDefinition<TElement[]> {
+    constructor(elementDefinition: Definition<TElement>) {
         super();
         this.elementDefinition = elementDefinition;
     }
 
-    public readonly elementDefinition: BaseDefinition<ElementType<TArray>>;
+    public readonly elementDefinition: Definition<TElement>;
 
-    override doMatches(value: unknown, depth: number): value is TArray {
+    override doMatches(value: unknown, depth: number): value is TElement[] {
         if (!Array.isArray(value)) return false;
 
         // Any item doesn't validate against #itemModel
         return (
             value.findIndex(
-                (itemValue) =>
+                (itemValue: unknown) =>
                     !this.elementDefinition.doMatches(itemValue, descend(depth))
             ) < 0
         );
@@ -30,7 +28,7 @@ export class ArrayDefinition<
         )}>`;
     }
 
-    getElementDefinition(): BaseDefinition<ElementType<TArray>> {
+    getElementDefinition(): Definition<TElement> {
         return this.elementDefinition;
     }
 }

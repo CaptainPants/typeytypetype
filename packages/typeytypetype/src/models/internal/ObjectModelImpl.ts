@@ -1,5 +1,5 @@
 import * as assert from 'typed-assert';
-import { type BaseDefinition } from '../../definitions/BaseDefinition.js';
+import { type Definition } from '../../definitions/Definition.js';
 import { type ObjectDefinition } from '../../definitions/ObjectDefinition.js';
 import { descend } from '../../internal/descend.js';
 import { type Model, type ObjectModel } from '../Model.js';
@@ -42,7 +42,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
 
     #propertyModels: Record<string, Model<unknown>>;
 
-    expandoPropertyDefinition(): BaseDefinition<unknown> | undefined {
+    expandoPropertyDefinition(): Definition<unknown> | undefined {
         return this.definition.getExpandoDefinition();
     }
 
