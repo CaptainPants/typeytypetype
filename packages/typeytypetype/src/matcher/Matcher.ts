@@ -1,4 +1,3 @@
-import { type Definition } from '../definitions/Definition.js';
 import { and } from '../internal/logical.js';
 import { type Model } from '../models/Model.js';
 import { matchPart } from './internal/matchPart.js';
@@ -30,9 +29,8 @@ export class Matcher<T> {
     }
 
     #doesMatch<TValue>(model: Model<TValue>, rule: MatcherRule<T>): boolean {
-        // model is a complicated type so definition gets typed a bit weirdly
-        const definition = model.definition as Definition<TValue>;
-
-        return and(rule.parts, (part) => matchPart(definition, part));
+        return and(rule.parts, (part) =>
+            matchPart<unknown>(model.definition.asUnknown(), part)
+        );
     }
 }

@@ -84,4 +84,15 @@ export abstract class Definition<T> {
     differentiator(): T {
         throw new Error('Do not call this method.');
     }
+
+    /**
+     * Cast the definition as Definition<unknown> - this won't happen naturally as the parameters to validate are strongly typed.
+     * TODO: should we restructure to get validate out of Definition into a subclass, and build a type safe conversion in as the
+     * first step? OR have an interface above Definition that we use for 'unknown'-ing, that doesn't have any typed methods.
+     * Maybe the current one becomes 'TypedDefinition' or 'BaseDefinition' and the new ancestor interface/class become 'Definition'.
+     * @returns
+     */
+    asUnknown(): Definition<unknown> {
+        return this as any;
+    }
 }

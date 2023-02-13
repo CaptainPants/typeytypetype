@@ -1,13 +1,16 @@
 import { descend } from '../internal/descend.js';
+import { type ElementType } from '../types.js';
 import { Definition } from './Definition.js';
 
-export class ArrayDefinition<TElement> extends Definition<TElement[]> {
-    constructor(elementDefinition: Definition<TElement>) {
+export class ArrayDefinition<
+    TArray extends readonly unknown[]
+> extends Definition<TArray> {
+    constructor(elementDefinition: Definition<ElementType<TArray>>) {
         super();
         this.elementDefinition = elementDefinition;
     }
 
-    public readonly elementDefinition: Definition<TElement>;
+    public readonly elementDefinition: Definition<ElementType<TArray>>;
 
     override doMatches(value: unknown, depth: number): boolean {
         if (!Array.isArray(value)) return false;
@@ -27,7 +30,7 @@ export class ArrayDefinition<TElement> extends Definition<TElement[]> {
         )}>`;
     }
 
-    getElementDefinition(): Definition<TElement> {
+    getElementDefinition(): Definition<ElementType<TArray>> {
         return this.elementDefinition;
     }
 }

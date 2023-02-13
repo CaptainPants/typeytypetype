@@ -1,17 +1,18 @@
 import { type ArrayDefinition } from '../../definitions/ArrayDefinition.js';
 import { type Definition } from '../../definitions/Definition.js';
 import { descend } from '../../internal/descend.js';
+import { type ElementType } from '../../types.js';
 import { type ArrayModel, type Model } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 import { ModelImpl } from './ModelImpl.js';
 
-export class ArrayModelImpl<TElement>
-    extends ModelImpl<TElement[], ArrayDefinition<TElement>>
-    implements ArrayModel<TElement>
+export class ArrayModelImpl<TArray extends readonly unknown[]>
+    extends ModelImpl<TArray, ArrayDefinition<TArray>>
+    implements ArrayModel<TArray>
 {
     constructor(
-        value: TElement[],
-        definition: ArrayDefinition<TElement>,
+        value: TArray,
+        definition: ArrayDefinition<TArray>,
         depth: number,
         factory: ModelFactory
     ) {
@@ -19,37 +20,39 @@ export class ArrayModelImpl<TElement>
 
         this.#elementDefinition = definition.getElementDefinition();
 
-        this.#elementModels = value.map((item) =>
-            factory.create({
-                value: item,
-                definition: this.#elementDefinition,
-                depth: descend(depth),
-            })
+        this.#elementModels = (value as ReadonlyArray<ElementType<TArray>>).map(
+            (item) =>
+                factory.create<ElementType<TArray>>({
+                    value: item,
+                    definition: this.#elementDefinition,
+                    depth: descend(depth),
+                })
         );
     }
 
     readonly type = 'array';
 
-    #elementDefinition: Definition<TElement>;
-    #elementModels: Array<Model<TElement>>;
+    #elementDefinition: Definition<ElementType<TArray>>;
+    #elementModels: Array<Model<ElementType<TArray>>>;
 
-    elementDefinition(): Definition<TElement> {
+    elementDefinition(): Definition<ElementType<TArray>> {
         return this.#elementDefinition;
     }
 
-    getElement(index: number): Model<TElement> | undefined {
+    getElement(index: number): Model<ElementType<TArray>> | undefined {
         return this.#elementModels[index];
     }
 
     async spliceElements(
         start: number,
         deleteCount: number,
-        newElements: TElement[]
-    ): Promise<Model<TElement[]>> {
+        newElements: Array<ElementType<TArray>>
+    ): Promise<Model<TArray>> {
         const copy = [...this.value];
         copy.splice(start, deleteCount, ...newElements);
 
-        return this.factory.create<TElement[]>({
+        return this.factory.create<TArray>({
+            // @ts-expect-error -- Typescript can't work out that ElementType[TArray][] == TArray so will error here
             value: copy,
             definition: this.definition,
             depth: this.depth,

@@ -77,7 +77,7 @@ export const Type = {
 
     array<TElement>(
         elementDefinition: Definition<TElement>
-    ): ArrayDefinition<TElement> {
+    ): ArrayDefinition<TElement[]> {
         return new ArrayDefinition(elementDefinition);
     },
 

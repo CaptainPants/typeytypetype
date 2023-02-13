@@ -5,6 +5,7 @@ import { type NumberTypeDefinition } from '../definitions/NumberTypeDefinition.j
 import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
 import { type StringTypeDefinition } from '../definitions/StringTypeDefinition.js';
 import { type IsUnion } from '../internal/utilityTypes.js';
+import { type ElementType } from '../types.js';
 import { type FixedPropertyType, type Maybe } from './internal/types.js';
 
 export type ModelType = 'unknown' | 'union' | 'object' | 'array' | 'simple';
@@ -30,19 +31,19 @@ export interface BooleanModel
     readonly type: 'boolean';
 }
 
-export interface ArrayModel<TElementType>
-    extends BaseModel<TElementType[], ArrayDefinition<TElementType>> {
+export interface ArrayModel<TArray extends readonly unknown[]>
+    extends BaseModel<TArray, ArrayDefinition<TArray>> {
     type: 'array';
 
-    elementDefinition: () => Definition<TElementType>;
+    elementDefinition: () => Definition<ElementType<TArray>>;
 
-    getElement: (index: number) => Model<TElementType> | undefined;
+    getElement: (index: number) => Model<ElementType<TArray>> | undefined;
 
     spliceElements: (
         start: number,
         deleteCount: number,
-        newElements: TElementType[]
-    ) => Promise<Model<TElementType[]>>;
+        newElements: Array<ElementType<TArray>>
+    ) => Promise<Model<TArray>>;
 }
 
 export interface ObjectModel<TProperties extends Record<string, unknown>>
@@ -74,13 +75,13 @@ export interface UnionModel<TUnion> extends BaseModel<TUnion> {
 }
 
 export type UnknownModel = Maybe<
-    ArrayModel<unknown> &
+    ArrayModel<unknown[]> &
         ObjectModel<Record<string, unknown>> &
         UnionModel<unknown> &
         StringModel &
         NumberModel &
         BooleanModel
->;
+> & { value: unknown; definition: Definition<unknown> };
 
 export type SpreadModel<T> = T extends any ? Model<T> : never;
 
@@ -96,8 +97,8 @@ export type Model<T> = unknown extends T
     ? UnknownModel
     : IsUnion<T> extends true
     ? UnionModel<T>
-    : T extends Array<infer TElementType>
-    ? ArrayModel<TElementType>
+    : T extends unknown[]
+    ? ArrayModel<T>
     : T extends Record<string, unknown>
     ? ObjectModel<T>
     : T extends string | number | boolean
