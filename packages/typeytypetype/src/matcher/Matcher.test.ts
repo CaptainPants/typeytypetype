@@ -8,13 +8,13 @@ test('test', async () => {
     const rules: Array<MatcherRule<number>> = [
         {
             name: 'rule1',
-            parts: [{ type: 'label', label: '1' }],
+            parts: [{ $label: '1' }],
             priority: 0,
             result: 1,
         },
         {
             name: 'rule2',
-            parts: [{ type: 'label', label: '2' }],
+            parts: [{ $label: '2' }],
             priority: 0,
             result: 2,
         },
@@ -25,12 +25,12 @@ test('test', async () => {
     const factory = new StandardModelFactory();
     const numModel1 = factory.create({
         value: 1,
-        definition: Type.number().addLabel('2').freeze(),
+        definition: Type.number().withLabels('2').freeze(),
         depth: 25,
     });
     const numModel2 = factory.create({
         value: 1,
-        definition: Type.number().addLabel('1').freeze(),
+        definition: Type.number().withLabels('1').freeze(),
         depth: 25,
     });
 

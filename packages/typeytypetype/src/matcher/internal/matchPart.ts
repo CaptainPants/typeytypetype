@@ -8,22 +8,19 @@ export function matchPart<TValue>(
     definition: Definition<TValue>,
     part: MatcherRulePart
 ): boolean {
-    switch (part.type) {
-        case 'attr':
-            return deepEqual(part.value, definition.getAttribute(part.name));
-        case 'label':
-            return definition.hasLabel(part.label);
-        case 'definition':
-            return definition.constructor === part.classConstructor;
-        case 'logical':
-            if (part.op === 'and') {
-                return and(part.operands, (item) =>
-                    matchPart(definition, item)
-                );
-            } else if (part.op === 'or') {
-                return or(part.operands, (item) => matchPart(definition, item));
-            } else {
-                throw new Error('Unexpected');
-            }
+    if ('$attr' in part) {
+        return deepEqual(part.value, definition.getAttribute(part.$attr));
+    } else if ('$label' in part) {
+        return definition.hasLabel(part.$label);
+    } else if ('$class' in part) {
+        return definition.constructor === part.$class;
+    } else if ('$or' in part) {
+        return or(part.$or, (item) => matchPart(definition, item));
+    } else if ('$and' in part) {
+        return and(part.$and, (item) => matchPart(definition, item));
+    } else if ('$predicate' in part) {
+        return part.$predicate(definition);
     }
+
+    throw new Error('Unexpected');
 }

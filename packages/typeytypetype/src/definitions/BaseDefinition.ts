@@ -23,22 +23,22 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         return this;
     }
 
-    addLabel(label: string): this {
+    withLabel(label: string): this {
         this.labels.push(label);
         return this;
     }
 
-    addLabels(...labels: string[]): this {
+    withLabels(...labels: string[]): this {
         this.labels.push(...labels);
         return this;
     }
 
-    addAttribute(name: string, value: unknown): this {
+    withAttr(name: string, value: unknown): this {
         this.attributes.set(name, value);
         return this;
     }
 
-    addValidator(validator: Validator<T>): this {
+    withValidator(validator: Validator<T>): this {
         this.validators.push(validator);
         return this;
     }

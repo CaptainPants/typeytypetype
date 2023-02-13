@@ -2,22 +2,23 @@ import { type Definition } from '../definitions/Definition.js';
 
 export type MatcherRulePart =
     | {
-          type: 'definition';
-          classConstructor: new (...args: unknown[]) => Definition<unknown>;
+          $class: new (...args: unknown[]) => Definition<unknown>;
       }
     | {
-          type: 'label';
-          label: string;
+          $label: string;
       }
     | {
-          type: 'attr';
-          name: string;
+          $attr: string;
           value: unknown;
       }
     | {
-          type: 'logical';
-          op: 'or' | 'and';
-          operands: MatcherRulePart[];
+          $or: MatcherRulePart[];
+      }
+    | {
+          $and: MatcherRulePart[];
+      }
+    | {
+          $predicate: (definition: Definition<unknown>) => boolean;
       };
 
 export interface MatcherRule<T> {
