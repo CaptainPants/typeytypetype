@@ -3,14 +3,37 @@ import { type Validator, type ValidationResult } from './Validator.js';
 
 export abstract class Definition<T> {
     readonly validators: Array<Validator<T>> = [];
+    readonly labels: string[] = [];
+    readonly attributes: Record<string, unknown> = {};
 
+    /**
+     * Calls the callback on the current definition, then freezes the definition.
+     * @param callback
+     * @returns
+     */
     setup(callback: (self: this) => void): this {
         callback(this);
+        this.freeze();
         return this;
     }
 
     freeze(): this {
         deepFreeze(this);
+        return this;
+    }
+
+    addLabel(label: string): this {
+        this.labels.push(label);
+        return this;
+    }
+
+    addLabels(...labels: string[]): this {
+        this.labels.push(...labels);
+        return this;
+    }
+
+    addAttribute(name: string, value: unknown): this {
+        this.attributes[name] = value;
         return this;
     }
 

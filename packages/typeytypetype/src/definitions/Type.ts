@@ -2,7 +2,14 @@ import { type Definition } from './Definition.js';
 import { ArrayDefinition } from './ArrayDefinition.js';
 import { NumberTypeDefinition } from './NumberTypeDefinition.js';
 import { StringTypeDefinition } from './StringTypeDefinition.js';
-import { ConstantDefinition } from './ConstantDefinition.js';
+import {
+    BooleanConstantDefinition,
+    type ConstantDefinition,
+    NullConstantDefinition,
+    NumberConstantDefinition,
+    StringConstantDefinition,
+    UndefinedConstantDefinition,
+} from './ConstantDefinition.js';
 import { BooleanTypeDefinition } from './BooleanTypeDefinition.js';
 import { UnionDefinition } from './UnionDefinition.js';
 import { DeferredDefinition } from './DeferredDefinition.js';
@@ -14,15 +21,29 @@ export const Type = {
     constant<TValue extends string | number | boolean>(
         value: TValue
     ): ConstantDefinition<TValue> {
-        return new ConstantDefinition(value);
+        if (typeof value === 'string') {
+            return new StringConstantDefinition(
+                value
+            ) satisfies Definition<string> as any;
+        } else if (typeof value === 'number') {
+            return new NumberConstantDefinition(
+                value
+            ) satisfies Definition<number> as any;
+        } else if (typeof value === 'boolean') {
+            return new BooleanConstantDefinition(
+                value
+            ) satisfies Definition<boolean> as any;
+        } else {
+            throw new TypeError('Not supported');
+        }
     },
 
     null() {
-        return new ConstantDefinition(null);
+        return new NullConstantDefinition();
     },
 
     undefined(): Definition<undefined> {
-        return new ConstantDefinition(undefined);
+        return new UndefinedConstantDefinition();
     },
 
     string(): StringTypeDefinition {
