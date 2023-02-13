@@ -1,6 +1,6 @@
-import { type Definition } from './definitions/Definition.js';
+import { type BaseDefinition } from './definitions/BaseDefinition.js';
 
-export type TypeFromDefinition<TModel> = TModel extends Definition<infer T>
+export type TypeFromDefinition<TModel> = TModel extends BaseDefinition<infer T>
     ? T
     : TModel;
 

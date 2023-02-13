@@ -1,7 +1,7 @@
-import { Definition } from './Definition.js';
+import { BaseDefinition } from './BaseDefinition.js';
 
-export class BooleanTypeDefinition extends Definition<boolean> {
-    override doMatches(value: unknown, _depth: number): boolean {
+export class BooleanTypeDefinition extends BaseDefinition<boolean> {
+    override doMatches(value: unknown, _depth: number): value is boolean {
         return typeof value === 'boolean';
     }
 

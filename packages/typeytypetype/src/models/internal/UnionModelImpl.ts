@@ -45,8 +45,6 @@ export class UnionModelImpl<TUnion>
 
     as<T>(definition: Definition<T>): Model<T> | null {
         const resolved = this.resolved;
-        return resolved.definition === (definition as any)
-            ? (resolved as any)
-            : null;
+        return resolved.definition === definition ? (resolved as any) : null;
     }
 }

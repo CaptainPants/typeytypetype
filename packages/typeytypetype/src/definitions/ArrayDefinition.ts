@@ -1,18 +1,18 @@
 import { descend } from '../internal/descend.js';
 import { type ElementType } from '../types.js';
-import { Definition } from './Definition.js';
+import { BaseDefinition } from './BaseDefinition.js';
 
 export class ArrayDefinition<
     TArray extends readonly unknown[]
-> extends Definition<TArray> {
-    constructor(elementDefinition: Definition<ElementType<TArray>>) {
+> extends BaseDefinition<TArray> {
+    constructor(elementDefinition: BaseDefinition<ElementType<TArray>>) {
         super();
         this.elementDefinition = elementDefinition;
     }
 
-    public readonly elementDefinition: Definition<ElementType<TArray>>;
+    public readonly elementDefinition: BaseDefinition<ElementType<TArray>>;
 
-    override doMatches(value: unknown, depth: number): boolean {
+    override doMatches(value: unknown, depth: number): value is TArray {
         if (!Array.isArray(value)) return false;
 
         // Any item doesn't validate against #itemModel
@@ -30,7 +30,7 @@ export class ArrayDefinition<
         )}>`;
     }
 
-    getElementDefinition(): Definition<ElementType<TArray>> {
+    getElementDefinition(): BaseDefinition<ElementType<TArray>> {
         return this.elementDefinition;
     }
 }

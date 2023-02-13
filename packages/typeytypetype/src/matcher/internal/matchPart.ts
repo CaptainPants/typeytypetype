@@ -10,9 +10,9 @@ export function matchPart<TValue>(
 ): boolean {
     switch (part.type) {
         case 'attr':
-            return deepEqual(part.value, definition.attributes[part.name]);
+            return deepEqual(part.value, definition.getAttribute(part.name));
         case 'label':
-            return definition.labels.includes(part.label);
+            return definition.hasLabel(part.label);
         case 'definition':
             return definition.constructor === part.classConstructor;
         case 'logical':

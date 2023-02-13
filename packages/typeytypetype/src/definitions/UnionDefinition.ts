@@ -1,8 +1,8 @@
 import { descend } from '../internal/descend.js';
 import { type SpreadDefinition } from './internal/types.js';
-import { Definition } from './Definition.js';
+import { BaseDefinition } from './BaseDefinition.js';
 
-export class UnionDefinition<TUnion> extends Definition<TUnion> {
+export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
     constructor(definitions: Array<SpreadDefinition<TUnion>>) {
         super();
         this.definitions = definitions;
@@ -19,7 +19,7 @@ export class UnionDefinition<TUnion> extends Definition<TUnion> {
         return match;
     }
 
-    override doMatches(value: unknown, depth: number): boolean {
+    override doMatches(value: unknown, depth: number): value is TUnion {
         return (
             this.definitions.findIndex((model) =>
                 model.doMatches(value, descend(depth))

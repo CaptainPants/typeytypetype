@@ -1,4 +1,4 @@
-import { type Definition } from './Definition.js';
+import { type BaseDefinition } from './BaseDefinition.js';
 import { ArrayDefinition } from './ArrayDefinition.js';
 import { NumberTypeDefinition } from './NumberTypeDefinition.js';
 import { StringTypeDefinition } from './StringTypeDefinition.js';
@@ -24,15 +24,15 @@ export const Type = {
         if (typeof value === 'string') {
             return new StringConstantDefinition(
                 value
-            ) satisfies Definition<string> as any;
+            ) satisfies BaseDefinition<string> as any;
         } else if (typeof value === 'number') {
             return new NumberConstantDefinition(
                 value
-            ) satisfies Definition<number> as any;
+            ) satisfies BaseDefinition<number> as any;
         } else if (typeof value === 'boolean') {
             return new BooleanConstantDefinition(
                 value
-            ) satisfies Definition<boolean> as any;
+            ) satisfies BaseDefinition<boolean> as any;
         } else {
             throw new TypeError('Not supported');
         }
@@ -42,7 +42,7 @@ export const Type = {
         return new NullConstantDefinition();
     },
 
-    undefined(): Definition<undefined> {
+    undefined(): BaseDefinition<undefined> {
         return new UndefinedConstantDefinition();
     },
 
@@ -71,12 +71,12 @@ export const Type = {
         return new RigidObjectDefinition<TObject>(propertyDefinitions);
     },
 
-    map<TValue>(valueDefinition: Definition<TValue>) {
+    map<TValue>(valueDefinition: BaseDefinition<TValue>) {
         return new MapObjectDefinition<TValue>(valueDefinition);
     },
 
     array<TElement>(
-        elementDefinition: Definition<TElement>
+        elementDefinition: BaseDefinition<TElement>
     ): ArrayDefinition<TElement[]> {
         return new ArrayDefinition(elementDefinition);
     },

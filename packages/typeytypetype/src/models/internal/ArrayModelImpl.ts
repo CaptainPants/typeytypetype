@@ -1,5 +1,5 @@
 import { type ArrayDefinition } from '../../definitions/ArrayDefinition.js';
-import { type Definition } from '../../definitions/Definition.js';
+import { type BaseDefinition } from '../../definitions/BaseDefinition.js';
 import { descend } from '../../internal/descend.js';
 import { type ElementType } from '../../types.js';
 import { type ArrayModel, type Model } from '../Model.js';
@@ -32,10 +32,10 @@ export class ArrayModelImpl<TArray extends readonly unknown[]>
 
     readonly type = 'array';
 
-    #elementDefinition: Definition<ElementType<TArray>>;
+    #elementDefinition: BaseDefinition<ElementType<TArray>>;
     #elementModels: Array<Model<ElementType<TArray>>>;
 
-    elementDefinition(): Definition<ElementType<TArray>> {
+    elementDefinition(): BaseDefinition<ElementType<TArray>> {
         return this.#elementDefinition;
     }
 

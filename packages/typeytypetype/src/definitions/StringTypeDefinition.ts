@@ -1,7 +1,7 @@
-import { Definition } from './Definition.js';
+import { BaseDefinition } from './BaseDefinition.js';
 
-export class StringTypeDefinition extends Definition<string> {
-    override doMatches(value: unknown, depth: number): boolean {
+export class StringTypeDefinition extends BaseDefinition<string> {
+    override doMatches(value: unknown, depth: number): value is string {
         return typeof value === 'string';
     }
 

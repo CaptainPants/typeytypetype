@@ -1,19 +1,22 @@
 import { descend } from '../internal/descend.js';
 import { type FixedPropertyType } from '../models/internal/types.js';
-import { type Definition } from './Definition.js';
+import { type BaseDefinition } from './BaseDefinition.js';
 import { ObjectDefinition } from './ObjectDefinition.js';
 
 export class MapObjectDefinition<TValue> extends ObjectDefinition<
     Record<string, TValue>
 > {
-    constructor(propertyDefinition: Definition<TValue>) {
+    constructor(propertyDefinition: BaseDefinition<TValue>) {
         super();
         this.propertyDefinition = propertyDefinition;
     }
 
-    readonly propertyDefinition: Definition<TValue>;
+    readonly propertyDefinition: BaseDefinition<TValue>;
 
-    override doMatches(value: unknown, depth: number): boolean {
+    override doMatches(
+        value: unknown,
+        depth: number
+    ): value is Record<string, TValue> {
         if (typeof value !== 'object' || value === null) return false;
 
         const asRecord = value as Record<string, unknown>;
@@ -47,7 +50,9 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
 
     public override getDefinition<Key extends string>(
         key: Key
-    ): Definition<FixedPropertyType<Record<string, TValue>, Key>> | undefined {
+    ):
+        | BaseDefinition<FixedPropertyType<Record<string, TValue>, Key>>
+        | undefined {
         return this.propertyDefinition as any;
     }
 }

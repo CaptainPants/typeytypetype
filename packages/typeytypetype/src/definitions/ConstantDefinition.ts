@@ -1,6 +1,6 @@
-import { Definition } from './Definition.js';
+import { BaseDefinition } from './BaseDefinition.js';
 
-export abstract class ConstantDefinition<T> extends Definition<T> {
+export abstract class ConstantDefinition<T> extends BaseDefinition<T> {
     constructor(value: T) {
         super();
         this.value = value;
@@ -8,7 +8,7 @@ export abstract class ConstantDefinition<T> extends Definition<T> {
 
     readonly value: T;
 
-    override doMatches(value: unknown, depth: number): boolean {
+    override doMatches(value: unknown, depth: number): value is T {
         return value === this.value;
     }
 

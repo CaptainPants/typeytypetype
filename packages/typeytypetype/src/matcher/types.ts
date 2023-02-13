@@ -1,4 +1,4 @@
-import { type Definition } from '../definitions';
+import { type Definition } from '../definitions/Definition.js';
 
 export type MatcherRulePart =
     | {

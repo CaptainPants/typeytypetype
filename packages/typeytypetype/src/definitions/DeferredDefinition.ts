@@ -1,7 +1,7 @@
 import { descend } from '../internal/descend.js';
-import { Definition } from './Definition.js';
+import { BaseDefinition } from './BaseDefinition.js';
 
-export class DeferredDefinition<T> extends Definition<T> {
+export class DeferredDefinition<T> extends BaseDefinition<T> {
     constructor(name: string) {
         super();
         this.name = name;
@@ -9,14 +9,14 @@ export class DeferredDefinition<T> extends Definition<T> {
     }
 
     public readonly name: string;
-    public definition: Definition<T> | null;
+    public definition: BaseDefinition<T> | null;
 
-    getDefinition(): Definition<T> {
+    getDefinition(): BaseDefinition<T> {
         if (this.definition === null) throw new Error('Model not provided.');
         return this.definition;
     }
 
-    override doMatches(value: unknown, depth: number): boolean {
+    override doMatches(value: unknown, depth: number): value is T {
         return this.getDefinition().doMatches(value, descend(depth));
     }
 

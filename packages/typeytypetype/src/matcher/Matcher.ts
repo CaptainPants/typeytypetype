@@ -30,7 +30,7 @@ export class Matcher<T> {
 
     #doesMatch<TValue>(model: Model<TValue>, rule: MatcherRule<T>): boolean {
         return and(rule.parts, (part) =>
-            matchPart<unknown>(model.definition.asUnknown(), part)
+            matchPart<unknown>(model.definition, part)
         );
     }
 }
