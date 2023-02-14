@@ -2,7 +2,11 @@ import * as assert from 'typed-assert';
 import { type Definition } from '../../definitions/Definition.js';
 import { type ObjectDefinition } from '../../definitions/ObjectDefinition.js';
 import { descend } from '../../internal/descend.js';
-import { type Model, type ObjectModel } from '../Model.js';
+import {
+    type ParentRelationship,
+    type Model,
+    type ObjectModel,
+} from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 import { ModelImpl } from './ModelImpl.js';
 import { type FixedPropertyType } from './types.js';
@@ -12,12 +16,13 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
     implements ObjectModel<TObject>
 {
     constructor(
+        parent: ParentRelationship | null,
         value: TObject,
         definition: ObjectDefinition<TObject>,
         depth: number,
         factory: ModelFactory
     ) {
-        super(value, definition, depth, factory);
+        super(parent, value, definition, depth, factory);
 
         this.#propertyModels = {};
 
@@ -31,6 +36,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             }
 
             this.#propertyModels[name] = factory.create({
+                parent: { $propertyOF: this, property: name },
                 value: value[name],
                 definition: propertyDef as any,
                 depth: descend(depth),
@@ -64,6 +70,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         };
 
         return this.factory.create<TObject>({
+            parent: this.parent,
             value: copy,
             definition: this.definition,
             depth: this.depth,
@@ -82,6 +89,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         delete copy[key];
 
         return this.factory.create<TObject>({
+            parent: this.parent,
             value: copy,
             definition: this.definition,
             depth: this.depth,

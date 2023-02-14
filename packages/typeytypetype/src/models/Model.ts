@@ -5,7 +5,7 @@ import { type NumberTypeDefinition } from '../definitions/NumberTypeDefinition.j
 import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
 import { type StringTypeDefinition } from '../definitions/StringTypeDefinition.js';
 import { type IsUnion } from '../internal/utilityTypes.js';
-import { type FixedPropertyType, type Maybe } from './internal/types.js';
+import { type FixedPropertyType } from './internal/types.js';
 
 export type ModelType = 'unknown' | 'union' | 'object' | 'array' | 'simple';
 
@@ -73,15 +73,6 @@ export interface UnionModel<TUnion> extends BaseModel<TUnion> {
     replace: (value: TUnion) => Promise<Model<TUnion>>;
 }
 
-export type UnknownModel = Maybe<
-    ArrayModel<unknown> &
-        ObjectModel<Record<string, unknown>> &
-        UnionModel<unknown> &
-        StringModel &
-        NumberModel &
-        BooleanModel
-> & { value: unknown; definition: Definition<unknown> };
-
 export type SpreadModel<T> = T extends any ? Model<T> : never;
 
 type SimpleModel<T> = T extends string
@@ -92,9 +83,7 @@ type SimpleModel<T> = T extends string
     ? BooleanModel
     : never;
 
-export type Model<T> = unknown extends T
-    ? UnknownModel
-    : IsUnion<T> extends true
+export type Model<T> = IsUnion<T> extends true
     ? UnionModel<T>
     : T extends Array<infer TElement>
     ? ArrayModel<TElement>
@@ -102,4 +91,8 @@ export type Model<T> = unknown extends T
     ? ObjectModel<T>
     : T extends string | number | boolean
     ? SimpleModel<T>
-    : never;
+    : BaseModel<T>;
+
+export type ParentRelationship =
+    | { $elementOf: Model<unknown>; index: number }
+    | { $propertyOF: Model<unknown>; property: string };

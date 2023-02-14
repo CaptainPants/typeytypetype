@@ -19,9 +19,15 @@ export class StandardModelFactory implements ModelFactory {
 
     #resolutionContext: ResolutionContext;
 
-    create<T>({ value, definition, depth }: ModelFactoryArgs<T>): Model<T> {
+    create<T>({
+        parent = null,
+        value,
+        definition,
+        depth,
+    }: ModelFactoryArgs<T>): Model<T> {
         if (definition instanceof UnionDefinition) {
             return new UnionModelImpl<any>(
+                parent,
                 value,
                 definition,
                 descend(depth),
@@ -29,6 +35,7 @@ export class StandardModelFactory implements ModelFactory {
             ) as any;
         } else if (definition instanceof ArrayDefinition) {
             return new ArrayModelImpl(
+                parent,
                 value as any[],
                 definition,
                 descend(depth),
@@ -37,13 +44,15 @@ export class StandardModelFactory implements ModelFactory {
             // This might be Rigid or Map
         } else if (definition instanceof ObjectDefinition) {
             return new ObjectModelImpl(
-                value as any,
+                parent,
+                value,
                 definition,
                 descend(depth),
                 this
             ) as any;
         } else {
             return new ModelImpl(
+                parent,
                 value,
                 definition,
                 descend(depth),

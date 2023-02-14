@@ -1,7 +1,12 @@
 import { type Definition } from '../../definitions/Definition.js';
 import { type UnionDefinition } from '../../definitions/UnionDefinition.js';
 import { descend } from '../../internal/descend.js';
-import { type SpreadModel, type Model, type UnionModel } from '../Model.js';
+import {
+    type SpreadModel,
+    type Model,
+    type UnionModel,
+    type ParentRelationship,
+} from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 import { ModelImpl } from './ModelImpl.js';
 
@@ -10,12 +15,13 @@ export class UnionModelImpl<TUnion>
     implements UnionModel<TUnion>
 {
     constructor(
+        parent: ParentRelationship | null,
         value: TUnion,
         definition: UnionDefinition<TUnion>,
         depth: number,
         factory: ModelFactory
     ) {
-        super(value, definition, depth, factory);
+        super(parent, value, definition, depth, factory);
 
         const match = factory.choose<TUnion>(value, definition);
 
@@ -24,6 +30,7 @@ export class UnionModelImpl<TUnion>
         }
 
         this.resolved = factory.create<TUnion>({
+            parent,
             value,
             definition: match,
             depth: descend(depth),
@@ -36,6 +43,7 @@ export class UnionModelImpl<TUnion>
 
     async replace(value: TUnion): Promise<Model<TUnion>> {
         const model = this.factory.create({
+            parent: this.parent,
             value,
             definition: this.definition,
             depth: descend(this.depth),

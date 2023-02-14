@@ -14,12 +14,10 @@ export class Matcher<T> {
         let bestCandidateRule: MatcherRule<T> | null = null;
 
         for (const rule of this.rules) {
-            const currentMatches = this.#doesMatch(model, rule);
-
             if (
-                currentMatches &&
                 (bestCandidateRule === null ||
-                    bestCandidateRule.priority < rule.priority)
+                    bestCandidateRule.priority < rule.priority) &&
+                this.#doesMatch(model, rule)
             ) {
                 bestCandidateRule = rule;
             }
