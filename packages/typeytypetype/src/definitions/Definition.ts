@@ -1,9 +1,9 @@
 import { type ValidationResult } from './Validator.js';
 
 export interface Definition<T> {
-    matches: (value: unknown) => boolean;
+    matches: (value: unknown) => value is T;
 
-    doMatches: (value: unknown, depth: number) => boolean;
+    doMatches: (value: unknown, depth: number) => value is T;
 
     validate: (value: unknown) => ValidationResult;
 
@@ -16,10 +16,4 @@ export interface Definition<T> {
     hasLabel: (label: string) => boolean;
 
     getAttribute: (name: string) => unknown;
-
-    /**
-     * This is 100% here just to allow type inference to match the type.
-     * @returns
-     */
-    differentiator: () => T;
 }
