@@ -36,7 +36,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             }
 
             this.#propertyModels[name] = factory.create({
-                parent: { $propertyOF: this, property: name },
+                parent: { $propertyOF: this as any, property: name },
                 value: value[name],
                 definition: propertyDef as any,
                 depth: descend(depth),

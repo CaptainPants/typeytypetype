@@ -83,6 +83,14 @@ type SimpleModel<T> = T extends string
     ? BooleanModel
     : never;
 
+export type UnknownModel =
+    | UnionModel<unknown>
+    | ArrayModel<unknown>
+    | ObjectModel<Record<string, unknown>>
+    | StringModel
+    | NumberModel
+    | BooleanModel;
+
 export type Model<T> = IsUnion<T> extends true
     ? UnionModel<T>
     : T extends Array<infer TElement>
@@ -91,7 +99,7 @@ export type Model<T> = IsUnion<T> extends true
     ? ObjectModel<T>
     : T extends string | number | boolean
     ? SimpleModel<T>
-    : BaseModel<T>;
+    : UnknownModel;
 
 export type ParentRelationship =
     | { $elementOf: Model<unknown>; index: number }
