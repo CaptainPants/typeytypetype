@@ -9,6 +9,9 @@ export type UnionToIntersection<U> = (
     ? I
     : never;
 
+/**
+ * This is not in use but is cool so keeping it around.
+ */
 export type TupleToIntersection<TArgs extends readonly unknown[]> =
     UnionToIntersection<TArgs[number]>;
 

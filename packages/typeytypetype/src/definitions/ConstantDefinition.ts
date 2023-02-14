@@ -18,13 +18,17 @@ export abstract class ConstantDefinition<T> extends BaseDefinition<T> {
 }
 
 export class StringConstantDefinition extends ConstantDefinition<string> {}
+
 export class NumberConstantDefinition extends ConstantDefinition<number> {}
+
 export class BooleanConstantDefinition extends ConstantDefinition<boolean> {}
+
 export class UndefinedConstantDefinition extends ConstantDefinition<undefined> {
     constructor() {
         super(undefined);
     }
 }
+
 export class NullConstantDefinition extends ConstantDefinition<null> {
     constructor() {
         super(null);

@@ -1,5 +1,6 @@
 import { descend } from '../internal/descend.js';
 import { BaseDefinition } from './BaseDefinition.js';
+import { type Definition } from './Definition.js';
 
 export class DeferredDefinition<T> extends BaseDefinition<T> {
     constructor(name: string) {
@@ -9,9 +10,9 @@ export class DeferredDefinition<T> extends BaseDefinition<T> {
     }
 
     public readonly name: string;
-    public definition: BaseDefinition<T> | null;
+    public definition: Definition<T> | null;
 
-    getDefinition(): BaseDefinition<T> {
+    getDefinition(): Definition<T> {
         if (this.definition === null) throw new Error('Model not provided.');
         return this.definition;
     }
