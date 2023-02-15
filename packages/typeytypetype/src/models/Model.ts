@@ -13,6 +13,7 @@ export interface BaseModel<
     T,
     TDefinition extends Definition<T> = Definition<T>
 > {
+    readonly parent: ParentRelationship | null;
     readonly value: T;
     readonly definition: TDefinition;
 }
@@ -99,8 +100,8 @@ export type Model<T> = IsUnion<T> extends true
     ? ObjectModel<T>
     : T extends string | number | boolean
     ? SimpleModel<T>
-    : UnknownModel;
+    : BaseModel<unknown>;
 
 export type ParentRelationship =
-    | { $elementOf: Model<unknown>; index: number }
-    | { $propertyOF: Model<unknown>; property: string };
+    | { type: 'element'; model: Model<unknown>; index: number }
+    | { type: 'property'; model: Model<unknown>; property: string };

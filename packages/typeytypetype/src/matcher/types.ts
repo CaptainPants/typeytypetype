@@ -12,13 +12,19 @@ export type MatcherRulePart =
           value: unknown;
       }
     | {
+          $parent: MatcherRulePart;
+      }
+    | {
+          $ancestor: MatcherRulePart;
+      }
+    | {
           $or: MatcherRulePart[];
       }
     | {
           $and: MatcherRulePart[];
       }
     | {
-          $predicate: (definition: Definition<unknown>) => boolean;
+          $callback: (definition: Definition<unknown>) => boolean;
       };
 
 export interface MatcherRule<T> {

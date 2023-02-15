@@ -27,8 +27,6 @@ export class Matcher<T> {
     }
 
     #doesMatch<TValue>(model: Model<TValue>, rule: MatcherRule<T>): boolean {
-        return and(rule.parts, (part) =>
-            matchPart<unknown>(model.definition, part)
-        );
+        return and(rule.parts, (part) => matchPart(model, part));
     }
 }

@@ -26,7 +26,7 @@ export class ArrayModelImpl<TElement>
 
         this.#elementModels = value.map((item, index) =>
             factory.create({
-                parent: { $elementOf: this as any, index },
+                parent: { type: 'element', model: this as any, index },
                 value: item,
                 definition: this.#elementDefinition,
                 depth: descend(depth),
