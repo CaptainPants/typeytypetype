@@ -65,7 +65,7 @@ export const Type = {
         return new UnionDefinition<TTypes[number]>(definitions as any);
     },
 
-    object<TObject extends Record<string, unknown>>(
+    object<TObject extends Readonly<Record<string, unknown>>>(
         propertyDefinitions: MappedDefinition<TObject>
     ) {
         return new RigidObjectDefinition<TObject>(propertyDefinitions);

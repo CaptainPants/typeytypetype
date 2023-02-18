@@ -12,7 +12,7 @@ import { type ModelFactory } from '../ModelFactory.js';
 import { ModelImpl } from './ModelImpl.js';
 
 export class ArrayModelImpl<TElement>
-    extends ModelImpl<TElement[], ArrayDefinition<TElement>>
+    extends ModelImpl<TElement[], ArrayDefinition<TElement>, unknown[]>
     implements ArrayModel<TElement>
 {
     constructor(

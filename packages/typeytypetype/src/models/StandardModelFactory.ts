@@ -4,13 +4,21 @@ import { ObjectDefinition } from '../definitions/ObjectDefinition.js';
 import { UnionDefinition } from '../definitions/UnionDefinition.js';
 import { descend } from '../internal/descend.js';
 import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
-import { ModelImpl } from './internal/ModelImpl.js';
 import { ObjectModelImpl } from './internal/ObjectModelImpl.js';
 import { type Model } from './Model.js';
 import { type ModelFactory, type ModelFactoryArgs } from './ModelFactory.js';
 import { type ResolutionContext } from '../definitions/ResolutionContext.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
-import { type SpreadDefinition } from '../definitions/index.js';
+import {
+    BooleanConstantDefinition,
+    BooleanTypeDefinition,
+    NumberConstantDefinition,
+    NumberTypeDefinition,
+    StringConstantDefinition,
+    StringTypeDefinition,
+    type SpreadDefinition,
+} from '../definitions/index.js';
+import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 
 export class StandardModelFactory implements ModelFactory {
     constructor() {
@@ -50,14 +58,46 @@ export class StandardModelFactory implements ModelFactory {
                 descend(depth),
                 this
             ) as any;
-        } else {
-            return new ModelImpl(
+        } else if (
+            definition instanceof StringTypeDefinition ||
+            definition instanceof StringConstantDefinition
+        ) {
+            return new SimpleModelImpl(
+                'string',
                 parent,
-                value,
+                value as string,
                 definition,
                 descend(depth),
                 this
             ) as any;
+        } else if (
+            definition instanceof NumberTypeDefinition ||
+            definition instanceof NumberConstantDefinition
+        ) {
+            return new SimpleModelImpl(
+                'number',
+                parent,
+                value as number,
+                definition,
+                descend(depth),
+                this
+            ) as any;
+        } else if (
+            definition instanceof BooleanTypeDefinition ||
+            definition instanceof BooleanConstantDefinition
+        ) {
+            return new SimpleModelImpl(
+                'boolean',
+                parent,
+                value as boolean,
+                definition,
+                descend(depth),
+                this
+            ) as any;
+        } else {
+            throw new TypeError(
+                `Unrecognised definition type ${definition.constructor.name}.`
+            );
         }
     }
 

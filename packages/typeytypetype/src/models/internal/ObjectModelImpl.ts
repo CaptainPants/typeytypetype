@@ -13,7 +13,11 @@ import { type ModelFactory } from '../ModelFactory.js';
 import { ModelImpl } from './ModelImpl.js';
 
 export class ObjectModelImpl<TObject extends Record<string, unknown>>
-    extends ModelImpl<TObject, ObjectDefinition<TObject>>
+    extends ModelImpl<
+        TObject,
+        ObjectDefinition<TObject>,
+        Record<string, unknown>
+    >
     implements ObjectModel<TObject>
 {
     constructor(

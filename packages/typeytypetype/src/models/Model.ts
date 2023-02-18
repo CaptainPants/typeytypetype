@@ -8,15 +8,18 @@ import { type ExpandoType, type IsUnion } from '../internal/utilityTypes.js';
 
 export type ModelType = 'unknown' | 'union' | 'object' | 'array' | 'simple';
 
-export interface UnknownBaseModel {
+export interface UnknownBaseModel<TUnknownType = unknown> {
     readonly parent: ParentRelationship | null;
-    readonly unknownValue: unknown;
+    readonly unknownValue: TUnknownType;
     readonly unknownDefinition: Definition<unknown>;
 }
 
-export interface BaseModel<T, TDefinition extends Definition<T> = Definition<T>>
-    extends UnknownBaseModel {
-    readonly value: T;
+export interface BaseModel<
+    T,
+    TDefinition extends Definition<T> = Definition<T>,
+    TUnknownType = unknown
+> extends UnknownBaseModel<TUnknownType> {
+    readonly value: Readonly<T>;
     readonly definition: TDefinition;
 }
 
@@ -35,7 +38,7 @@ export interface NumberModel
 export interface BooleanModel
     extends SimpleModel<boolean, BooleanTypeDefinition, 'boolean'> {}
 
-export interface UnknownArrayModel extends UnknownBaseModel {
+export interface UnknownArrayModel extends UnknownBaseModel<unknown[]> {
     type: 'array';
 
     unknownElementDefinition: () => Definition<unknown>;
@@ -50,7 +53,7 @@ export interface UnknownArrayModel extends UnknownBaseModel {
 }
 
 export interface ArrayModel<TElement>
-    extends BaseModel<TElement[], ArrayDefinition<TElement>>,
+    extends BaseModel<TElement[], ArrayDefinition<TElement>, unknown[]>,
         UnknownArrayModel {
     elementDefinition: () => Definition<TElement>;
 
@@ -63,7 +66,8 @@ export interface ArrayModel<TElement>
     ) => Promise<Model<TElement[]>>;
 }
 
-export interface UnknownObjectModel extends UnknownBaseModel {
+export interface UnknownObjectModel
+    extends UnknownBaseModel<Record<string, unknown>> {
     type: 'object';
 
     unknownExpandoPropertyDefinition: () => Definition<unknown> | undefined;
@@ -79,7 +83,11 @@ export interface UnknownObjectModel extends UnknownBaseModel {
 }
 
 export interface ObjectModel<TObject extends Record<string, unknown>>
-    extends BaseModel<TObject, ObjectDefinition<TObject>>,
+    extends BaseModel<
+            TObject,
+            ObjectDefinition<TObject>,
+            Record<string, unknown>
+        >,
         UnknownObjectModel {
     expandoPropertyDefinition?: () =>
         | Definition<ExpandoType<TObject>>

@@ -2,13 +2,16 @@ import { type Definition } from '../../definitions/Definition.js';
 import { type ParentRelationship, type BaseModel } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 
-export class ModelImpl<T, TDef extends Definition<T> = Definition<T>>
-    implements BaseModel<T>
+export class ModelImpl<
+    T,
+    TDefinition extends Definition<T> = Definition<T>,
+    TUnknownType = unknown
+> implements BaseModel<T, TDefinition, TUnknownType>
 {
     constructor(
         parent: ParentRelationship | null,
         value: T,
-        definition: TDef,
+        definition: TDefinition,
         depth: number,
         factory: ModelFactory
     ) {
@@ -21,12 +24,12 @@ export class ModelImpl<T, TDef extends Definition<T> = Definition<T>>
 
     public readonly parent: ParentRelationship | null;
     public readonly value: T;
-    public readonly definition: TDef;
+    public readonly definition: TDefinition;
     public readonly depth: number;
     public readonly factory: ModelFactory;
 
-    public get unknownValue(): unknown {
-        return this.value;
+    public get unknownValue(): TUnknownType {
+        return this.value as any;
     }
 
     public get unknownDefinition(): Definition<unknown> {

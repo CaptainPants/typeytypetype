@@ -2,7 +2,7 @@ import { type TypeFromDefinition } from '../../types.js';
 import { type Definition } from '../Definition.js';
 
 export type MappedTypeFromDefinition<T> = {
-    [TKey in keyof T]: TypeFromDefinition<T[TKey]>;
+    readonly [TKey in keyof T]: TypeFromDefinition<T[TKey]>;
 };
 
 export type MappedDefinition<T> = {
