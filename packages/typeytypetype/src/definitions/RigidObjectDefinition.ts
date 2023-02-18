@@ -1,5 +1,4 @@
 import { descend } from '../internal/descend.js';
-import { type FixedPropertyType } from '../models/internal/types.js';
 import { type BaseDefinition } from './BaseDefinition.js';
 import { ObjectDefinition } from './ObjectDefinition.js';
 import { type MappedDefinition } from './internal/types.js';
@@ -59,9 +58,9 @@ export class RigidObjectDefinition<
 
     public override getDefinition<Key extends string>(
         key: Key
-    ): Definition<FixedPropertyType<TObject, Key>> | undefined {
+    ): Definition<TObject[Key]> | undefined {
         const propertyDef = this.propertyDefinitions[key];
 
-        return propertyDef as any;
+        return propertyDef;
     }
 }

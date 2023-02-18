@@ -24,4 +24,12 @@ export class ModelImpl<T, TDef extends Definition<T> = Definition<T>>
     public readonly definition: TDef;
     public readonly depth: number;
     public readonly factory: ModelFactory;
+
+    public get unknownValue(): unknown {
+        return this.value;
+    }
+
+    public get unknownDefinition(): Definition<unknown> {
+        return this.definition;
+    }
 }

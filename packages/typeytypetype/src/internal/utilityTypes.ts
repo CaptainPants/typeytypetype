@@ -30,3 +30,11 @@ export type IsUnion<T, C = T> = T extends C
         ? false
         : true
     : never;
+
+type _ExpandoProperty<TObject> = {
+    [TKey in keyof TObject as string extends TKey
+        ? TKey
+        : never]: TObject[TKey];
+};
+export type ExpandoType<TObject> =
+    _ExpandoProperty<TObject>[keyof _ExpandoProperty<TObject>];

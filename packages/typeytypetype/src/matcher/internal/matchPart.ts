@@ -2,11 +2,11 @@ import { deepEqual } from 'fast-equals';
 
 import { descend } from '../../internal/descend.js';
 import { and, or } from '../../internal/logical.js';
-import { type BaseModel, type Model } from '../../models';
+import { type UnknownModel, type Model } from '../../models';
 import { type MatcherRulePart } from '../types.js';
 
 function traverseAncestors(
-    node: BaseModel<unknown>,
+    node: Model<unknown>,
     predicate: (node: Model<unknown>) => boolean
 ): Model<unknown> | null {
     let current = node.parent?.model ?? null;
@@ -21,17 +21,20 @@ function traverseAncestors(
     return null;
 }
 
-export function matchPart<TValue>(
-    model: Model<TValue>,
+export function matchPart(
+    model: UnknownModel,
     part: MatcherRulePart,
     depth = 25
 ): boolean {
     if ('$attr' in part) {
-        return deepEqual(part.value, model.definition.getAttribute(part.$attr));
+        return deepEqual(
+            part.value,
+            model.unknownDefinition.getAttribute(part.$attr)
+        );
     } else if ('$label' in part) {
-        return model.definition.hasLabel(part.$label);
+        return model.unknownDefinition.hasLabel(part.$label);
     } else if ('$class' in part) {
-        return model.definition.constructor === part.$class;
+        return model.unknownDefinition.constructor === part.$class;
     } else if ('$or' in part) {
         return or(part.$or, (item) => matchPart(model, item, descend(depth)));
     } else if ('$and' in part) {
@@ -49,7 +52,7 @@ export function matchPart<TValue>(
             ) != null
         );
     } else if ('$callback' in part) {
-        return part.$callback(model.definition);
+        return part.$callback(model.unknownDefinition);
     }
 
     throw new Error('Unexpected');

@@ -10,7 +10,7 @@ export class Matcher<T> {
 
     public readonly rules: Array<MatcherRule<T>>;
 
-    public findMatch<TValue>(model: Model<TValue>): MatcherRule<T> | null {
+    public findMatch(model: Model<unknown>): MatcherRule<T> | null {
         let bestCandidateRule: MatcherRule<T> | null = null;
 
         for (const rule of this.rules) {
@@ -26,7 +26,7 @@ export class Matcher<T> {
         return bestCandidateRule;
     }
 
-    #doesMatch<TValue>(model: Model<TValue>, rule: MatcherRule<T>): boolean {
+    #doesMatch(model: Model<unknown>, rule: MatcherRule<T>): boolean {
         return and(rule.parts, (part) => matchPart(model, part));
     }
 }

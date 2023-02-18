@@ -1,9 +1,9 @@
 import { type ValidationResult } from './Validator.js';
 
 export interface Definition<T> {
-    matches: (value: unknown) => boolean;
+    matches: (value: unknown) => value is T;
 
-    doMatches: (value: unknown, depth: number) => boolean;
+    doMatches: (value: unknown, depth: number) => value is T;
 
     validate: (value: unknown) => ValidationResult;
 

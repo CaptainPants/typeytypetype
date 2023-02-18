@@ -41,6 +41,16 @@ export class UnionModelImpl<TUnion>
 
     readonly resolved: SpreadModel<TUnion>;
 
+    async unknownReplace(value: unknown): Promise<Model<unknown>> {
+        const model = this.factory.create({
+            parent: this.parent,
+            value,
+            definition: this.definition,
+            depth: descend(this.depth),
+        });
+        return model;
+    }
+
     async replace(value: TUnion): Promise<Model<TUnion>> {
         const model = this.factory.create({
             parent: this.parent,
@@ -53,6 +63,8 @@ export class UnionModelImpl<TUnion>
 
     as<T>(definition: Definition<T>): Model<T> | null {
         const resolved = this.resolved;
-        return resolved.definition === definition ? (resolved as any) : null;
+        return resolved.unknownDefinition === definition
+            ? (resolved as any)
+            : null;
     }
 }

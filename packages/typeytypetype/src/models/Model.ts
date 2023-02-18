@@ -4,37 +4,54 @@ import { type Definition } from '../definitions/Definition.js';
 import { type NumberTypeDefinition } from '../definitions/NumberTypeDefinition.js';
 import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
 import { type StringTypeDefinition } from '../definitions/StringTypeDefinition.js';
-import { type IsUnion } from '../internal/utilityTypes.js';
-import { type FixedPropertyType } from './internal/types.js';
+import { type ExpandoType, type IsUnion } from '../internal/utilityTypes.js';
 
 export type ModelType = 'unknown' | 'union' | 'object' | 'array' | 'simple';
 
-export interface BaseModel<
-    T,
-    TDefinition extends Definition<T> = Definition<T>
-> {
+export interface UnknownBaseModel {
     readonly parent: ParentRelationship | null;
+    readonly unknownValue: unknown;
+    readonly unknownDefinition: Definition<unknown>;
+}
+
+export interface BaseModel<T, TDefinition extends Definition<T> = Definition<T>>
+    extends UnknownBaseModel {
     readonly value: T;
     readonly definition: TDefinition;
 }
 
-export interface StringModel extends BaseModel<string, StringTypeDefinition> {
-    readonly type: 'string';
+export interface SimpleModel<
+    T,
+    TDefinition extends Definition<T>,
+    TType extends string
+> extends BaseModel<T, TDefinition> {
+    readonly type: TType;
 }
 
-export interface NumberModel extends BaseModel<number, NumberTypeDefinition> {
-    readonly type: 'number';
-}
-
+export interface StringModel
+    extends SimpleModel<string, StringTypeDefinition, 'string'> {}
+export interface NumberModel
+    extends SimpleModel<number, NumberTypeDefinition, 'number'> {}
 export interface BooleanModel
-    extends BaseModel<boolean, BooleanTypeDefinition> {
-    readonly type: 'boolean';
+    extends SimpleModel<boolean, BooleanTypeDefinition, 'boolean'> {}
+
+export interface UnknownArrayModel extends UnknownBaseModel {
+    type: 'array';
+
+    unknownElementDefinition: () => Definition<unknown>;
+
+    unknownGetElement: (index: number) => Model<unknown> | undefined;
+
+    unknownSpliceElements: (
+        start: number,
+        deleteCount: number,
+        newElements: unknown[]
+    ) => Promise<UnknownArrayModel>;
 }
 
 export interface ArrayModel<TElement>
-    extends BaseModel<TElement[], ArrayDefinition<TElement>> {
-    type: 'array';
-
+    extends BaseModel<TElement[], ArrayDefinition<TElement>>,
+        UnknownArrayModel {
     elementDefinition: () => Definition<TElement>;
 
     getElement: (index: number) => Model<TElement> | undefined;
@@ -46,37 +63,57 @@ export interface ArrayModel<TElement>
     ) => Promise<Model<TElement[]>>;
 }
 
-export interface ObjectModel<TProperties extends Record<string, unknown>>
-    extends BaseModel<TProperties, ObjectDefinition<TProperties>> {
+export interface UnknownObjectModel extends UnknownBaseModel {
     type: 'object';
 
-    expandoPropertyDefinition?: () => Definition<unknown> | undefined;
+    unknownExpandoPropertyDefinition: () => Definition<unknown> | undefined;
 
-    getProperty: <TKey extends string>(
-        key: TKey
-    ) => Model<FixedPropertyType<TProperties, TKey>>;
+    unknownGetProperty: <TKey extends string>(key: TKey) => Model<unknown>;
+
+    unknownSetPropertyValue: <TKey extends string>(
+        key: TKey,
+        value: unknown
+    ) => Promise<Model<unknown>>;
+
+    unknownDeleteProperty: (key: string) => Promise<Model<unknown>>;
+}
+
+export interface ObjectModel<TObject extends Record<string, unknown>>
+    extends BaseModel<TObject, ObjectDefinition<TObject>>,
+        UnknownObjectModel {
+    expandoPropertyDefinition?: () =>
+        | Definition<ExpandoType<TObject>>
+        | undefined;
+
+    getProperty: <TKey extends string>(key: TKey) => Model<TObject[TKey]>;
 
     setPropertyValue: <TKey extends string>(
         key: TKey,
-        value: FixedPropertyType<TProperties, TKey>
-    ) => Promise<Model<TProperties>>;
+        value: TObject[TKey]
+    ) => Promise<Model<TObject>>;
 
-    deleteProperty: (key: string) => Promise<Model<TProperties>>;
+    deleteProperty: (key: string) => Promise<Model<TObject>>;
 }
 
-export interface UnionModel<TUnion> extends BaseModel<TUnion> {
+export interface UnknownUnionModel extends UnknownBaseModel {
     type: 'union';
 
-    readonly resolved: SpreadModel<TUnion>;
+    as: <TAs>(definition: Definition<TAs>) => Model<TAs> | null;
 
-    as: <T>(definition: Definition<T>) => Model<T> | null;
+    unknownReplace: (value: unknown) => Promise<Model<unknown>>;
+}
+
+export interface UnionModel<TUnion>
+    extends BaseModel<TUnion>,
+        UnknownUnionModel {
+    readonly resolved: SpreadModel<TUnion>;
 
     replace: (value: TUnion) => Promise<Model<TUnion>>;
 }
 
 export type SpreadModel<T> = T extends any ? Model<T> : never;
 
-type SimpleModel<T> = T extends string
+type SimpleModels<T> = T extends string
     ? StringModel
     : T extends number
     ? NumberModel
@@ -85,9 +122,9 @@ type SimpleModel<T> = T extends string
     : never;
 
 export type UnknownModel =
-    | UnionModel<unknown>
-    | ArrayModel<unknown>
-    | ObjectModel<Record<string, unknown>>
+    | UnknownArrayModel
+    | UnknownObjectModel
+    | UnknownUnionModel
     | StringModel
     | NumberModel
     | BooleanModel;
@@ -99,8 +136,8 @@ export type Model<T> = IsUnion<T> extends true
     : T extends Record<string, unknown>
     ? ObjectModel<T>
     : T extends string | number | boolean
-    ? SimpleModel<T>
-    : BaseModel<unknown>;
+    ? SimpleModels<T>
+    : UnknownModel;
 
 export type ParentRelationship =
     | { type: 'element'; model: Model<unknown>; index: number }

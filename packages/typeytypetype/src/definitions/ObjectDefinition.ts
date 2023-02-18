@@ -1,4 +1,4 @@
-import { type FixedPropertyType } from '../models/internal/types.js';
+import { type ExpandoType } from '../internal/utilityTypes.js';
 import { BaseDefinition } from './BaseDefinition.js';
 import { type Definition } from './Definition.js';
 
@@ -11,9 +11,11 @@ export abstract class ObjectDefinition<
 
     public abstract getDefinition<Key extends string>(
         key: Key
-    ): Definition<FixedPropertyType<TObject, Key>> | undefined;
+    ): Definition<TObject[Key]> | undefined;
 
-    public getExpandoDefinition(): Definition<unknown> | undefined {
+    public getExpandoDefinition():
+        | Definition<ExpandoType<TObject>>
+        | undefined {
         return undefined;
     }
 
