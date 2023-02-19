@@ -1,6 +1,9 @@
 import { type ArrayDefinition } from '../../definitions/ArrayDefinition.js';
 import { type Definition } from '../../definitions/Definition.js';
 import { descend } from '../../internal/descend.js';
+import { mapAsync } from '../../internal/mapAsync.js';
+import { stringForError } from '../../internal/stringForError.js';
+import { isModel } from '../isModel.js';
 import {
     type ParentRelationship,
     type ArrayModel,
@@ -66,11 +69,18 @@ export class ArrayModelImpl<TElement>
 
         const eleDefinition = this.elementDefinition();
 
-        const typed = newElements.map((item) => {
-            if (eleDefinition.matches(item)) {
-                return item;
+        const typed = await mapAsync(newElements, async (item) => {
+            if (isModel(item)) {
+                // Refers to the same definition, so we don't need to test it
+                if (item.unknownDefinition !== eleDefinition) {
+                    throw new TypeError(
+                        `Unexpected value ${stringForError(item.unknownValue)}`
+                    );
+                }
+                return item.unknownValue as TElement;
+            } else {
+                return await eleDefinition.validateCast(item);
             }
-            throw new TypeError(`Unexpected value ${String(item)}`);
         });
 
         copy.splice(start, deleteCount, ...typed);
@@ -86,16 +96,12 @@ export class ArrayModelImpl<TElement>
     async spliceElements(
         start: number,
         deleteCount: number,
-        newElements: TElement[]
+        newElements: Array<TElement | Model<TElement>>
     ): Promise<Model<TElement[]>> {
-        const copy = [...this.value];
-        copy.splice(start, deleteCount, ...newElements);
-
-        return this.factory.create<TElement[]>({
-            parent: this.parent,
-            value: copy,
-            definition: this.definition,
-            depth: this.depth,
-        });
+        return (await this.unknownSpliceElements(
+            start,
+            deleteCount,
+            newElements
+        )) as Model<TElement[]>;
     }
 }

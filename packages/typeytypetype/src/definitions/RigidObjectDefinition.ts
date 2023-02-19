@@ -58,9 +58,9 @@ export class RigidObjectDefinition<
 
     public override getDefinition<Key extends string>(
         key: Key
-    ): Definition<TObject[Key]> | undefined {
+    ): Definition<TObject[Key]> | null {
         const propertyDef = this.propertyDefinitions[key];
 
-        return propertyDef;
+        return propertyDef ?? null;
     }
 }

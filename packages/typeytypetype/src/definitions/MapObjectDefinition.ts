@@ -49,7 +49,7 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
 
     public override getDefinition<Key extends string>(
         key: Key
-    ): Definition<TValue> | undefined {
+    ): Definition<TValue> | null {
         return this.propertyDefinition;
     }
 

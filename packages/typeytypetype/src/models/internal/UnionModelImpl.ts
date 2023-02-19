@@ -1,6 +1,8 @@
 import { type Definition } from '../../definitions/Definition.js';
 import { type UnionDefinition } from '../../definitions/UnionDefinition.js';
 import { descend } from '../../internal/descend.js';
+import { stringForError } from '../../internal/stringForError.js';
+import { isModel } from '../isModel.js';
 import {
     type SpreadModel,
     type Model,
@@ -42,9 +44,23 @@ export class UnionModelImpl<TUnion>
     readonly resolved: SpreadModel<TUnion>;
 
     async unknownReplace(value: unknown): Promise<Model<unknown>> {
+        let processedValue: unknown;
+
+        if (isModel(value)) {
+            if (this.definition !== value.unknownDefinition) {
+                // Mismatch
+                throw new TypeError(
+                    `Unexpected value ${stringForError(value.unknownValue)}`
+                );
+            }
+            processedValue = value.unknownValue as TUnion;
+        } else {
+            processedValue = await this.definition.validateCast(value);
+        }
+
         const model = this.factory.create({
             parent: this.parent,
-            value,
+            value: processedValue,
             definition: this.definition,
             depth: descend(this.depth),
         });
@@ -52,13 +68,7 @@ export class UnionModelImpl<TUnion>
     }
 
     async replace(value: TUnion): Promise<Model<TUnion>> {
-        const model = this.factory.create({
-            parent: this.parent,
-            value,
-            definition: this.definition,
-            depth: descend(this.depth),
-        });
-        return model;
+        return (await this.unknownReplace(value)) as Model<TUnion>;
     }
 
     as<T>(definition: Definition<T>): Model<T> | null {

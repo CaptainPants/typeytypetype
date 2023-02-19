@@ -53,6 +53,18 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         return await this.doValidate(value, 25);
     }
 
+    async validateCast(value: unknown): Promise<T> {
+        const res = await this.validate(value);
+        if (res.length > 0) {
+            throw new TypeError(
+                `Value ${String(value)} did not pass validation: ${res.join(
+                    ', '
+                )}`
+            );
+        }
+        return value as T;
+    }
+
     async doValidate(value: unknown, depth: number): ValidationResult {
         // Note that this is a type assertion
         if (!this.doMatches(value, depth)) {

@@ -2,7 +2,9 @@ import * as assert from 'typed-assert';
 import { type Definition } from '../../definitions/Definition.js';
 import { type ObjectDefinition } from '../../definitions/ObjectDefinition.js';
 import { descend } from '../../internal/descend.js';
+import { stringForError } from '../../internal/stringForError.js';
 import { type ExpandoType } from '../../internal/utilityTypes.js';
+import { isModel } from '../isModel.js';
 import {
     type ParentRelationship,
     type Model,
@@ -79,14 +81,32 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         key: TKey,
         value: unknown
     ): Promise<UnknownModel> {
+        const def = this.definition.getDefinition(key);
+
+        if (def === null) {
+            throw new TypeError(
+                `Could not assign to property ${key} as no definition found.`
+            );
+        }
+
+        let processedValue: TObject[TKey];
+
+        if (isModel(value)) {
+            if (def !== value.unknownDefinition) {
+                // Mismatch
+                throw new TypeError(
+                    `Unexpected value ${stringForError(value.unknownValue)}`
+                );
+            }
+            processedValue = value.unknownValue as TObject[TKey];
+        } else {
+            processedValue = await def.validateCast(value);
+        }
+
         const copy = {
             ...this.value,
-            [key]: value,
+            [key]: processedValue,
         };
-
-        if (!this.definition.matches(copy)) {
-            throw new TypeError(`Invalid property assignment.`);
-        }
 
         return this.factory.create<TObject>({
             parent: this.parent,
@@ -100,17 +120,10 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         key: TKey,
         value: TObject[TKey]
     ): Promise<Model<TObject>> {
-        const copy = {
-            ...this.value,
-            [key]: value,
-        };
-
-        return this.factory.create<TObject>({
-            parent: this.parent,
-            value: copy,
-            definition: this.definition,
-            depth: this.depth,
-        });
+        return (await this.unknownSetPropertyValue(
+            key,
+            value
+        )) as Model<TObject>;
     }
 
     async unknownDeleteProperty(key: string): Promise<UnknownModel> {

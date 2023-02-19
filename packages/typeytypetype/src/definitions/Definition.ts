@@ -7,6 +7,8 @@ export interface Definition<T> {
 
     validate: (value: unknown) => ValidationResult;
 
+    validateCast: (value: unknown) => Promise<T>;
+
     doValidate: (value: unknown, depth: number) => ValidationResult;
 
     toTypeString: () => string;

@@ -11,7 +11,7 @@ export abstract class ObjectDefinition<
 
     public abstract getDefinition<Key extends string>(
         key: Key
-    ): Definition<TObject[Key]> | undefined;
+    ): Definition<TObject[Key]> | null;
 
     public getExpandoDefinition():
         | Definition<ExpandoType<TObject>>
