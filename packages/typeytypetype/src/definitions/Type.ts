@@ -1,7 +1,7 @@
 import { type Definition } from './Definition.js';
 import { ArrayDefinition } from './ArrayDefinition.js';
-import { NumberTypeDefinition } from './NumberTypeDefinition.js';
-import { StringTypeDefinition } from './StringTypeDefinition.js';
+import { NumberDefinition } from './NumberDefinition.js';
+import { StringDefinition } from './StringDefinition.js';
 import {
     BooleanConstantDefinition,
     type ConstantDefinition,
@@ -10,7 +10,7 @@ import {
     StringConstantDefinition,
     UndefinedConstantDefinition,
 } from './ConstantDefinition.js';
-import { BooleanTypeDefinition } from './BooleanTypeDefinition.js';
+import { BooleanDefinition } from './BooleanDefinition.js';
 import { UnionDefinition } from './UnionDefinition.js';
 import { DeferredDefinition } from './DeferredDefinition.js';
 import { RigidObjectDefinition } from './RigidObjectDefinition.js';
@@ -46,16 +46,16 @@ export const Type = {
         return new UndefinedConstantDefinition();
     },
 
-    string(): StringTypeDefinition {
-        return new StringTypeDefinition();
+    string(): StringDefinition {
+        return new StringDefinition();
     },
 
-    boolean(): BooleanTypeDefinition {
-        return new BooleanTypeDefinition();
+    boolean(): BooleanDefinition {
+        return new BooleanDefinition();
     },
 
-    number(): NumberTypeDefinition {
-        return new NumberTypeDefinition();
+    number(): NumberDefinition {
+        return new NumberDefinition();
     },
 
     union<TTypes extends readonly unknown[]>(

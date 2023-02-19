@@ -1,9 +1,16 @@
 import { type ArrayDefinition } from '../definitions/ArrayDefinition.js';
-import { type BooleanTypeDefinition } from '../definitions/BooleanTypeDefinition.js';
+import { type BooleanDefinition } from '../definitions/BooleanDefinition.js';
+import {
+    type BooleanConstantDefinition,
+    type NullConstantDefinition,
+    type NumberConstantDefinition,
+    type StringConstantDefinition,
+    type UndefinedConstantDefinition,
+} from '../definitions/ConstantDefinition.js';
 import { type Definition } from '../definitions/Definition.js';
-import { type NumberTypeDefinition } from '../definitions/NumberTypeDefinition.js';
+import { type NumberDefinition } from '../definitions/NumberDefinition.js';
 import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
-import { type StringTypeDefinition } from '../definitions/StringTypeDefinition.js';
+import { type StringDefinition } from '../definitions/StringDefinition.js';
 import { type ExpandoType, type IsUnion } from '../internal/utilityTypes.js';
 
 export type ModelType = 'unknown' | 'union' | 'object' | 'array' | 'simple';
@@ -31,12 +38,27 @@ export interface SimpleModel<
     readonly type: TType;
 }
 
+export interface StringConstantModel
+    extends SimpleModel<string, StringConstantDefinition, 'string-constant'> {}
 export interface StringModel
-    extends SimpleModel<string, StringTypeDefinition, 'string'> {}
+    extends SimpleModel<string, StringDefinition, 'string'> {}
+export interface NumberConstantModel
+    extends SimpleModel<number, NumberConstantDefinition, 'number-constant'> {}
 export interface NumberModel
-    extends SimpleModel<number, NumberTypeDefinition, 'number'> {}
+    extends SimpleModel<number, NumberDefinition, 'number'> {}
+export interface BooleanConstantModel
+    extends SimpleModel<
+        boolean,
+        BooleanConstantDefinition,
+        'boolean-constant'
+    > {}
 export interface BooleanModel
-    extends SimpleModel<boolean, BooleanTypeDefinition, 'boolean'> {}
+    extends SimpleModel<boolean, BooleanDefinition, 'boolean'> {}
+
+export interface NullModel
+    extends SimpleModel<null, NullConstantDefinition, 'null'> {}
+export interface UndefinedModel
+    extends SimpleModel<undefined, UndefinedConstantDefinition, 'undefined'> {}
 
 export interface UnknownArrayModel extends UnknownBaseModel<unknown[]> {
     type: 'array';
@@ -122,11 +144,17 @@ export interface UnionModel<TUnion>
 export type SpreadModel<T> = T extends any ? Model<T> : never;
 
 type SimpleModels<T> = T extends string
-    ? StringModel
+    ? T extends string
+        ? StringModel
+        : StringConstantModel
     : T extends number
-    ? NumberModel
+    ? T extends number
+        ? NumberModel
+        : NumberConstantModel
     : T extends boolean
-    ? BooleanModel
+    ? T extends string
+        ? StringModel
+        : BooleanConstantModel
     : never;
 
 export type UnknownModel =
@@ -134,8 +162,13 @@ export type UnknownModel =
     | UnknownObjectModel
     | UnknownUnionModel
     | StringModel
+    | StringConstantModel
     | NumberModel
-    | BooleanModel;
+    | NumberConstantModel
+    | BooleanModel
+    | BooleanConstantModel
+    | NullModel
+    | UndefinedModel;
 
 export type Model<T> = IsUnion<T> extends true
     ? UnionModel<T>
@@ -143,7 +176,7 @@ export type Model<T> = IsUnion<T> extends true
     ? ArrayModel<TElement>
     : T extends Record<string, unknown>
     ? ObjectModel<T>
-    : T extends string | number | boolean
+    : T extends string | number | boolean | null | undefined
     ? SimpleModels<T>
     : UnknownModel;
 

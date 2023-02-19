@@ -11,11 +11,11 @@ import { type ResolutionContext } from '../definitions/ResolutionContext.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import {
     BooleanConstantDefinition,
-    BooleanTypeDefinition,
+    BooleanDefinition,
     NumberConstantDefinition,
-    NumberTypeDefinition,
+    NumberDefinition,
     StringConstantDefinition,
-    StringTypeDefinition,
+    StringDefinition,
     type SpreadDefinition,
 } from '../definitions/index.js';
 import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
@@ -59,7 +59,7 @@ export class StandardModelFactory implements ModelFactory {
                 this
             ) as any;
         } else if (
-            definition instanceof StringTypeDefinition ||
+            definition instanceof StringDefinition ||
             definition instanceof StringConstantDefinition
         ) {
             return new SimpleModelImpl(
@@ -71,7 +71,7 @@ export class StandardModelFactory implements ModelFactory {
                 this
             ) as any;
         } else if (
-            definition instanceof NumberTypeDefinition ||
+            definition instanceof NumberDefinition ||
             definition instanceof NumberConstantDefinition
         ) {
             return new SimpleModelImpl(
@@ -83,7 +83,7 @@ export class StandardModelFactory implements ModelFactory {
                 this
             ) as any;
         } else if (
-            definition instanceof BooleanTypeDefinition ||
+            definition instanceof BooleanDefinition ||
             definition instanceof BooleanConstantDefinition
         ) {
             return new SimpleModelImpl(
