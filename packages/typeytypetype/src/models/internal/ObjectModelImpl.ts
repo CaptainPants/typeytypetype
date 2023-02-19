@@ -67,18 +67,20 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         return this.definition.getExpandoDefinition();
     }
 
-    unknownGetProperty<TKey extends string>(key: TKey): UnknownModel {
+    unknownGetProperty(key: string): UnknownModel {
         return this.getProperty(key);
     }
 
-    getProperty<TKey extends string>(key: TKey): Model<TObject[TKey]> {
+    getProperty<TKey extends keyof TObject & string>(
+        key: TKey
+    ): Model<TObject[TKey]> {
         const result = this.#propertyModels[key];
         assert.isNotUndefined(result);
         return result as any;
     }
 
-    async unknownSetPropertyValue<TKey extends string>(
-        key: TKey,
+    async unknownSetPropertyValue(
+        key: string,
         value: unknown
     ): Promise<UnknownModel> {
         const def = this.definition.getDefinition(key);
@@ -89,7 +91,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             );
         }
 
-        let processedValue: TObject[TKey];
+        let processedValue: unknown;
 
         if (isModel(value)) {
             if (def !== value.unknownDefinition) {
@@ -98,7 +100,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
                     `Unexpected value ${stringForError(value.unknownValue)}`
                 );
             }
-            processedValue = value.unknownValue as TObject[TKey];
+            processedValue = value.unknownValue;
         } else {
             processedValue = await def.validateCast(value);
         }
@@ -116,7 +118,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         });
     }
 
-    async setPropertyValue<TKey extends string>(
+    async setPropertyValue<TKey extends keyof TObject & string>(
         key: TKey,
         value: TObject[TKey]
     ): Promise<Model<TObject>> {
@@ -127,12 +129,6 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
     }
 
     async unknownDeleteProperty(key: string): Promise<UnknownModel> {
-        return await this.deleteProperty(key);
-    }
-
-    async deleteProperty<TKey extends string>(
-        key: TKey
-    ): Promise<Model<TObject>> {
         if (!this.definition.supportsDelete()) {
             throw new TypeError('Delete not supported.');
         }
@@ -147,5 +143,11 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             definition: this.definition,
             depth: this.depth,
         });
+    }
+
+    async deleteProperty<TKey extends keyof TObject & string>(
+        key: TKey
+    ): Promise<Model<TObject>> {
+        return (await this.unknownDeleteProperty(key)) as Model<TObject>;
     }
 }

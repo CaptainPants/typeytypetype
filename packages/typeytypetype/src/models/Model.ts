@@ -94,10 +94,10 @@ export interface UnknownObjectModel
 
     unknownExpandoPropertyDefinition: () => Definition<unknown> | undefined;
 
-    unknownGetProperty: <TKey extends string>(key: TKey) => Model<unknown>;
+    unknownGetProperty: (key: string) => Model<unknown>;
 
-    unknownSetPropertyValue: <TKey extends string>(
-        key: TKey,
+    unknownSetPropertyValue: (
+        key: string,
         value: unknown
     ) => Promise<Model<unknown>>;
 
@@ -115,14 +115,18 @@ export interface ObjectModel<TObject extends Record<string, unknown>>
         | Definition<ExpandoType<TObject>>
         | undefined;
 
-    getProperty: <TKey extends string>(key: TKey) => Model<TObject[TKey]>;
+    getProperty: <TKey extends keyof TObject & string>(
+        key: TKey
+    ) => Model<TObject[TKey]>;
 
-    setPropertyValue: <TKey extends string>(
+    setPropertyValue: <TKey extends keyof TObject & string>(
         key: TKey,
         value: TObject[TKey]
     ) => Promise<Model<TObject>>;
 
-    deleteProperty: (key: string) => Promise<Model<TObject>>;
+    deleteProperty: <TKey extends keyof TObject & string>(
+        key: TKey
+    ) => Promise<Model<TObject>>;
 }
 
 export interface UnknownUnionModel extends UnknownBaseModel {
