@@ -12,10 +12,10 @@ test('test', async () => {
     });
 
     expect(await num.validate(1)).toStrictEqual([
-        'Value must be greater than or equal to 3',
+        { message: 'Value must be greater than or equal to 3' },
     ]);
     expect(await num.validate(5)).toStrictEqual([]);
     expect(await num.validate(10)).toStrictEqual([
-        'Value must be less than or equal to 8',
+        { message: 'Value must be less than or equal to 8' },
     ]);
 });

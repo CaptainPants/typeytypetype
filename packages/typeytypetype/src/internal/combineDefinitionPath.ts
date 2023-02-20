@@ -1,13 +1,13 @@
 export function combineDefinitionPath(
-    path: string | undefined,
-    toAdd: number | string
+    addToLeft: number | string,
+    path: string | undefined
 ): string {
-    if (typeof toAdd === 'number') {
-        return (path ?? '') + `[${toAdd}]`;
+    if (typeof addToLeft === 'number') {
+        return `[${addToLeft}]` + (path ?? '');
     } else {
         if (path === undefined) {
-            return toAdd;
+            return addToLeft;
         }
-        return path + '.' + toAdd;
+        return addToLeft + '.' + path;
     }
 }

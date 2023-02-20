@@ -10,13 +10,17 @@ export type Validator<T> = (
 
 export interface ValidationOptions {
     deep?: boolean | undefined;
-    path?: string | undefined;
 }
-export type ValidationResult = Promise<string[]>;
+
+export interface ValidationSingleResult {
+    path?: string | undefined;
+    message: string;
+}
+export type ValidationResult = Promise<ValidationSingleResult[]>;
 
 export async function flattenValidatorResult(
     result: ValidatorResult | Promise<ValidatorResult>
-): ValidationResult {
+): Promise<string[]> {
     const awaited = await result;
     return awaited === null
         ? []

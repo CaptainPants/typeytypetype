@@ -3,7 +3,10 @@ import { descend } from '../internal/descend.js';
 import { type ExpandoType } from '../internal/utilityTypes.js';
 import { BaseDefinition } from './BaseDefinition.js';
 import { type Definition } from './Definition.js';
-import { type ValidationOptions } from './Validator.js';
+import {
+    type ValidationSingleResult,
+    type ValidationOptions,
+} from './Validator.js';
 
 export abstract class ObjectDefinition<
     TObject extends Record<string, unknown>
@@ -28,12 +31,12 @@ export abstract class ObjectDefinition<
 
     protected override async doValidateChildren(
         value: TObject,
-        { deep, path }: ValidationOptions,
+        options: ValidationOptions,
         depth: number
-    ): Promise<string[] | undefined> {
+    ): Promise<ValidationSingleResult[] | undefined> {
         const keys = Object.keys(value);
 
-        const res: string[] = [];
+        const res: ValidationSingleResult[] = [];
 
         for (const key of keys) {
             const propValue = value[key];
@@ -42,12 +45,17 @@ export abstract class ObjectDefinition<
             const currentPropValidationResult =
                 await propDefinition?.doValidate(
                     propValue,
-                    { deep, path: combineDefinitionPath(path, key) },
+                    options,
                     descend(depth)
                 );
 
             if (currentPropValidationResult !== undefined) {
-                res.push(...currentPropValidationResult);
+                res.push(
+                    ...currentPropValidationResult.map((item) => ({
+                        path: combineDefinitionPath(key, item.path),
+                        message: item.message,
+                    }))
+                );
             }
         }
 

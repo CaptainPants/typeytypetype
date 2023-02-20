@@ -2,7 +2,10 @@ import { combineDefinitionPath } from '../internal/combineDefinitionPath.js';
 import { descend } from '../internal/descend.js';
 import { BaseDefinition } from './BaseDefinition.js';
 import { type Definition } from './Definition.js';
-import { type ValidationOptions } from './Validator.js';
+import {
+    type ValidationSingleResult,
+    type ValidationOptions,
+} from './Validator.js';
 
 export class ArrayDefinition<TElement> extends BaseDefinition<TElement[]> {
     constructor(elementDefinition: Definition<TElement>) {
@@ -48,21 +51,26 @@ export class ArrayDefinition<TElement> extends BaseDefinition<TElement[]> {
 
     protected override async doValidateChildren(
         value: TElement[],
-        { deep, path }: ValidationOptions,
+        options: ValidationOptions,
         depth: number
-    ): Promise<string[] | undefined> {
-        const res: string[] = [];
+    ): Promise<ValidationSingleResult[] | undefined> {
+        const res: ValidationSingleResult[] = [];
 
         for (let i = 0; i < value.length; ++i) {
             const item = value[i];
 
             const itemResult = await this.elementDefinition.doValidate(
                 item,
-                { deep, path: combineDefinitionPath(path, i) },
+                options,
                 descend(depth)
             );
 
-            res.push(...itemResult);
+            res.push(
+                ...itemResult.map((item) => ({
+                    path: combineDefinitionPath(i, item.path),
+                    message: item.message,
+                }))
+            );
         }
 
         return res;

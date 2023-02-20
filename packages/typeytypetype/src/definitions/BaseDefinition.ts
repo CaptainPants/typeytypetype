@@ -6,6 +6,8 @@ import {
     type Validator,
     type ValidationResult,
     type ValidationOptions,
+    type ValidationSingleResult,
+    flattenValidatorResult,
 } from './Validator.js';
 
 export abstract class BaseDefinition<T> implements Definition<T> {
@@ -91,15 +93,16 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         // will be called at each level of validation, which would multiply the cost of
         // doing validation.
         if (!this.doMatches(value, false, depth)) {
-            return ['Non-matching structure'];
+            return [{ message: 'Non-matching structure' }];
         }
 
-        const errors: string[] = [];
+        const errors: ValidationSingleResult[] = [];
         for (const validator of this.validators) {
             const result = await validator(value);
 
             if (result !== null) {
-                errors.push(...result);
+                const flattened = await flattenValidatorResult(result);
+                errors.push(...flattened.map((item) => ({ message: item })));
             }
         }
 
@@ -118,7 +121,7 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         value: T,
         options: ValidationOptions,
         depth: number
-    ): Promise<string[] | undefined> {
+    ): Promise<ValidationSingleResult[] | undefined> {
         return undefined;
     }
 

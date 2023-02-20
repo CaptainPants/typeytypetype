@@ -1,7 +1,11 @@
 import { descend } from '../internal/descend.js';
 import { type SpreadDefinition } from './internal/types.js';
 import { BaseDefinition } from './BaseDefinition.js';
-import { type ValidationOptions } from './Validator.js';
+import {
+    type ValidationSingleResult,
+    type ValidationOptions,
+} from './Validator.js';
+import { combineDefinitionPath } from '../internal/combineDefinitionPath.js';
 
 export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
     constructor(definitions: Array<SpreadDefinition<TUnion>>) {
@@ -37,9 +41,14 @@ export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
         value: TUnion,
         options: ValidationOptions,
         depth: number
-    ): Promise<string[] | undefined> {
+    ): Promise<ValidationSingleResult[] | undefined> {
         const def = this.getDefinition(value);
 
-        return await def?.doValidate(value, options, descend(depth));
+        return (await def?.doValidate(value, options, descend(depth)))?.map(
+            (item) => ({
+                path: combineDefinitionPath('$', item.path),
+                message: item.message,
+            })
+        );
     }
 }
