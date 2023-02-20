@@ -7,7 +7,7 @@ export interface CreateModelArgs<T> {
     definition: Definition<T>;
 }
 
-export interface CreateModelPartArgs<T> {
+export interface CreateUnvalidatedModelPartArgs<T> {
     parent?: ParentRelationship | null | undefined;
     value: T;
     definition: Definition<T>;
@@ -17,5 +17,7 @@ export interface CreateModelPartArgs<T> {
 export interface ModelFactory {
     createModel: <T>(args: CreateModelArgs<T>) => Promise<Model<T>>;
 
-    createModelPart: <T>(args: CreateModelPartArgs<T>) => Model<T>;
+    createUnvalidatedModelPart: <T>(
+        args: CreateUnvalidatedModelPartArgs<T>
+    ) => Model<T>;
 }

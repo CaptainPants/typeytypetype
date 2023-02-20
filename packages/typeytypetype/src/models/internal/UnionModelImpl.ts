@@ -8,7 +8,7 @@ import {
     type ParentRelationship,
 } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
-import { adoptAndValidate } from './adoptAndValidate.js';
+import { validateForAdoption } from './validateForAdoption.js';
 import { ModelImpl } from './ModelImpl.js';
 
 export class UnionModelImpl<TUnion>
@@ -30,7 +30,7 @@ export class UnionModelImpl<TUnion>
             throw new Error(`Could not find matching definition for value.`);
         }
 
-        this.resolved = factory.createModelPart<TUnion>({
+        this.resolved = factory.createUnvalidatedModelPart<TUnion>({
             parent,
             value,
             definition: match,
@@ -43,9 +43,9 @@ export class UnionModelImpl<TUnion>
     readonly resolved: SpreadModel<TUnion>;
 
     async unknownReplace(value: unknown): Promise<Model<unknown>> {
-        const adopted = await adoptAndValidate(value, this.definition);
+        const adopted = await validateForAdoption(value, this.definition);
 
-        const model = this.factory.createModelPart({
+        const model = this.factory.createUnvalidatedModelPart({
             parent: this.parent,
             value: adopted,
             definition: this.definition,

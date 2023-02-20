@@ -10,7 +10,7 @@ import {
     type UnknownModel,
 } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
-import { adoptAndValidate } from './adoptAndValidate.js';
+import { validateForAdoption } from './validateForAdoption.js';
 import { ModelImpl } from './ModelImpl.js';
 
 export class ObjectModelImpl<TObject extends Record<string, unknown>>
@@ -41,7 +41,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
                 );
             }
 
-            this.#propertyModels[name] = factory.createModelPart({
+            this.#propertyModels[name] = factory.createUnvalidatedModelPart({
                 parent: {
                     type: 'property',
                     model: this as any,
@@ -90,14 +90,16 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             );
         }
 
-        const adopted = await adoptAndValidate(value, def);
+        const adopted = await validateForAdoption(value, def);
 
         const copy = {
             ...this.value,
             [key]: adopted,
         };
 
-        return this.factory.createModelPart<TObject>({
+        await this.definition.validateAndThrow(copy, { deep: false });
+
+        return this.factory.createUnvalidatedModelPart<TObject>({
             parent: this.parent,
             value: copy,
             definition: this.definition,
@@ -124,7 +126,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete copy[key];
 
-        return this.factory.createModelPart<TObject>({
+        return this.factory.createUnvalidatedModelPart<TObject>({
             parent: this.parent,
             value: copy,
             definition: this.definition,

@@ -7,7 +7,7 @@ import { ObjectModelImpl } from './internal/ObjectModelImpl.js';
 import { type Model } from './Model.js';
 import {
     type ModelFactory,
-    type CreateModelPartArgs,
+    type CreateUnvalidatedModelPartArgs,
     type CreateModelArgs,
 } from './ModelFactory.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
@@ -28,9 +28,9 @@ export class StandardModelFactory implements ModelFactory {
         value,
         definition,
     }: CreateModelArgs<T>): Promise<Model<T>> {
-        const typed = await definition.validateAndTypeAssert(value);
+        const typed = await definition.validateAndThrow(value);
 
-        return this.createModelPart<T>({
+        return this.createUnvalidatedModelPart<T>({
             parent,
             value: typed,
             definition,
@@ -38,7 +38,9 @@ export class StandardModelFactory implements ModelFactory {
         });
     }
 
-    createModelPart<T>(args: CreateModelPartArgs<T>): Model<T> {
+    createUnvalidatedModelPart<T>(
+        args: CreateUnvalidatedModelPartArgs<T>
+    ): Model<T> {
         // This indirection is mostly so that we don't have 15 'as any' parts,
         // and just have the one 'any' return type
         return this.#doCreateModelPart(args);
@@ -49,7 +51,7 @@ export class StandardModelFactory implements ModelFactory {
         value,
         definition,
         depth,
-    }: CreateModelPartArgs<T>): any {
+    }: CreateUnvalidatedModelPartArgs<T>): any {
         if (definition instanceof UnionDefinition) {
             return new UnionModelImpl<any>(
                 parent,

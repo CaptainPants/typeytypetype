@@ -61,15 +61,28 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         depth: number
     ): value is T;
 
+    applyDefaultValidationOptions(
+        options?: ValidationOptions
+    ): ValidationOptions {
+        return Object.assign({ deep: true }, options);
+    }
+
     async validate(
         value: unknown,
         options?: ValidationOptions
     ): ValidationResult {
-        return await this.doValidate(value, options ?? {}, 25);
+        return await this.doValidate(
+            value,
+            this.applyDefaultValidationOptions(options),
+            25
+        );
     }
 
-    async validateAndTypeAssert(value: unknown): Promise<T> {
-        const res = await this.validate(value, { deep: true });
+    async validateAndThrow(
+        value: unknown,
+        options?: ValidationOptions
+    ): Promise<T> {
+        const res = await this.validate(value, options);
         if (res.length > 0) {
             throw new TypeError(
                 `Value ${stringForError(

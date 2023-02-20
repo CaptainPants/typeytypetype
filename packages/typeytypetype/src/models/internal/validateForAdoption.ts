@@ -1,7 +1,7 @@
 import { type Definition } from '../../definitions';
 import { isModel } from '../isModel.js';
 
-export async function adoptAndValidate<T>(
+export async function validateForAdoption<T>(
     valueOrModel: unknown,
     definition: Definition<T>
 ): Promise<T> {
@@ -9,9 +9,9 @@ export async function adoptAndValidate<T>(
         if (valueOrModel.unknownDefinition === definition) {
             return valueOrModel as T;
         } else {
-            return await definition.validateAndTypeAssert(valueOrModel);
+            return await definition.validateAndThrow(valueOrModel);
         }
     } else {
-        return await definition.validateAndTypeAssert(valueOrModel);
+        return await definition.validateAndThrow(valueOrModel);
     }
 }

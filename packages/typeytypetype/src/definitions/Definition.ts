@@ -7,7 +7,10 @@ export interface Definition<T> {
 
     validate: (value: unknown, options?: ValidationOptions) => ValidationResult;
 
-    validateAndTypeAssert: (value: unknown) => Promise<T>;
+    validateAndThrow: (
+        value: unknown,
+        options?: ValidationOptions
+    ) => Promise<T>;
 
     doValidate: (
         value: unknown,

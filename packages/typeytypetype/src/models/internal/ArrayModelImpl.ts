@@ -10,7 +10,7 @@ import {
     type UnknownArrayModel,
 } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
-import { adoptAndValidate } from './adoptAndValidate.js';
+import { validateForAdoption } from './validateForAdoption.js';
 import { ModelImpl } from './ModelImpl.js';
 
 export class ArrayModelImpl<TElement>
@@ -29,7 +29,7 @@ export class ArrayModelImpl<TElement>
         this.#elementDefinition = definition.getElementDefinition();
 
         this.#elementModels = value.map((item, index) =>
-            factory.createModelPart({
+            factory.createUnvalidatedModelPart({
                 parent: { type: 'element', model: this as any, index },
                 value: item,
                 definition: this.#elementDefinition,
@@ -69,12 +69,14 @@ export class ArrayModelImpl<TElement>
         const eleDefinition = this.elementDefinition();
 
         const typed = await mapAsync(newElements, async (item) => {
-            return await adoptAndValidate(item, eleDefinition);
+            return await validateForAdoption(item, eleDefinition);
         });
 
         copy.splice(start, deleteCount, ...typed);
 
-        return this.factory.createModelPart<TElement[]>({
+        await this.definition.validateAndThrow(copy, { deep: false });
+
+        return this.factory.createUnvalidatedModelPart<TElement[]>({
             parent: this.parent,
             value: copy,
             definition: this.definition,
