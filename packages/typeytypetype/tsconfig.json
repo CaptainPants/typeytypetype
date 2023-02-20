@@ -15,7 +15,7 @@
         // "paths": {},                                      /* Specify a set of entries that re-map imports to additional lookup locations. */
 
         /* Emit */
-        "outDir": "./dist" /* Specify an output folder for all emitted files. */,
+        "outDir": "./build" /* Specify an output folder for all emitted files. */,
 
         /* Interop Constraints */
         // "isolatedModules": true,                          /* Ensure that each file can be safely transpiled without relying on other imports. */

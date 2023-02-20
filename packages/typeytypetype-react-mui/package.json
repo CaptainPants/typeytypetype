@@ -1,0 +1,25 @@
+{
+    "name": "@captainpants/typeytypetype-react-mui",
+    "version": "0.0.1",
+    "main": "dest/index.js",
+    "repository": "https://github.com/CaptainPants/typeytypetype",
+    "author": "Stuart Murray <captainpantsnpm@gmail.com>",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "format": "npx prettier --config ../../.prettierrc.json --write src",
+        "lint": "npx eslint src/**/*.{ts,tsx} --fix",
+        "typecheck": "tsc",
+        "build": "tsc",
+        "test": "npx jest src",
+        "check": "yarn format && yarn lint && yarn test && yarn typecheck"
+    },
+    "dependencies": {
+        "@captainpants/typeytypetype": "*",
+        "@captainpants/typeytypetype-react": "*",
+        "@types/react": "^18.0.27",
+        "@types/react-dom": "^18.0.10",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
+    }
+}

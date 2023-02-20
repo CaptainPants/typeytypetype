@@ -14,12 +14,12 @@
     }
   },
   "targetDefaults": {
-    "compile": {
+    "test": {
       "dependsOn": [
-        "^compile"
+        "^build"
       ],
       "outputs": [
-        "{projectRoot}/dist"
+        "{projectRoot}/build"
       ]
     },
     "build": {
@@ -27,7 +27,7 @@
         "^build"
       ],
       "outputs": [
-        "{projectRoot}/dist"
+        "{projectRoot}/build"
       ]
     }
   }
