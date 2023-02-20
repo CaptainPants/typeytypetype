@@ -29,7 +29,7 @@ export class ArrayModelImpl<TElement>
         this.#elementDefinition = definition.getElementDefinition();
 
         this.#elementModels = value.map((item, index) =>
-            factory.create({
+            factory.createModelPart({
                 parent: { type: 'element', model: this as any, index },
                 value: item,
                 definition: this.#elementDefinition,
@@ -74,7 +74,7 @@ export class ArrayModelImpl<TElement>
 
         copy.splice(start, deleteCount, ...typed);
 
-        return this.factory.create<TElement[]>({
+        return this.factory.createModelPart<TElement[]>({
             parent: this.parent,
             value: copy,
             definition: this.definition,

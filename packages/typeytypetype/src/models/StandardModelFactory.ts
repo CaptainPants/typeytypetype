@@ -6,7 +6,11 @@ import { descend } from '../internal/descend.js';
 import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
 import { ObjectModelImpl } from './internal/ObjectModelImpl.js';
 import { type Model } from './Model.js';
-import { type ModelFactory, type ModelFactoryArgs } from './ModelFactory.js';
+import {
+    type ModelFactory,
+    type CreateModelPartArgs,
+    type CreateModelArgs,
+} from './ModelFactory.js';
 import { type ResolutionContext } from '../definitions/ResolutionContext.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import {
@@ -27,12 +31,29 @@ export class StandardModelFactory implements ModelFactory {
 
     #resolutionContext: ResolutionContext;
 
-    create<T>({
+    createModel<T>(args: CreateModelArgs<T>): Promise<Model<T>>;
+    async createModel<T>({
+        parent,
+        value,
+        definition,
+    }: CreateModelArgs<T>): Promise<Model<T>> {
+        const typed = await definition.validateCast(value, { deep: true });
+
+        return this.createModelPart<T>({
+            parent,
+            value: typed,
+            definition,
+            depth: StandardModelFactory.defaultMaxDepth,
+        });
+    }
+
+    createModelPart<T>(args: CreateModelPartArgs<T>): Model<T>;
+    createModelPart<T>({
         parent = null,
         value,
         definition,
         depth,
-    }: ModelFactoryArgs<T>): Model<T> {
+    }: CreateModelPartArgs<T>): Model<T> {
         if (definition instanceof UnionDefinition) {
             return new UnionModelImpl<any>(
                 parent,

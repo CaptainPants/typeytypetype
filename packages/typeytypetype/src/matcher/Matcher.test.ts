@@ -23,15 +23,13 @@ test('test', async () => {
     const matcher = new Matcher<number>(rules);
 
     const factory = new StandardModelFactory();
-    const numModel1 = factory.create({
+    const numModel1 = await factory.createModel({
         value: 1,
         definition: Type.number().withLabels('2').freeze(),
-        depth: 25,
     });
-    const numModel2 = factory.create({
+    const numModel2 = await factory.createModel({
         value: 1,
         definition: Type.number().withLabels('1').freeze(),
-        depth: 25,
     });
 
     const match1 = matcher.findMatch(numModel1);

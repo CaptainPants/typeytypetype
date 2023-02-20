@@ -16,10 +16,9 @@ test('rigid-object', async () => {
 
     const factory = new StandardModelFactory();
 
-    const model = factory.create({
+    const model = await factory.createModel({
         value,
         definition,
-        depth: StandardModelFactory.defaultMaxDepth,
     });
 
     const updated = await model.setPropertyValue('num', 2);

@@ -41,7 +41,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
                 );
             }
 
-            this.#propertyModels[name] = factory.create({
+            this.#propertyModels[name] = factory.createModelPart({
                 parent: {
                     type: 'property',
                     model: this as any,
@@ -97,7 +97,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             [key]: adopted,
         };
 
-        return this.factory.create<TObject>({
+        return this.factory.createModelPart<TObject>({
             parent: this.parent,
             value: copy,
             definition: this.definition,
@@ -124,7 +124,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
         delete copy[key];
 
-        return this.factory.create<TObject>({
+        return this.factory.createModelPart<TObject>({
             parent: this.parent,
             value: copy,
             definition: this.definition,

@@ -9,10 +9,9 @@ test('array', async () => {
 
     const input = [1, 2, 3];
 
-    const model = factory.create({
+    const model = await factory.createModel({
         value: input,
         definition,
-        depth: StandardModelFactory.defaultMaxDepth,
     });
 
     const result = await model.spliceElements(1, 0, [6, 7]);

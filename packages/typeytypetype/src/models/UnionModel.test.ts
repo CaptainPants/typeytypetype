@@ -25,10 +25,9 @@ test('union', async () => {
 
     const factory = new StandardModelFactory();
 
-    const model = factory.create({
+    const model = await factory.createModel({
         value,
         definition,
-        depth: StandardModelFactory.defaultMaxDepth,
     });
 
     const resolved = model.resolved;

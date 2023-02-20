@@ -8,10 +8,9 @@ test('label', async () => {
 
     expect(
         matchPart(
-            factory.create({
+            await factory.createModel({
                 value: 1,
                 definition: Type.number().withLabels('test-label'),
-                depth: 25,
             }),
             {
                 $label: 'test-label',
@@ -20,10 +19,9 @@ test('label', async () => {
     ).toStrictEqual(true);
     expect(
         matchPart(
-            factory.create({
+            await factory.createModel({
                 value: 1,
                 definition: Type.number().withLabels('test-label'),
-                depth: 25,
             }),
             {
                 $label: 'test-label',
@@ -33,10 +31,9 @@ test('label', async () => {
 
     expect(
         matchPart(
-            factory.create({
+            await factory.createModel({
                 value: 1,
                 definition: Type.number().withLabels('label1'),
-                depth: 25,
             }),
             {
                 $label: 'label1-suffix',
@@ -45,10 +42,9 @@ test('label', async () => {
     ).toStrictEqual(false);
     expect(
         matchPart(
-            factory.create({
+            await factory.createModel({
                 value: 1,
                 definition: Type.number(),
-                depth: 25,
             }),
             { $label: 'test-label' }
         )
@@ -60,10 +56,9 @@ test('attribute', async () => {
 
     expect(
         matchPart(
-            factory.create({
+            await factory.createModel({
                 value: 1,
                 definition: Type.number().withAttr('type', 'ham-sandwich'),
-                depth: 25,
             }),
             {
                 $attr: 'type',
@@ -73,10 +68,9 @@ test('attribute', async () => {
     ).toStrictEqual(true);
     expect(
         matchPart(
-            factory.create({
+            await factory.createModel({
                 value: 1,
                 definition: Type.number(),
-                depth: 25,
             }),
             {
                 $attr: 'type',
@@ -86,12 +80,11 @@ test('attribute', async () => {
     ).toStrictEqual(false);
     expect(
         matchPart(
-            factory.create({
+            await factory.createModel({
                 value: 1,
                 definition: Type.number()
                     .withAttr('type', 'ham-sandwich')
                     .withAttr('other', 'thing'),
-                depth: 25,
             }),
             { $attr: 'type', value: 'ham-sandwich' }
         )

@@ -30,7 +30,7 @@ export class UnionModelImpl<TUnion>
             throw new Error(`Could not find matching definition for value.`);
         }
 
-        this.resolved = factory.create<TUnion>({
+        this.resolved = factory.createModelPart<TUnion>({
             parent,
             value,
             definition: match,
@@ -45,7 +45,7 @@ export class UnionModelImpl<TUnion>
     async unknownReplace(value: unknown): Promise<Model<unknown>> {
         const adopted = await adoptAndValidate(value, this.definition);
 
-        const model = this.factory.create({
+        const model = this.factory.createModelPart({
             parent: this.parent,
             value: adopted,
             definition: this.definition,
