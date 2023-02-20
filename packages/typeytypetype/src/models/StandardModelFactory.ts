@@ -20,7 +20,6 @@ import {
     NumberDefinition,
     StringConstantDefinition,
     StringDefinition,
-    type SpreadDefinition,
 } from '../definitions/index.js';
 import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 
@@ -138,13 +137,6 @@ export class StandardModelFactory implements ModelFactory {
                 `Unrecognised definition type ${definition.constructor.name}.`
             );
         }
-    }
-
-    choose<TUnion>(
-        value: TUnion,
-        definition: UnionDefinition<TUnion>
-    ): SpreadDefinition<TUnion> | undefined {
-        return definition.getDefinition(value);
     }
 
     static readonly defaultMaxDepth = 25;

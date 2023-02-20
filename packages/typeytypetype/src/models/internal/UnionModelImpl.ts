@@ -24,7 +24,7 @@ export class UnionModelImpl<TUnion>
     ) {
         super(parent, value, definition, depth, factory);
 
-        const match = factory.choose<TUnion>(value, definition);
+        const match = definition.getDefinition(value);
 
         if (match === undefined) {
             throw new Error(`Could not find matching definition for value.`);
