@@ -9,7 +9,8 @@ export type Validator<T> = (
 ) => ValidatorResult | Promise<ValidatorResult>;
 
 export interface ValidationOptions {
-    deep?: boolean;
+    deep?: boolean | undefined;
+    path?: string | undefined;
 }
 export type ValidationResult = Promise<string[]>;
 

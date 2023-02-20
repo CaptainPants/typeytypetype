@@ -9,9 +9,9 @@ export async function adoptAndValidate<T>(
         if (valueOrModel.unknownDefinition === definition) {
             return valueOrModel as T;
         } else {
-            return await definition.validateCast(valueOrModel);
+            return await definition.validateAndTypeAssert(valueOrModel);
         }
     } else {
-        return await definition.validateCast(valueOrModel);
+        return await definition.validateAndTypeAssert(valueOrModel);
     }
 }

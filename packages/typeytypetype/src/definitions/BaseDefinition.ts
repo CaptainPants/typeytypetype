@@ -66,7 +66,7 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         return await this.doValidate(value, options ?? {}, 25);
     }
 
-    async validateCast(
+    async validateAndTypeAssert(
         value: unknown,
         options?: ValidationOptions
     ): Promise<T> {
@@ -127,14 +127,6 @@ export abstract class BaseDefinition<T> implements Definition<T> {
     }
 
     abstract doToTypeString(depth: number): string;
-
-    /**
-     * This is 100% here just to allow type inference to match the type.
-     * @returns
-     */
-    differentiator(): T {
-        throw new Error('Do not call this method.');
-    }
 
     hasLabel(label: string): boolean {
         return this.labels.includes(label);

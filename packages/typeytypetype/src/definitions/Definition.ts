@@ -7,7 +7,7 @@ export interface Definition<T> {
 
     validate: (value: unknown, options?: ValidationOptions) => ValidationResult;
 
-    validateCast: (value: unknown) => Promise<T>;
+    validateAndTypeAssert: (value: unknown) => Promise<T>;
 
     doValidate: (
         value: unknown,
@@ -22,10 +22,4 @@ export interface Definition<T> {
     hasLabel: (label: string) => boolean;
 
     getAttribute: (name: string) => unknown;
-
-    /**
-     * This is 100% here just to allow type inference to match the type.
-     * @returns
-     */
-    differentiator: () => T;
 }

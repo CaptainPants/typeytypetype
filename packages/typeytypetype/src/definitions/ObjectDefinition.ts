@@ -1,3 +1,4 @@
+import { combineDefinitionPath } from '../internal/combineDefinitionPath.js';
 import { descend } from '../internal/descend.js';
 import { type ExpandoType } from '../internal/utilityTypes.js';
 import { BaseDefinition } from './BaseDefinition.js';
@@ -27,7 +28,7 @@ export abstract class ObjectDefinition<
 
     protected override async doValidateChildren(
         value: TObject,
-        options: ValidationOptions,
+        { deep, path }: ValidationOptions,
         depth: number
     ): Promise<string[] | undefined> {
         const keys = Object.keys(value);
@@ -41,7 +42,7 @@ export abstract class ObjectDefinition<
             const currentPropValidationResult =
                 await propDefinition?.doValidate(
                     propValue,
-                    options,
+                    { deep, path: combineDefinitionPath(path, key) },
                     descend(depth)
                 );
 

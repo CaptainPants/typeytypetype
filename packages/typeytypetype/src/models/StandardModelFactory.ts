@@ -28,7 +28,7 @@ export class StandardModelFactory implements ModelFactory {
         value,
         definition,
     }: CreateModelArgs<T>): Promise<Model<T>> {
-        const typed = await definition.validateCast(value);
+        const typed = await definition.validateAndTypeAssert(value);
 
         return this.createModelPart<T>({
             parent,

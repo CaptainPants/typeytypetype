@@ -1,3 +1,4 @@
+import { combineDefinitionPath } from '../internal/combineDefinitionPath.js';
 import { descend } from '../internal/descend.js';
 import { BaseDefinition } from './BaseDefinition.js';
 import { type Definition } from './Definition.js';
@@ -47,15 +48,17 @@ export class ArrayDefinition<TElement> extends BaseDefinition<TElement[]> {
 
     protected override async doValidateChildren(
         value: TElement[],
-        options: ValidationOptions,
+        { deep, path }: ValidationOptions,
         depth: number
     ): Promise<string[] | undefined> {
         const res: string[] = [];
 
-        for (const item of value) {
+        for (let i = 0; i < value.length; ++i) {
+            const item = value[i];
+
             const itemResult = await this.elementDefinition.doValidate(
                 item,
-                options,
+                { deep, path: combineDefinitionPath(path, i) },
                 descend(depth)
             );
 
