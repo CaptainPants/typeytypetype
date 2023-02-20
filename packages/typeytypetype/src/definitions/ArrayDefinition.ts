@@ -11,14 +11,26 @@ export class ArrayDefinition<TElement> extends BaseDefinition<TElement[]> {
 
     public readonly elementDefinition: Definition<TElement>;
 
-    override doMatches(value: unknown, depth: number): value is TElement[] {
+    override doMatches(
+        value: unknown,
+        deep: boolean,
+        depth: number
+    ): value is TElement[] {
         if (!Array.isArray(value)) return false;
+
+        if (!deep) {
+            return true;
+        }
 
         // Any item doesn't validate against #itemModel
         return (
             value.findIndex(
                 (itemValue: unknown) =>
-                    !this.elementDefinition.doMatches(itemValue, descend(depth))
+                    !this.elementDefinition.doMatches(
+                        itemValue,
+                        deep,
+                        descend(depth)
+                    )
             ) < 0
         );
     }

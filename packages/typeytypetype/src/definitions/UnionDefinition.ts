@@ -15,10 +15,14 @@ export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
         return this.definitions.find((x) => x.matches(value));
     }
 
-    override doMatches(value: unknown, depth: number): value is TUnion {
+    override doMatches(
+        value: unknown,
+        deep: boolean,
+        depth: number
+    ): value is TUnion {
         return (
             this.definitions.findIndex((model) =>
-                model.doMatches(value, descend(depth))
+                model.doMatches(value, deep, descend(depth))
             ) >= 0
         );
     }

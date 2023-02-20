@@ -14,9 +14,14 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
 
     override doMatches(
         value: unknown,
+        deep: boolean,
         depth: number
     ): value is Record<string, TValue> {
         if (typeof value !== 'object' || value === null) return false;
+
+        if (!deep) {
+            return true;
+        }
 
         const asRecord = value as Record<string, unknown>;
 
@@ -29,6 +34,7 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
             if (
                 !this.propertyDefinition.doMatches(
                     propertyValue,
+                    deep,
                     descend(depth)
                 )
             ) {

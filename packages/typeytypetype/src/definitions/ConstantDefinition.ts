@@ -8,7 +8,11 @@ export abstract class ConstantDefinition<T> extends BaseDefinition<T> {
 
     readonly value: T;
 
-    override doMatches(value: unknown, depth: number): value is T {
+    override doMatches(
+        value: unknown,
+        _deep: boolean,
+        _depth: number
+    ): value is T {
         return value === this.value;
     }
 

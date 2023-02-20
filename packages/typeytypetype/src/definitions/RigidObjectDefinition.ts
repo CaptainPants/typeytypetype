@@ -14,8 +14,16 @@ export class RigidObjectDefinition<
 
     readonly propertyDefinitions: MappedDefinition<TObject>;
 
-    override doMatches(value: unknown, depth: number): value is TObject {
+    override doMatches(
+        value: unknown,
+        deep: boolean,
+        depth: number
+    ): value is TObject {
         if (typeof value !== 'object' || value === null) return false;
+
+        if (!deep) {
+            return true;
+        }
 
         const asRecord = value as Record<string, unknown>;
 
@@ -27,7 +35,7 @@ export class RigidObjectDefinition<
             if (typeof property === 'undefined') return true; // this shouldn't happen
 
             const propertyValue = asRecord[key];
-            if (!property.doMatches(propertyValue, descend(depth))) {
+            if (!property.doMatches(propertyValue, deep, descend(depth))) {
                 return true;
             }
 

@@ -1,5 +1,6 @@
 import { deepFreeze } from '../internal/deepFreeze.js';
 import { descend } from '../internal/descend.js';
+import { stringForError } from '../internal/stringForError.js';
 import { type Definition } from './Definition.js';
 import {
     type Validator,
@@ -49,10 +50,14 @@ export abstract class BaseDefinition<T> implements Definition<T> {
     }
 
     matches(value: unknown): value is T {
-        return this.doMatches(value, 25);
+        return this.doMatches(value, true, 25);
     }
 
-    abstract doMatches(value: unknown, depth: number): value is T;
+    abstract doMatches(
+        value: unknown,
+        deep: boolean,
+        depth: number
+    ): value is T;
 
     async validate(
         value: unknown,
@@ -68,9 +73,9 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         const res = await this.validate(value, options);
         if (res.length > 0) {
             throw new TypeError(
-                `Value ${String(value)} did not pass validation: ${res.join(
-                    ', '
-                )}`
+                `Value ${stringForError(
+                    value
+                )} did not pass validation: ${res.join(', ')}`
             );
         }
         return value as T;
@@ -82,7 +87,10 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         depth: number
     ): ValidationResult {
         // Note that this is a type assertion
-        if (!this.doMatches(value, depth)) {
+        // Passing deep: false as the assumption is that doMatches
+        // will be called at each level of validation, which would multiply the cost of
+        // doing validation.
+        if (!this.doMatches(value, false, depth)) {
             return ['Non-matching structure'];
         }
 
@@ -96,13 +104,10 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         }
 
         if (options.deep === true) {
-            const descendents = await this.doValidateChildren(
-                value,
-                options,
-                descend(depth)
-            );
-            if (descendents !== undefined) {
-                errors.push(...descendents);
+            const validationResultsForDescendents =
+                await this.doValidateChildren(value, options, descend(depth));
+            if (validationResultsForDescendents !== undefined) {
+                errors.push(...validationResultsForDescendents);
             }
         }
 

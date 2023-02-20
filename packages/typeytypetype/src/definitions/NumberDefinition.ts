@@ -1,7 +1,11 @@
 import { BaseDefinition } from './BaseDefinition.js';
 
 export class NumberDefinition extends BaseDefinition<number> {
-    override doMatches(value: unknown, depth: number): value is number {
+    override doMatches(
+        value: unknown,
+        _deep: boolean,
+        _depth: number
+    ): value is number {
         return typeof value === 'number';
     }
 

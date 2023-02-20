@@ -3,11 +3,11 @@ import { type ValidationOptions, type ValidationResult } from './Validator.js';
 export interface Definition<T> {
     matches: (value: unknown) => value is T;
 
-    doMatches: (value: unknown, depth: number) => value is T;
+    doMatches: (value: unknown, deep: boolean, depth: number) => value is T;
 
     validate: (value: unknown, options?: ValidationOptions) => ValidationResult;
 
-    validateCast: (value: unknown, options?: ValidationOptions) => Promise<T>;
+    validateCast: (value: unknown) => Promise<T>;
 
     doValidate: (
         value: unknown,

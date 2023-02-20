@@ -1,4 +1,3 @@
-import { createResolutionContext } from '../definitions/createResolutionContext.js';
 import { ArrayDefinition } from '../definitions/ArrayDefinition.js';
 import { ObjectDefinition } from '../definitions/ObjectDefinition.js';
 import { UnionDefinition } from '../definitions/UnionDefinition.js';
@@ -11,7 +10,6 @@ import {
     type CreateModelPartArgs,
     type CreateModelArgs,
 } from './ModelFactory.js';
-import { type ResolutionContext } from '../definitions/ResolutionContext.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import {
     BooleanConstantDefinition,
@@ -24,19 +22,13 @@ import {
 import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 
 export class StandardModelFactory implements ModelFactory {
-    constructor() {
-        this.#resolutionContext = createResolutionContext();
-    }
-
-    #resolutionContext: ResolutionContext;
-
     createModel<T>(args: CreateModelArgs<T>): Promise<Model<T>>;
     async createModel<T>({
         parent,
         value,
         definition,
     }: CreateModelArgs<T>): Promise<Model<T>> {
-        const typed = await definition.validateCast(value, { deep: true });
+        const typed = await definition.validateCast(value);
 
         return this.createModelPart<T>({
             parent,

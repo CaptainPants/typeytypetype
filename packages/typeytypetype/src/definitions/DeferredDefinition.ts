@@ -17,8 +17,12 @@ export class DeferredDefinition<T> extends BaseDefinition<T> {
         return this.definition;
     }
 
-    override doMatches(value: unknown, depth: number): value is T {
-        return this.getDefinition().doMatches(value, descend(depth));
+    override doMatches(
+        value: unknown,
+        deep: boolean,
+        depth: number
+    ): value is T {
+        return this.getDefinition().doMatches(value, deep, descend(depth));
     }
 
     override doToTypeString(depth: number): string {
