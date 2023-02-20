@@ -68,11 +68,8 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         return await this.doValidate(value, options ?? {}, 25);
     }
 
-    async validateAndTypeAssert(
-        value: unknown,
-        options?: ValidationOptions
-    ): Promise<T> {
-        const res = await this.validate(value, options);
+    async validateAndTypeAssert(value: unknown): Promise<T> {
+        const res = await this.validate(value, { deep: true });
         if (res.length > 0) {
             throw new TypeError(
                 `Value ${stringForError(
@@ -97,20 +94,23 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         }
 
         const errors: ValidationSingleResult[] = [];
+
+        // Validate children first, as we need to
+        // make sure structure is correct before validating the parent
+        if (options.deep === true) {
+            const validationResultsForDescendents =
+                await this.doValidateChildren(value, options, descend(depth));
+            if (validationResultsForDescendents !== undefined) {
+                errors.push(...validationResultsForDescendents);
+            }
+        }
+
         for (const validator of this.validators) {
             const result = await validator(value);
 
             if (result !== null) {
                 const flattened = await flattenValidatorResult(result);
                 errors.push(...flattened.map((item) => ({ message: item })));
-            }
-        }
-
-        if (options.deep === true) {
-            const validationResultsForDescendents =
-                await this.doValidateChildren(value, options, descend(depth));
-            if (validationResultsForDescendents !== undefined) {
-                errors.push(...validationResultsForDescendents);
             }
         }
 
