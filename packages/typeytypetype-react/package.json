@@ -9,9 +9,10 @@
     "scripts": {
         "format": "npx prettier --config ../../.prettierrc.json --write src",
         "lint": "npx eslint src/**/*.{ts,tsx} --fix",
-        "compile": "tsc",
+        "typecheck": "tsc",
+        "build": "tsc",
         "test": "npx jest src",
-        "build": "yarn format && yarn lint && yarn test && yarn compile"
+        "check": "yarn format && yarn lint && yarn test && yarn typecheck"
     },
     "dependencies": {
         "@captainpants/typeytypetype": "*",

@@ -8,6 +8,8 @@ module.exports = {
         'prettier',
         'plugin:import/recommended',
         'plugin:import/typescript',
+        "@remix-run/eslint-config", 
+        "@remix-run/eslint-config/node"
     ],
     overrides: [],
     parserOptions: {
