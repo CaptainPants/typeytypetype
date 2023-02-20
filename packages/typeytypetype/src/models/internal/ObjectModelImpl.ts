@@ -2,9 +2,7 @@ import * as assert from 'typed-assert';
 import { type Definition } from '../../definitions/Definition.js';
 import { type ObjectDefinition } from '../../definitions/ObjectDefinition.js';
 import { descend } from '../../internal/descend.js';
-import { stringForError } from '../../internal/stringForError.js';
 import { type ExpandoType } from '../../internal/utilityTypes.js';
-import { isModel } from '../isModel.js';
 import {
     type ParentRelationship,
     type Model,
@@ -12,6 +10,7 @@ import {
     type UnknownModel,
 } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
+import { adoptAndValidate } from './adoptAndValidate.js';
 import { ModelImpl } from './ModelImpl.js';
 
 export class ObjectModelImpl<TObject extends Record<string, unknown>>
@@ -91,23 +90,11 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             );
         }
 
-        let processedValue: unknown;
-
-        if (isModel(value)) {
-            if (def !== value.unknownDefinition) {
-                // Mismatch
-                throw new TypeError(
-                    `Unexpected value ${stringForError(value.unknownValue)}`
-                );
-            }
-            processedValue = value.unknownValue;
-        } else {
-            processedValue = await def.validateCast(value);
-        }
+        const adopted = await adoptAndValidate(value, def);
 
         const copy = {
             ...this.value,
-            [key]: processedValue,
+            [key]: adopted,
         };
 
         return this.factory.create<TObject>({

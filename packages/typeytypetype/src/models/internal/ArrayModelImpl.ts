@@ -2,8 +2,6 @@ import { type ArrayDefinition } from '../../definitions/ArrayDefinition.js';
 import { type Definition } from '../../definitions/Definition.js';
 import { descend } from '../../internal/descend.js';
 import { mapAsync } from '../../internal/mapAsync.js';
-import { stringForError } from '../../internal/stringForError.js';
-import { isModel } from '../isModel.js';
 import {
     type ParentRelationship,
     type ArrayModel,
@@ -12,6 +10,7 @@ import {
     type UnknownArrayModel,
 } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
+import { adoptAndValidate } from './adoptAndValidate.js';
 import { ModelImpl } from './ModelImpl.js';
 
 export class ArrayModelImpl<TElement>
@@ -70,17 +69,7 @@ export class ArrayModelImpl<TElement>
         const eleDefinition = this.elementDefinition();
 
         const typed = await mapAsync(newElements, async (item) => {
-            if (isModel(item)) {
-                // Refers to the same definition, so we don't need to test it
-                if (item.unknownDefinition !== eleDefinition) {
-                    throw new TypeError(
-                        `Unexpected value ${stringForError(item.unknownValue)}`
-                    );
-                }
-                return item.unknownValue as TElement;
-            } else {
-                return await eleDefinition.validateCast(item);
-            }
+            return await adoptAndValidate(item, eleDefinition);
         });
 
         copy.splice(start, deleteCount, ...typed);

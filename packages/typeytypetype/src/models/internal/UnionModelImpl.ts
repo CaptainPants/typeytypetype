@@ -1,8 +1,6 @@
 import { type Definition } from '../../definitions/Definition.js';
 import { type UnionDefinition } from '../../definitions/UnionDefinition.js';
 import { descend } from '../../internal/descend.js';
-import { stringForError } from '../../internal/stringForError.js';
-import { isModel } from '../isModel.js';
 import {
     type SpreadModel,
     type Model,
@@ -10,6 +8,7 @@ import {
     type ParentRelationship,
 } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
+import { adoptAndValidate } from './adoptAndValidate.js';
 import { ModelImpl } from './ModelImpl.js';
 
 export class UnionModelImpl<TUnion>
@@ -44,23 +43,11 @@ export class UnionModelImpl<TUnion>
     readonly resolved: SpreadModel<TUnion>;
 
     async unknownReplace(value: unknown): Promise<Model<unknown>> {
-        let processedValue: unknown;
-
-        if (isModel(value)) {
-            if (this.definition !== value.unknownDefinition) {
-                // Mismatch
-                throw new TypeError(
-                    `Unexpected value ${stringForError(value.unknownValue)}`
-                );
-            }
-            processedValue = value.unknownValue as TUnion;
-        } else {
-            processedValue = await this.definition.validateCast(value);
-        }
+        const adopted = await adoptAndValidate(value, this.definition);
 
         const model = this.factory.create({
             parent: this.parent,
-            value: processedValue,
+            value: adopted,
             definition: this.definition,
             depth: descend(this.depth),
         });

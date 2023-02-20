@@ -1,6 +1,7 @@
 import { descend } from '../internal/descend.js';
 import { type SpreadDefinition } from './internal/types.js';
 import { BaseDefinition } from './BaseDefinition.js';
+import { type ValidationOptions } from './Validator.js';
 
 export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
     constructor(definitions: Array<SpreadDefinition<TUnion>>) {
@@ -26,5 +27,15 @@ export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
         return this.definitions
             .map((item) => `(${item.doToTypeString(descend(depth))}})`)
             .join(' | ');
+    }
+
+    protected override async doValidateChildren(
+        value: TUnion,
+        options: ValidationOptions,
+        depth: number
+    ): Promise<string[] | undefined> {
+        const def = this.getDefinition(value);
+
+        return await def?.doValidate(value, options, descend(depth));
     }
 }

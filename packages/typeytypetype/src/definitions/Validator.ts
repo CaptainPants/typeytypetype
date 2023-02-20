@@ -8,6 +8,9 @@ export type Validator<T> = (
     value: T
 ) => ValidatorResult | Promise<ValidatorResult>;
 
+export interface ValidationOptions {
+    deep?: boolean;
+}
 export type ValidationResult = Promise<string[]>;
 
 export async function flattenValidatorResult(

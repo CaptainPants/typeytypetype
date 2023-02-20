@@ -1,6 +1,7 @@
 import { descend } from '../internal/descend.js';
 import { BaseDefinition } from './BaseDefinition.js';
 import { type Definition } from './Definition.js';
+import { type ValidationOptions } from './Validator.js';
 
 export class ArrayDefinition<TElement> extends BaseDefinition<TElement[]> {
     constructor(elementDefinition: Definition<TElement>) {
@@ -30,5 +31,25 @@ export class ArrayDefinition<TElement> extends BaseDefinition<TElement[]> {
 
     getElementDefinition(): Definition<TElement> {
         return this.elementDefinition;
+    }
+
+    protected override async doValidateChildren(
+        value: TElement[],
+        options: ValidationOptions,
+        depth: number
+    ): Promise<string[] | undefined> {
+        const res: string[] = [];
+
+        for (const item of value) {
+            const itemResult = await this.elementDefinition.doValidate(
+                item,
+                options,
+                descend(depth)
+            );
+
+            res.push(...itemResult);
+        }
+
+        return res;
     }
 }

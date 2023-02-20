@@ -1,6 +1,11 @@
 import { deepFreeze } from '../internal/deepFreeze.js';
+import { descend } from '../internal/descend.js';
 import { type Definition } from './Definition.js';
-import { type Validator, type ValidationResult } from './Validator.js';
+import {
+    type Validator,
+    type ValidationResult,
+    type ValidationOptions,
+} from './Validator.js';
 
 export abstract class BaseDefinition<T> implements Definition<T> {
     readonly validators: Array<Validator<T>> = [];
@@ -49,12 +54,18 @@ export abstract class BaseDefinition<T> implements Definition<T> {
 
     abstract doMatches(value: unknown, depth: number): value is T;
 
-    async validate(value: unknown): ValidationResult {
-        return await this.doValidate(value, 25);
+    async validate(
+        value: unknown,
+        options?: ValidationOptions
+    ): ValidationResult {
+        return await this.doValidate(value, options ?? {}, 25);
     }
 
-    async validateCast(value: unknown): Promise<T> {
-        const res = await this.validate(value);
+    async validateCast(
+        value: unknown,
+        options?: ValidationOptions
+    ): Promise<T> {
+        const res = await this.validate(value, options);
         if (res.length > 0) {
             throw new TypeError(
                 `Value ${String(value)} did not pass validation: ${res.join(
@@ -65,7 +76,11 @@ export abstract class BaseDefinition<T> implements Definition<T> {
         return value as T;
     }
 
-    async doValidate(value: unknown, depth: number): ValidationResult {
+    async doValidate(
+        value: unknown,
+        options: ValidationOptions,
+        depth: number
+    ): ValidationResult {
         // Note that this is a type assertion
         if (!this.doMatches(value, depth)) {
             return ['Non-matching structure'];
@@ -80,7 +95,26 @@ export abstract class BaseDefinition<T> implements Definition<T> {
             }
         }
 
+        if (options.deep === true) {
+            const descendents = await this.doValidateChildren(
+                value,
+                options,
+                descend(depth)
+            );
+            if (descendents !== undefined) {
+                errors.push(...descendents);
+            }
+        }
+
         return errors;
+    }
+
+    protected async doValidateChildren(
+        value: T,
+        options: ValidationOptions,
+        depth: number
+    ): Promise<string[] | undefined> {
+        return undefined;
     }
 
     toTypeString(): string {

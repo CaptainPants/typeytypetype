@@ -58,10 +58,7 @@ export class StandardModelFactory implements ModelFactory {
                 descend(depth),
                 this
             ) as any;
-        } else if (
-            definition instanceof StringDefinition ||
-            definition instanceof StringConstantDefinition
-        ) {
+        } else if (definition instanceof StringDefinition) {
             return new SimpleModelImpl(
                 'string',
                 parent,
@@ -70,10 +67,16 @@ export class StandardModelFactory implements ModelFactory {
                 descend(depth),
                 this
             ) as any;
-        } else if (
-            definition instanceof NumberDefinition ||
-            definition instanceof NumberConstantDefinition
-        ) {
+        } else if (definition instanceof StringConstantDefinition) {
+            return new SimpleModelImpl(
+                'string-constant',
+                parent,
+                value as string,
+                definition,
+                descend(depth),
+                this
+            ) as any;
+        } else if (definition instanceof NumberDefinition) {
             return new SimpleModelImpl(
                 'number',
                 parent,
@@ -82,12 +85,27 @@ export class StandardModelFactory implements ModelFactory {
                 descend(depth),
                 this
             ) as any;
-        } else if (
-            definition instanceof BooleanDefinition ||
-            definition instanceof BooleanConstantDefinition
-        ) {
+        } else if (definition instanceof NumberConstantDefinition) {
+            return new SimpleModelImpl(
+                'number-constant',
+                parent,
+                value as number,
+                definition,
+                descend(depth),
+                this
+            ) as any;
+        } else if (definition instanceof BooleanDefinition) {
             return new SimpleModelImpl(
                 'boolean',
+                parent,
+                value as boolean,
+                definition,
+                descend(depth),
+                this
+            ) as any;
+        } else if (definition instanceof BooleanConstantDefinition) {
+            return new SimpleModelImpl(
+                'boolean-constant',
                 parent,
                 value as boolean,
                 definition,

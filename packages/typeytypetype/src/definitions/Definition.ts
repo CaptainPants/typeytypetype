@@ -1,15 +1,19 @@
-import { type ValidationResult } from './Validator.js';
+import { type ValidationOptions, type ValidationResult } from './Validator.js';
 
 export interface Definition<T> {
     matches: (value: unknown) => value is T;
 
     doMatches: (value: unknown, depth: number) => value is T;
 
-    validate: (value: unknown) => ValidationResult;
+    validate: (value: unknown, options?: ValidationOptions) => ValidationResult;
 
-    validateCast: (value: unknown) => Promise<T>;
+    validateCast: (value: unknown, options?: ValidationOptions) => Promise<T>;
 
-    doValidate: (value: unknown, depth: number) => ValidationResult;
+    doValidate: (
+        value: unknown,
+        options: ValidationOptions,
+        depth: number
+    ) => ValidationResult;
 
     toTypeString: () => string;
 
