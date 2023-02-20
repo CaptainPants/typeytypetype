@@ -46,13 +46,18 @@ export class StandardModelFactory implements ModelFactory {
         });
     }
 
-    createModelPart<T>(args: CreateModelPartArgs<T>): Model<T>;
-    createModelPart<T>({
+    createModelPart<T>(args: CreateModelPartArgs<T>): Model<T> {
+        // This indirection is mostly so that we don't have 15 'as any' parts,
+        // and just have the one 'any' return type
+        return this.#doCreateModelPart(args);
+    }
+
+    #doCreateModelPart<T>({
         parent = null,
         value,
         definition,
         depth,
-    }: CreateModelPartArgs<T>): Model<T> {
+    }: CreateModelPartArgs<T>): any {
         if (definition instanceof UnionDefinition) {
             return new UnionModelImpl<any>(
                 parent,
@@ -60,15 +65,15 @@ export class StandardModelFactory implements ModelFactory {
                 definition,
                 descend(depth),
                 this
-            ) as any;
+            );
         } else if (definition instanceof ArrayDefinition) {
             return new ArrayModelImpl(
                 parent,
-                value as any[],
+                value as T[],
                 definition,
                 descend(depth),
                 this
-            ) as any;
+            );
             // This might be Rigid or Map
         } else if (definition instanceof ObjectDefinition) {
             return new ObjectModelImpl(
@@ -77,7 +82,7 @@ export class StandardModelFactory implements ModelFactory {
                 definition,
                 descend(depth),
                 this
-            ) as any;
+            );
         } else if (definition instanceof StringDefinition) {
             return new SimpleModelImpl(
                 'string',
@@ -86,7 +91,7 @@ export class StandardModelFactory implements ModelFactory {
                 definition,
                 descend(depth),
                 this
-            ) as any;
+            );
         } else if (definition instanceof StringConstantDefinition) {
             return new SimpleModelImpl(
                 'string-constant',
@@ -95,7 +100,7 @@ export class StandardModelFactory implements ModelFactory {
                 definition,
                 descend(depth),
                 this
-            ) as any;
+            );
         } else if (definition instanceof NumberDefinition) {
             return new SimpleModelImpl(
                 'number',
@@ -104,7 +109,7 @@ export class StandardModelFactory implements ModelFactory {
                 definition,
                 descend(depth),
                 this
-            ) as any;
+            );
         } else if (definition instanceof NumberConstantDefinition) {
             return new SimpleModelImpl(
                 'number-constant',
@@ -113,7 +118,7 @@ export class StandardModelFactory implements ModelFactory {
                 definition,
                 descend(depth),
                 this
-            ) as any;
+            );
         } else if (definition instanceof BooleanDefinition) {
             return new SimpleModelImpl(
                 'boolean',
@@ -122,7 +127,7 @@ export class StandardModelFactory implements ModelFactory {
                 definition,
                 descend(depth),
                 this
-            ) as any;
+            );
         } else if (definition instanceof BooleanConstantDefinition) {
             return new SimpleModelImpl(
                 'boolean-constant',
@@ -131,7 +136,7 @@ export class StandardModelFactory implements ModelFactory {
                 definition,
                 descend(depth),
                 this
-            ) as any;
+            );
         } else {
             throw new TypeError(
                 `Unrecognised definition type ${definition.constructor.name}.`
