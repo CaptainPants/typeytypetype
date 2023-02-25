@@ -1,7 +1,10 @@
 import { type Definition } from './definitions/Definition.js';
+import { type Model } from './models/Model.js';
 
-export type TypeFromDefinition<TModel> = TModel extends Definition<infer T>
+export type TypeFromDefinition<TDefinition> = TDefinition extends Definition<
+    infer T
+>
     ? T
-    : TModel;
+    : TDefinition;
 
-export type Replacer<T> = (value: T) => Promise<void>;
+export type Replacer<T> = (value: T | Model<T>) => Promise<void>;

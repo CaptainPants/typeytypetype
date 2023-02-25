@@ -26,33 +26,48 @@ export function matchPart(
     part: MatcherRulePart,
     depth = 25
 ): boolean {
-    if ('$attr' in part) {
-        return deepEqual(
-            part.value,
-            model.unknownDefinition.getAttribute(part.$attr)
-        );
-    } else if ('$label' in part) {
-        return model.unknownDefinition.hasLabel(part.$label);
-    } else if ('$class' in part) {
-        return model.unknownDefinition.constructor === part.$class;
-    } else if ('$or' in part) {
-        return or(part.$or, (item) => matchPart(model, item, descend(depth)));
-    } else if ('$and' in part) {
-        return and(part.$and, (item) => matchPart(model, item, descend(depth)));
-    } else if ('$parent' in part) {
-        const parent = model.parent?.model;
-        if (parent === undefined) {
-            return false;
-        }
-        return matchPart(parent, part.$parent, descend(depth));
-    } else if ('$ancestor' in part) {
-        return (
-            traverseAncestors(model, (node) =>
-                matchPart(node, part.$ancestor, descend(depth))
-            ) != null
-        );
-    } else if ('$callback' in part) {
-        return part.$callback(model.unknownDefinition);
+    switch (part.type) {
+        case 'attr':
+            return deepEqual(
+                part.value,
+                model.unknownDefinition.getAttribute(part.name)
+            );
+        case 'label':
+            return model.unknownDefinition.hasLabel(part.label);
+        case 'type':
+            return model.unknownDefinition.constructor === part.constructor;
+        case 'or':
+            return or(part.rules, (item) =>
+                matchPart(model, item, descend(depth))
+            );
+        case 'and':
+            return and(part.rules, (item) =>
+                matchPart(model, item, descend(depth))
+            );
+        case 'propertyOf':
+            if (model.parent?.type !== 'property') {
+                return false;
+            }
+            if (
+                typeof part.propertyName !== 'undefined' &&
+                part.propertyName !== model.parent.property
+            ) {
+                return false;
+            }
+            return matchPart(model.parent.model, part.match, descend(depth));
+        case 'element':
+            if (model.parent?.type !== 'element') {
+                return false;
+            }
+            return matchPart(model.parent.model, part.match, descend(depth));
+        case 'ancestor':
+            return (
+                traverseAncestors(model, (item) =>
+                    matchPart(item, part.match, descend(depth))
+                ) !== null
+            );
+        case 'callback':
+            return part.callback(model);
     }
 
     throw new Error('Unexpected');
