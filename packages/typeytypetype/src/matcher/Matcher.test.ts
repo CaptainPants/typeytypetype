@@ -49,3 +49,33 @@ test('test', async () => {
 
     expect(match3).toStrictEqual(null);
 });
+
+test('ordered', async () => {
+    const rules: Array<MatcherRule<number>> = [
+        {
+            name: 'rule1',
+            parts: [Rule.label('1')],
+            priority: 0,
+            result: 1,
+        },
+        {
+            name: 'rule2',
+            parts: [Rule.label('1')],
+            priority: 0,
+            result: 2,
+        },
+    ];
+
+    const matcher = new Matcher<number>(rules);
+
+    const factory = new StandardModelFactory();
+    const numModel1 = await factory.createModel({
+        value: 2,
+        definition: Type.number().withLabels('1').freeze(),
+    });
+
+    const match1 = matcher.findMatch(numModel1);
+
+    expect(match1?.name).toStrictEqual('rule2');
+    expect(match1?.result).toStrictEqual(2);
+});
