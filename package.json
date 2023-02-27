@@ -8,8 +8,7 @@
         "test": "npx lerna run test",
         "lint": "npx lerna run lint",
         "format": "npx lerna run format",
-        "compile": "npx lerna run compile",
-        "build": "npx lerna run compile"
+        "build": "npx lerna run build"
     },
     "devDependencies": {
         "@jest/globals": "^29.4.1",
