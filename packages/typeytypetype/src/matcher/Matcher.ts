@@ -13,7 +13,9 @@ export class Matcher<T> {
     public findMatch(model: Model<unknown>): MatcherRule<T> | null {
         let bestCandidateRule: MatcherRule<T> | null = null;
 
-        for (const rule of this.rules) {
+        for (let i = this.rules.length - 1; i >= 0; --i) {
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            const rule = this.rules[i]!;
             if (
                 (bestCandidateRule === null ||
                     bestCandidateRule.priority < rule.priority) &&
