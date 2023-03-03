@@ -37,9 +37,9 @@ test('test', async () => {
         definition: Type.number().withLabels('3').freeze(),
     });
 
-    const match1 = matcher.findMatch(numModel1);
-    const match2 = matcher.findMatch(numModel2);
-    const match3 = matcher.findMatch(numModel3);
+    const match1 = matcher.findSingleMatch(numModel1);
+    const match2 = matcher.findSingleMatch(numModel2);
+    const match3 = matcher.findSingleMatch(numModel3);
 
     expect(match1?.name).toStrictEqual('rule2');
     expect(match1?.result).toStrictEqual(2);
@@ -74,8 +74,10 @@ test('ordered', async () => {
         definition: Type.number().withLabels('1').freeze(),
     });
 
-    const match1 = matcher.findMatch(numModel1);
+    const match1 = matcher.findSingleMatch(numModel1);
 
     expect(match1?.name).toStrictEqual('rule2');
     expect(match1?.result).toStrictEqual(2);
 });
+
+test.todo('multiple-ordered');
