@@ -24,14 +24,12 @@ import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 export class StandardModelFactory implements ModelFactory {
     createModel<T>(args: CreateModelArgs<T>): Promise<Model<T>>;
     async createModel<T>({
-        parent,
         value,
         definition,
     }: CreateModelArgs<T>): Promise<Model<T>> {
         const typed = await definition.validateAndThrow(value);
 
         return this.createUnvalidatedModelPart<T>({
-            parent,
             value: typed,
             definition,
             depth: StandardModelFactory.defaultMaxDepth,

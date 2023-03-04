@@ -1,7 +1,7 @@
 import { expect, test } from '@jest/globals';
 import { Type } from '../definitions/Type.js';
 import { type TypeFromDefinition } from '../types.js';
-import { StandardModelFactory } from './StandardModelFactory.js';
+import { createModel } from './createModel.js';
 
 test('map-object', async () => {
     const definition = Type.map(Type.number());
@@ -11,12 +11,7 @@ test('map-object', async () => {
         b: 2,
     };
 
-    const factory = new StandardModelFactory();
-
-    const model = await factory.createModel({
-        value,
-        definition,
-    });
+    const model = await createModel(value, definition);
 
     const updated = await model.setPropertyValue('c', 3);
 

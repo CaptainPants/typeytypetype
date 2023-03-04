@@ -10,7 +10,8 @@
         "format": "npx prettier --config ../../.prettierrc.json --write src",
         "lint": "npx eslint src/**/*.{ts,tsx} --fix",
         "typecheck": "tsc",
-        "build": "tsc",
+        "build": "yarn clean && tsc",
+        "clean": "npx rimraf build",
         "test": "npx jest src",
         "check": "yarn format && yarn lint && yarn test && yarn typecheck"
     },
