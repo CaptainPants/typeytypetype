@@ -4,6 +4,7 @@ import React, {
     type ReactElement,
     useContext,
     useMemo,
+    type FunctionComponent,
 } from 'react';
 import { EditorContext } from './internal/EditorContext.js';
 import {
@@ -11,6 +12,28 @@ import {
     type EditorProps,
     type NextEditorProps,
 } from './types.js';
+
+const Last = (): ReactElement => <>No match</>;
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const createNextEditor = (
+    matches: Array<MatcherRule<ComponentType<EditorProps>>>,
+    index: number
+): FunctionComponent<NextEditorProps> => {
+    const Editor = matches[index]?.result ?? Last;
+
+    // This name is hopefully preserved for viewing in the React developer browser extension
+    const Next: FunctionComponent<NextEditorProps> = ({ model, replace }) => {
+        // memoize so that the identity stays the same between renders
+        const InnerNext = useMemo(() => {
+            return createNextEditor(matches, index + 1);
+        }, []);
+
+        return <Editor model={model} replace={replace} Next={InnerNext} />;
+    };
+
+    return Next;
+};
 
 export function EditorHost<T>(
     props: Readonly<EditorHostProps<T>>
@@ -21,26 +44,13 @@ export function EditorHost<T>({
 }: Readonly<EditorHostProps<T>>): ReactElement {
     const context = useContext(EditorContext);
 
-    const Editor = useMemo(() => {
+    const InitialNextEditor = useMemo(() => {
         const matches = context.matcher.findAllMatches(model);
 
-        // Worst case there are no matches
-        let Next: ComponentType<NextEditorProps<T>> = () => <>No match</>;
-
-        for (let i = matches.length - 1; i >= 0; --i) {
-            const NextEditor = (
-                matches[i] as MatcherRule<ComponentType<EditorProps<T>>>
-            ).result;
-
-            Next = ({ model, replace }: NextEditorProps<T>): ReactElement => {
-                return (
-                    <NextEditor model={model} replace={replace} Next={Next} />
-                );
-            };
-        }
-
-        return Next;
+        return createNextEditor(matches, 0);
     }, [model]);
 
-    return <Editor model={model} replace={replace} />;
+    // Cheating the type system here a bit
+    // we'll need the editors themselves to validate that their models are the right type
+    return <InitialNextEditor model={model} replace={replace as any} />;
 }
