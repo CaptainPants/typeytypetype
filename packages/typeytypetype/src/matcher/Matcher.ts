@@ -28,7 +28,7 @@ export class Matcher<T> {
         return bestCandidateRule;
     }
 
-    public findAllMatches(model: Model<unknown>): Array<MatcherRule<T>> | null {
+    public findAllMatches(model: Model<unknown>): Array<MatcherRule<T>> {
         const matches: Array<[rule: MatcherRule<T>, index: number]> = [];
 
         for (let i = this.rules.length - 1; i >= 0; --i) {

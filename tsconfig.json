@@ -15,6 +15,7 @@
 
         /* Emit */
         "outDir": "./build" /* Specify an output folder for all emitted files. */,
+        "declaration": true,
 
         /* Interop Constraints */
         // "isolatedModules": true,                          /* Ensure that each file can be safely transpiled without relying on other imports. */

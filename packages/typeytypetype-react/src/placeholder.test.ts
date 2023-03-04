@@ -1,3 +1,3 @@
-import { expect, test } from '@jest/globals';
+import { test } from '@jest/globals';
 
 test.todo('typeytypetype-react');
