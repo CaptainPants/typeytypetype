@@ -1,5 +1,5 @@
 import { type Definition } from '../../definitions';
-import { isModel } from '../isModel.js';
+import { isModel } from '../is.js';
 
 export async function validateForAdoption<T>(
     valueOrModel: unknown,

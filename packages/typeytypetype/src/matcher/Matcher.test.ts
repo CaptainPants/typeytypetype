@@ -80,13 +80,17 @@ test('ordered', async () => {
     expect(match1?.result).toStrictEqual(2);
 });
 
-function createRule(id: string, label: string, priority: number): MatcherRule<string> {
+function createRule(
+    id: string,
+    label: string,
+    priority: number
+): MatcherRule<string> {
     return {
         name: `rule-${id}`,
         parts: [Rule.label(label)],
         priority,
         result: id,
-    }
+    };
 }
 
 test('multiple-ordered', async () => {
@@ -98,14 +102,17 @@ test('multiple-ordered', async () => {
         createRule('5', '2', 1),
         createRule('6', '2', 2),
         createRule('7', '2', 1),
-        createRule('8', '2', 2)
+        createRule('8', '2', 2),
     ];
 
     const matcher = new Matcher(rules);
 
     const factory = new StandardModelFactory();
 
-    const model = await factory.createModel({ definition: Type.number().withLabel('2'), value: 6 });
+    const model = await factory.createModel({
+        definition: Type.number().withLabel('2'),
+        value: 6,
+    });
 
     const results = matcher.findAllMatches(model);
 
