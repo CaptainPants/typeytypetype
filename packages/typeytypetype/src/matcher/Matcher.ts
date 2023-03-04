@@ -10,7 +10,7 @@ export class Matcher<T> {
 
     public readonly rules: Array<MatcherRule<T>>;
 
-    public findSingleMatch(model: Model<unknown>): MatcherRule<T> | null {
+    public findBestMatch(model: Model<unknown>): MatcherRule<T> | null {
         let bestCandidateRule: MatcherRule<T> | null = null;
 
         for (let i = this.rules.length - 1; i >= 0; --i) {
