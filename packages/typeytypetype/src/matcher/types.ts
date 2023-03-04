@@ -55,7 +55,7 @@ export type MatcherRulePart =
       };
 
 export interface MatcherRule<T> {
-    name: string;
+    name?: string;
     parts: MatcherRulePart[];
     priority: number;
     result: T;
