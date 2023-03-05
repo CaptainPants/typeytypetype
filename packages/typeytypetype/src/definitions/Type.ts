@@ -4,7 +4,6 @@ import { NumberDefinition } from './NumberDefinition.js';
 import { StringDefinition } from './StringDefinition.js';
 import {
     BooleanConstantDefinition,
-    type ConstantDefinition,
     NullConstantDefinition,
     NumberConstantDefinition,
     StringConstantDefinition,
@@ -17,26 +16,29 @@ import { RigidObjectDefinition } from './RigidObjectDefinition.js';
 import { MapObjectDefinition } from './MapObjectDefinition.js';
 import { type MappedDefinition } from './internal/types.js';
 
+function constant(value: string): StringConstantDefinition;
+function constant(value: number): NumberConstantDefinition;
+function constant(value: boolean): BooleanConstantDefinition;
+function constant(value: unknown): unknown {
+    if (typeof value === 'string') {
+        return new StringConstantDefinition(
+            value
+        ) satisfies Definition<string> as any;
+    } else if (typeof value === 'number') {
+        return new NumberConstantDefinition(
+            value
+        ) satisfies Definition<number> as any;
+    } else if (typeof value === 'boolean') {
+        return new BooleanConstantDefinition(
+            value
+        ) satisfies Definition<boolean> as any;
+    } else {
+        throw new TypeError('Not supported');
+    }
+}
+
 export const Type = {
-    constant<TValue extends string | number | boolean>(
-        value: TValue
-    ): ConstantDefinition<TValue> {
-        if (typeof value === 'string') {
-            return new StringConstantDefinition(
-                value
-            ) satisfies Definition<string> as any;
-        } else if (typeof value === 'number') {
-            return new NumberConstantDefinition(
-                value
-            ) satisfies Definition<number> as any;
-        } else if (typeof value === 'boolean') {
-            return new BooleanConstantDefinition(
-                value
-            ) satisfies Definition<boolean> as any;
-        } else {
-            throw new TypeError('Not supported');
-        }
-    },
+    constant,
 
     null() {
         return new NullConstantDefinition();
