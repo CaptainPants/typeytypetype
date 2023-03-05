@@ -8,7 +8,7 @@
         "clean": "npx lerna run clean",
         "build": "npx lerna run build",
         "check:fix": "npx lerna run check:fix",
-        "check": "npx lerna run check",
+        "verify": "npx lerna run verify",
         "watch": "yarn run build && lerna run --stream --concurrency= watch"
     },
     "devDependencies": {

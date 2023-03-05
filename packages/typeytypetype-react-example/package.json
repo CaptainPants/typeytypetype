@@ -8,14 +8,14 @@
   "scripts": {
     "format": "npx prettier --config ../../.prettierrc.json --write app",
     "lint": "npx eslint app/**/*.{ts,tsx}",
+    "typecheck": "tsc",
     "test": "npx jest app",
-    "check:fix": "yarn run format && yarn run lint --fix && yarn run test && yarn run typecheck",
-    "check": "yarn run lint && yarn run test && yarn run typecheck",
+    "verify:fix": "yarn run format && yarn run lint --fix && yarn run test && yarn run typecheck",
+    "verify": "yarn run lint && yarn run test && yarn run typecheck",
     "clean": "npx rimraf build && npx rimraf public/build",
     "build": "remix build",
     "watch": "remix dev",
-    "start": "remix-serve build",
-    "typecheck": "tsc"
+    "start": "remix-serve build"
   },
   "dependencies": {
     "@captainpants/typeytypetype": "*",

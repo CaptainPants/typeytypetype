@@ -22,7 +22,7 @@
         "{projectRoot}/build"
       ]
     },
-    "check": {
+    "verify": {
       "dependsOn": [
         "^build"
       ],
