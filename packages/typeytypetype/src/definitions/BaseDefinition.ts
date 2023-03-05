@@ -7,8 +7,8 @@ import {
     type ValidationResult,
     type ValidationOptions,
     type ValidationSingleResult,
-    flattenValidatorResult,
-} from './Validator.js';
+} from '../validation/types.js';
+import { flattenValidatorResultsToStrings } from '../validation/flattenValidatorResultsToStrings.js';
 
 export abstract class BaseDefinition<T> implements Definition<T> {
     readonly validators: Array<Validator<T>> = [];
@@ -122,7 +122,9 @@ export abstract class BaseDefinition<T> implements Definition<T> {
             const result = await validator(value);
 
             if (result !== null) {
-                const flattened = await flattenValidatorResult(result);
+                const flattened = await flattenValidatorResultsToStrings(
+                    result
+                );
                 errors.push(...flattened.map((item) => ({ message: item })));
             }
         }

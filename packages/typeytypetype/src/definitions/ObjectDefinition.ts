@@ -6,7 +6,7 @@ import { type Definition } from './Definition.js';
 import {
     type ValidationSingleResult,
     type ValidationOptions,
-} from './Validator.js';
+} from '../validation/types.js';
 
 export abstract class ObjectDefinition<
     TObject extends Record<string, unknown>

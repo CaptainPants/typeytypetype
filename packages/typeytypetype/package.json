@@ -23,7 +23,9 @@
         "verify:fix": "yarn run format && yarn run lint --fix && yarn run test && yarn run typecheck",
         "verify": "yarn run lint && yarn run test && yarn run typecheck"
     },
-    "devDependencies": {},
+    "devDependencies": {
+        "prettier": "^2.8.4"
+    },
     "dependencies": {
         "fast-equals": "^4.0.3"
     }

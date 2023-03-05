@@ -1,4 +1,7 @@
-import { type ValidationOptions, type ValidationResult } from './Validator.js';
+import {
+    type ValidationOptions,
+    type ValidationResult,
+} from '../validation/types.js';
 
 export interface Definition<T> {
     matches: (value: unknown) => value is T;

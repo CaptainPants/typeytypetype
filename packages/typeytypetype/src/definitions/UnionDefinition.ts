@@ -4,7 +4,7 @@ import { BaseDefinition } from './BaseDefinition.js';
 import {
     type ValidationSingleResult,
     type ValidationOptions,
-} from './Validator.js';
+} from '../validation/types.js';
 import { combineDefinitionPath } from '../internal/combineDefinitionPath.js';
 
 export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {

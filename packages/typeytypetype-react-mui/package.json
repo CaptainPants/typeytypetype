@@ -10,7 +10,7 @@
     "exports": {
         ".": "./build/index.js"
     },
-   "scripts": {
+    "scripts": {
         "format": "npx prettier --config ../../.prettierrc.json --write src",
         "lint": "npx eslint src/**/*.{ts,tsx}",
         "typecheck": "tsc",
@@ -25,6 +25,9 @@
     "dependencies": {
         "@captainpants/typeytypetype": "*",
         "@captainpants/typeytypetype-react": "*",
+        "@emotion/react": "^11.10.6",
+        "@emotion/styled": "^11.10.6",
+        "@mui/material": "^5.11.11",
         "@types/react": "^18.0.27",
         "@types/react-dom": "^18.0.10",
         "react": "^18.2.0",

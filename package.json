@@ -7,7 +7,7 @@
     "scripts": {
         "clean": "npx lerna run clean",
         "build": "npx lerna run build",
-        "check:fix": "npx lerna run check:fix",
+        "verify:fix": "npx lerna run verify:fix",
         "verify": "npx lerna run verify",
         "watch": "yarn run build && lerna run --stream --concurrency= watch"
     },

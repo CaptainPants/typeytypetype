@@ -5,7 +5,7 @@ import { type Definition } from './Definition.js';
 import {
     type ValidationSingleResult,
     type ValidationOptions,
-} from './Validator.js';
+} from '../validation/types.js';
 
 export class ArrayDefinition<TElement> extends BaseDefinition<TElement[]> {
     constructor(elementDefinition: Definition<TElement>) {
