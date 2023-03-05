@@ -3,27 +3,29 @@ import { type ValidationSingleResult } from '@captainpants/typeytypetype/build/d
 import { useEffect, useState } from 'react';
 import { useAsyncCallback } from './useAsyncCallback.js';
 
-export type UseValidatedDraftResult<TInput> = [
-    draft: TInput,
-    setDraft: (value: TInput) => void,
+export type UseValidatedDraftResult<TDraft> = [
+    draft: TDraft,
+    setDraft: (value: TDraft) => void,
     validationResults: ValidationSingleResult[]
 ];
 
-export interface UseValidatedDraftOptions<T, TInput> {
-    value: T;
-    definition: Definition<T>;
+export interface UseValidatedDraftOptions<TModelValue, TDraft> {
+    value: TModelValue;
+    definition: Definition<TModelValue>;
 
-    convertIn: (value: T) => TInput;
+    convertIn: (value: TModelValue) => TDraft;
     convertOut: (
-        value: TInput
-    ) => { success: true; value: T } | { success: false; errors: string[] };
+        value: TDraft
+    ) =>
+        | { success: true; value: TModelValue }
+        | { success: false; errors: string[] };
 
-    onValid: (value: T) => void;
+    onValid: (value: TModelValue) => void;
 }
 
-export function useValidatedDraft<T, TInput>(
-    options: UseValidatedDraftOptions<T, TInput>
-): UseValidatedDraftResult<TInput>;
+export function useValidatedDraft<TModelValue, TDraft>(
+    options: UseValidatedDraftOptions<TModelValue, TDraft>
+): UseValidatedDraftResult<TDraft>;
 export function useValidatedDraft<T, TInput>({
     value,
     definition,
