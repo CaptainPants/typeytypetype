@@ -2,6 +2,7 @@
     "include": ["src/**/*.ts", "src/**/*.tsx"],
     "extends": "../../tsconfig.json",
     "compilerOptions": {
+        "incremental": true,
         /* Emit */
         "outDir": "./build" /* Specify an output folder for all emitted files. */,
     }

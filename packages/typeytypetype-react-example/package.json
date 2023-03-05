@@ -10,8 +10,9 @@
     "lint": "npx eslint src/**/*.{ts,tsx} --fix",
     "test": "npx jest src",
     "check": "yarn format && yarn lint && yarn test && yarn typecheck",
+    "clean": "npx rimraf build && npx rimraf public/build",
     "build": "remix build",
-    "dev": "remix dev",
+    "watch": "remix dev",
     "start": "remix-serve build",
     "typecheck": "tsc"
   },

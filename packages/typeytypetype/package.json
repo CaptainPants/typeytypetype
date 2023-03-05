@@ -15,8 +15,9 @@
         "format": "npx prettier --config ../../.prettierrc.json --write src",
         "lint": "npx eslint src/**/*.{ts,tsx} --fix",
         "typecheck": "tsc",
-        "build": "yarn run clean && tsc",
         "clean": "npx rimraf build",
+        "build": "tsc",
+        "watch": "tsc --watch",
         "test": "npx jest --silent=false src",
         "test:only": "npx jest --silent=false",
         "check": "yarn format && yarn lint && yarn test && yarn typecheck"
