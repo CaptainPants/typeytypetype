@@ -1,6 +1,6 @@
 import { type Definition } from '@captainpants/typeytypetype';
 import { type ValidationSingleResult } from '@captainpants/typeytypetype/build/definitions/Validator';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useAsyncCallback } from './useAsyncCallback.js';
 
 export type UseValidatedDraftResult<TDraft> = [
@@ -65,15 +65,18 @@ export function useValidatedDraft<T, TInput>({
                 onValid(converted);
             }
         },
-        [convertOut, definition]
+        [convertOut, definition, onValid]
     );
 
-    const resultSetDraft = (value: TInput): void => {
-        setDraft(value);
+    const resultSetDraft = useCallback(
+        (value: TInput): void => {
+            setDraft(value);
 
-        // throw away the result here
-        void validate({}, value);
-    };
+            // throw away the result here
+            void validate({}, value);
+        },
+        [validate]
+    );
 
     return [draft, resultSetDraft, validationResults];
 }
