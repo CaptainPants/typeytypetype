@@ -7,7 +7,7 @@ import {
     joinSingleValidationResults,
 } from '@captainpants/typeytypetype';
 import {
-    useValidated,
+    useValidatedDraft,
     type EditorProps,
 } from '@captainpants/typeytypetype-react';
 
@@ -17,13 +17,16 @@ export function MuiTextEditor({
 }: Readonly<EditorProps>): ReactElement {
     assertStringModel(model);
 
-    const [draft, setDraft, validationErrors] = useValidated(
-        model,
-        (validated) => {
+    const [draft, setDraft, validationErrors] = useValidatedDraft({
+        value: model.value,
+        definition: model.definition,
+        convertIn: (val) => val,
+        convertOut: (val) => ({ success: true, value: val }),
+        onValid: (validated) => {
             // fire and forget
             void replace(validated);
-        }
-    );
+        },
+    });
 
     const onChange = useCallback((evt: React.ChangeEvent<HTMLInputElement>) => {
         setDraft(evt.target.value);
