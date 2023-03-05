@@ -6,6 +6,7 @@ import { useAsyncCallback } from './useAsyncCallback.js';
 export type UseValidatedDraftResult<TDraft> = [
     draft: TDraft,
     setDraft: (value: TDraft) => void,
+    isValidating: boolean,
     validationResults: ValidationSingleResult[]
 ];
 
@@ -42,7 +43,7 @@ export function useValidatedDraft<T, TInput>({
         setDraft(convertIn(value));
     }, [value]);
 
-    const [validate] = useAsyncCallback(
+    const [validate, isValidating] = useAsyncCallback(
         async ({ signal }, newValue: TInput) => {
             const convertResult = convertOut(newValue);
 
@@ -78,5 +79,5 @@ export function useValidatedDraft<T, TInput>({
         [validate]
     );
 
-    return [draft, resultSetDraft, validationResults];
+    return [draft, resultSetDraft, isValidating, validationResults];
 }
