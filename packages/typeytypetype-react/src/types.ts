@@ -21,7 +21,7 @@ export interface EditorHostProps<T> {
     replace: Replacer<T>;
 }
 
-export interface RootEditorProps<T> {
+export interface EditorRootProps<T> {
     model: Model<T>;
     replace: Replacer<T>;
     rules: Array<MatcherRule<ComponentType<EditorProps>>>;

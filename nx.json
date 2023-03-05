@@ -22,6 +22,14 @@
         "{projectRoot}/build"
       ]
     },
+    "check": {
+      "dependsOn": [
+        "^build"
+      ],
+      "outputs": [
+        "{projectRoot}/build"
+      ]
+    },
     "build": {
       "dependsOn": [
         "^build"

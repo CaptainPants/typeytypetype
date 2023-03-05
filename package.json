@@ -5,12 +5,11 @@
         "packages/*"
     ],
     "scripts": {
-        "test": "npx lerna run test",
-        "lint": "npx lerna run lint",
-        "format": "npx lerna run format",
         "clean": "npx lerna run clean",
         "build": "npx lerna run build",
-        "watch": "lerna run --stream --concurrency= watch"
+        "check:fix": "npx lerna run check:fix",
+        "check": "npx lerna run check",
+        "watch": "yarn run build && lerna run --stream --concurrency= watch"
     },
     "devDependencies": {
         "@jest/globals": "^29.4.1",

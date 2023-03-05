@@ -1,5 +1,5 @@
 import React, { useMemo, type ReactElement } from 'react';
-import { type RootEditorProps } from './types.js';
+import { type EditorRootProps } from './types.js';
 import { Matcher } from '@captainpants/typeytypetype';
 import {
     EditorContext,
@@ -8,13 +8,13 @@ import {
 import { EditorHost } from './EditorHost.js';
 
 export function EditorRoot<T>(
-    props: Readonly<RootEditorProps<T>>
+    props: Readonly<EditorRootProps<T>>
 ): ReactElement;
 export function EditorRoot<T>({
     model,
     replace,
     rules,
-}: Readonly<RootEditorProps<T>>): ReactElement {
+}: Readonly<EditorRootProps<T>>): ReactElement {
     const contextValue = useMemo<EditorContextType>(() => {
         const matcher = new Matcher(rules);
         return {

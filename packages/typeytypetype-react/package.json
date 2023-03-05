@@ -1,20 +1,26 @@
 {
     "name": "@captainpants/typeytypetype-react",
     "version": "0.0.1",
-    "main": "dest/index.js",
     "repository": "https://github.com/CaptainPants/typeytypetype",
     "author": "Stuart Murray <captainpantsnpm@gmail.com>",
     "license": "MIT",
     "type": "module",
+    "main": "./build/index.js",
+    "types": "./build/index.d.ts",
+    "exports": {
+        ".": "./build/index.js"
+    },
     "scripts": {
         "format": "npx prettier --config ../../.prettierrc.json --write src",
-        "lint": "npx eslint src/**/*.{ts,tsx} --fix",
+        "lint": "npx eslint src/**/*.{ts,tsx}",
         "typecheck": "tsc",
         "clean": "npx rimraf build",
         "build": "tsc",
         "watch": "tsc --watch",
         "test": "npx jest src",
-        "check": "yarn format && yarn lint && yarn test && yarn typecheck"
+        "check:fix": "yarn run format && yarn run lint --fix && yarn run test && yarn run typecheck",
+        "check": "yarn run lint && yarn run test && yarn run typecheck",
+        "validate": "yarn run lint && yarn run test && yarn run typecheck"
     },
     "dependencies": {
         "@captainpants/typeytypetype": "*",
