@@ -27,7 +27,7 @@
         "prettier": "^2.8.4"
     },
     "dependencies": {
-        "fast-equals": "^4.0.3",
-        "yocto-queue": "^1.0.0"
+        "@datastructures-js/queue": "^4.2.3",
+        "fast-equals": "^4.0.3"
     }
 }

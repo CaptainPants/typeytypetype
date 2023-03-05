@@ -6,7 +6,7 @@ import {
     type ValidationOptions,
 } from '../validation/types.js';
 import { combineDefinitionPath } from '../internal/combineDefinitionPath.js';
-import Queue from 'yocto-queue';
+import { Queue } from '@datastructures-js/queue';
 
 export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
     constructor(definitions: Array<SpreadDefinition<TUnion>>) {
@@ -18,19 +18,17 @@ export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
 
     getDefinition(value: TUnion): SpreadDefinition<TUnion> | null {
         const queue = new Queue<SpreadDefinition<TUnion>>();
-        
+
         for (const item of this.definitions) {
             queue.enqueue(item);
         }
 
-        while (queue.size > 0) {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            const current = queue.dequeue()!;
+        while (!queue.isEmpty()) {
+            const current = queue.dequeue();
 
             if (current.matches(value)) {
                 return current;
-            }
-            else if (current instanceof UnionDefinition) {
+            } else if (current instanceof UnionDefinition) {
                 for (const inner of current.definitions) {
                     queue.enqueue(inner as any);
                 }
