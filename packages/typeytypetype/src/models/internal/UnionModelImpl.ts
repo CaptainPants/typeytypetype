@@ -26,7 +26,7 @@ export class UnionModelImpl<TUnion>
 
         const match = definition.getDefinition(value);
 
-        if (match === undefined) {
+        if (match === null) {
             throw new Error(`Could not find matching definition for value.`);
         }
 
