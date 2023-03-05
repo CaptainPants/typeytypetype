@@ -10,17 +10,17 @@
     "exports": {
         ".": "./build/index.js"
     },
-    "scripts": {
+   "scripts": {
         "format": "npx prettier --config ../../.prettierrc.json --write src",
         "lint": "npx eslint src/**/*.{ts,tsx}",
         "typecheck": "tsc",
         "clean": "npx rimraf build",
         "build": "tsc",
         "watch": "tsc --watch",
-        "test": "npx jest src",
+        "test": "npx jest --silent=false src",
+        "test:only": "npx jest --silent=false",
         "check:fix": "yarn run format && yarn run lint --fix && yarn run test && yarn run typecheck",
-        "check": "yarn run lint && yarn run test && yarn run typecheck",
-        "validate": "yarn run lint && yarn run test && yarn run typecheck"
+        "check": "yarn run lint && yarn run test && yarn run typecheck"
     },
     "dependencies": {
         "@captainpants/typeytypetype": "*",

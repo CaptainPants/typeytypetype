@@ -20,8 +20,8 @@
         "watch": "tsc --watch",
         "test": "npx jest --silent=false src",
         "test:only": "npx jest --silent=false",
-        "check": "yarn run format && yarn run lint --fix && yarn run test && yarn run typecheck",
-        "validate": "yarn run lint && yarn run test && yarn run typecheck"
+        "check:fix": "yarn run format && yarn run lint --fix && yarn run test && yarn run typecheck",
+        "check": "yarn run lint && yarn run test && yarn run typecheck"
     },
     "devDependencies": {},
     "dependencies": {
