@@ -23,7 +23,7 @@ function traverseAncestors(
 
 export function matchModelRule<TResult>(
     model: Model<unknown>,
-    part: ModelMatcherRule<TResult>,
+    part: ModelMatcherRule<TResult, Model<unknown>>,
     depth = 25
 ): boolean {
     return matchModelRulePart(model, part.matches, depth);
@@ -31,7 +31,7 @@ export function matchModelRule<TResult>(
 
 export function matchModelRulePart(
     model: Model<unknown>,
-    part: ModelMatcherRulePart,
+    part: ModelMatcherRulePart<Model<unknown>>,
     depth = 25
 ): boolean {
     switch (part.type) {

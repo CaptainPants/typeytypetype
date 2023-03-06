@@ -1,5 +1,4 @@
 import { type Definition } from '../definitions/Definition.js';
-import { type Model } from '../models/Model.js';
 
 export type SelectorStep<TRulePart> =
     | {
@@ -18,7 +17,7 @@ export type Selector<TModelMatcherRulePart> = [
     ...rest: Array<SelectorStep<TModelMatcherRulePart>>
 ];
 
-export type ModelMatcherRulePart =
+export type ModelMatcherRulePart<TModel> =
     | {
           type: 'any';
       }
@@ -37,33 +36,33 @@ export type ModelMatcherRulePart =
       }
     | {
           type: 'element';
-          match: ModelMatcherRulePart;
+          match: ModelMatcherRulePart<TModel>;
       }
     | {
           type: 'propertyOf';
           propertyName?: string | undefined;
-          match: ModelMatcherRulePart;
+          match: ModelMatcherRulePart<TModel>;
       }
     | {
           type: 'ancestor';
-          match: ModelMatcherRulePart;
+          match: ModelMatcherRulePart<TModel>;
       }
     | {
           type: 'or';
-          rules: ModelMatcherRulePart[];
+          rules: Array<ModelMatcherRulePart<TModel>>;
       }
     | {
           type: 'and';
-          rules: ModelMatcherRulePart[];
+          rules: Array<ModelMatcherRulePart<TModel>>;
       }
     | {
           type: 'callback';
-          callback: (model: Model<unknown>) => boolean;
+          callback: (model: TModel) => boolean;
       };
 
-export interface ModelMatcherRule<T> {
+export interface ModelMatcherRule<TResult, TModel> {
     name?: string;
-    matches: ModelMatcherRulePart;
+    matches: ModelMatcherRulePart<TModel>;
     priority: number;
-    result: T;
+    result: TResult;
 }

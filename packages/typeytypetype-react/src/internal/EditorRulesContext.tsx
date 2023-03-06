@@ -1,6 +1,11 @@
+import { type Model, type ModelMatcherRule } from '@captainpants/typeytypetype';
 import { createContext } from 'react';
-import { type EditorRulesProps } from '../EditorRules.js';
+import { type Editor } from '../types.js';
 
-export const EditorRulesContext = createContext<EditorRulesProps>({
+export interface EditorRulesContextType {
+    rules: Array<ModelMatcherRule<Editor, Model<unknown>>>;
+}
+
+export const EditorRulesContext = createContext<EditorRulesContextType>({
     rules: [],
 });

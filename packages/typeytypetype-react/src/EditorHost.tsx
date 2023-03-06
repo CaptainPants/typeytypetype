@@ -1,5 +1,6 @@
 import {
     createModelMatcher,
+    type Model,
     type ModelMatcherRule,
 } from '@captainpants/typeytypetype';
 import React, {
@@ -17,11 +18,10 @@ import {
 
 const Last = (): ReactElement => <>No match</>;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const createNextEditor = (
-    matches: Array<ModelMatcherRule<Editor>>,
+function createNextEditor(
+    matches: Array<ModelMatcherRule<Editor, Model<unknown>>>,
     index: number
-): FunctionComponent<NextEditorProps> => {
+): FunctionComponent<NextEditorProps> {
     const Editor = matches[index]?.result ?? Last;
 
     // This name is hopefully preserved for viewing in the React developer browser extension
@@ -35,7 +35,7 @@ const createNextEditor = (
     };
 
     return Next;
-};
+}
 
 export function EditorHost<T>(
     props: Readonly<EditorHostProps<T>>
