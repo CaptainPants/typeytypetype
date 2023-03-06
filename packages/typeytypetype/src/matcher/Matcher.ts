@@ -1,16 +1,21 @@
-import { type Model } from '../models/Model.js';
-import { matchPart } from './internal/matchPart.js';
-import { type MatcherRule } from './types.js';
+interface Rule {
+    priority: number;
+}
 
-export class Matcher<T> {
-    constructor(rules: Array<MatcherRule<T>>) {
+export class Matcher<TRule extends Rule, TModel> {
+    constructor(
+        rules: TRule[],
+        match: (model: TModel, rule: TRule) => boolean
+    ) {
         this.rules = rules;
+        this.match = match;
     }
 
-    public readonly rules: Array<MatcherRule<T>>;
+    public readonly rules: TRule[];
+    public readonly match: (model: TModel, rule: TRule) => boolean;
 
-    public findBestMatch(model: Model<unknown>): MatcherRule<T> | null {
-        let bestCandidateRule: MatcherRule<T> | null = null;
+    public findBestMatch(model: TModel): TRule | null {
+        let bestCandidateRule: TRule | null = null;
 
         for (let i = this.rules.length - 1; i >= 0; --i) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -27,8 +32,8 @@ export class Matcher<T> {
         return bestCandidateRule;
     }
 
-    public findAllMatches(model: Model<unknown>): Array<MatcherRule<T>> {
-        const matches: Array<[rule: MatcherRule<T>, index: number]> = [];
+    public findAllMatches(model: TModel): TRule[] {
+        const matches: Array<[rule: TRule, index: number]> = [];
 
         for (let i = this.rules.length - 1; i >= 0; --i) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -46,16 +51,16 @@ export class Matcher<T> {
         return matches.map(([rule, _index]) => rule);
     }
 
-    #doesMatch(model: Model<unknown>, rule: MatcherRule<T>): boolean {
-        return matchPart(model, rule.matches);
+    #doesMatch(model: TModel, rule: TRule): boolean {
+        return this.match(model, rule);
     }
 }
 
-type SortingMatch<T> = [rule: MatcherRule<T>, index: number];
+type SortingMatch = [rule: Rule, index: number];
 
-function priorityDescendingThenIndexDescending<T>(
-    [aRule, aIndex]: SortingMatch<T>,
-    [bRule, bIndex]: SortingMatch<T>
+function priorityDescendingThenIndexDescending(
+    [aRule, aIndex]: SortingMatch,
+    [bRule, bIndex]: SortingMatch
 ): number {
     // Descending priority value
     if (aRule.priority > bRule.priority) {

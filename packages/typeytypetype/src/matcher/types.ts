@@ -1,17 +1,24 @@
 import { type Definition } from '../definitions/Definition.js';
 import { type Model } from '../models/Model.js';
 
-export type SelectorStep =
-    | { $element: MatcherRulePart | MatcherRulePart[] }
+export type SelectorStep<TRulePart> =
     | {
-          $property: MatcherRulePart | MatcherRulePart[];
+          $element: TRulePart | TRulePart[];
+      }
+    | {
+          $property: TRulePart | TRulePart[];
           propertyName?: string | undefined;
       }
-    | { $descendent: MatcherRulePart | MatcherRulePart[] };
+    | {
+          $descendent: TRulePart | TRulePart[];
+      };
 
-export type Selector = [top: MatcherRulePart, ...rest: SelectorStep[]];
+export type Selector<TModelMatcherRulePart> = [
+    top: TModelMatcherRulePart,
+    ...rest: Array<SelectorStep<TModelMatcherRulePart>>
+];
 
-export type MatcherRulePart =
+export type ModelMatcherRulePart =
     | {
           type: 'any';
       }
@@ -30,33 +37,33 @@ export type MatcherRulePart =
       }
     | {
           type: 'element';
-          match: MatcherRulePart;
+          match: ModelMatcherRulePart;
       }
     | {
           type: 'propertyOf';
           propertyName?: string | undefined;
-          match: MatcherRulePart;
+          match: ModelMatcherRulePart;
       }
     | {
           type: 'ancestor';
-          match: MatcherRulePart;
+          match: ModelMatcherRulePart;
       }
     | {
           type: 'or';
-          rules: MatcherRulePart[];
+          rules: ModelMatcherRulePart[];
       }
     | {
           type: 'and';
-          rules: MatcherRulePart[];
+          rules: ModelMatcherRulePart[];
       }
     | {
           type: 'callback';
           callback: (model: Model<unknown>) => boolean;
       };
 
-export interface MatcherRule<T> {
+export interface ModelMatcherRule<T> {
     name?: string;
-    matches: MatcherRulePart;
+    matches: ModelMatcherRulePart;
     priority: number;
     result: T;
 }

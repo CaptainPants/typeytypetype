@@ -1,15 +1,17 @@
-import { type MatcherRule } from '@captainpants/typeytypetype';
+import {
+    createModelMatcher,
+    type ModelMatcherRule,
+} from '@captainpants/typeytypetype';
 import React, {
-    type ComponentType,
     type ReactElement,
     useContext,
     useMemo,
     type FunctionComponent,
 } from 'react';
-import { EditorContext } from './internal/EditorContext.js';
+import { EditorRulesContext } from './internal/EditorRulesContext.js';
 import {
+    type Editor,
     type EditorHostProps,
-    type EditorProps,
     type NextEditorProps,
 } from './types.js';
 
@@ -17,7 +19,7 @@ const Last = (): ReactElement => <>No match</>;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const createNextEditor = (
-    matches: Array<MatcherRule<ComponentType<EditorProps>>>,
+    matches: Array<ModelMatcherRule<Editor>>,
     index: number
 ): FunctionComponent<NextEditorProps> => {
     const Editor = matches[index]?.result ?? Last;
@@ -43,13 +45,19 @@ export function EditorHost<T>({
     replace,
     propertyName,
 }: Readonly<EditorHostProps<T>>): ReactElement {
-    const context = useContext(EditorContext);
+    const { rules } = useContext(EditorRulesContext);
 
+    const matches = useMemo(
+        () => createModelMatcher<Editor>(rules).findAllMatches(model),
+        [rules, model]
+    );
+
+    // TODO: memoize this based on the array elements
+    // low priotity as the rules are unlikely to change dynamically it would be consistent to
+    // allow it
     const InitialNextEditor = useMemo(() => {
-        const matches = context.matcher.findAllMatches(model);
-
         return createNextEditor(matches, 0);
-    }, [model]);
+    }, [matches]);
 
     // Cheating the type system here a bit
     // we'll need the editors themselves to validate that their models are the right type

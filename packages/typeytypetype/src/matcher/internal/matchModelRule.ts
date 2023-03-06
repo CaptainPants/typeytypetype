@@ -2,8 +2,8 @@ import { deepEqual } from 'fast-equals';
 
 import { descend } from '../../internal/descend.js';
 import { and, or } from '../../internal/logical.js';
-import { type UnknownModel, type Model } from '../../models';
-import { type MatcherRulePart } from '../types.js';
+import { type Model } from '../../models';
+import { type ModelMatcherRule, type ModelMatcherRulePart } from '../types.js';
 
 function traverseAncestors(
     node: Model<unknown>,
@@ -21,9 +21,17 @@ function traverseAncestors(
     return null;
 }
 
-export function matchPart(
-    model: UnknownModel,
-    part: MatcherRulePart,
+export function matchModelRule<TResult>(
+    model: Model<unknown>,
+    part: ModelMatcherRule<TResult>,
+    depth = 25
+): boolean {
+    return matchModelRulePart(model, part.matches, depth);
+}
+
+export function matchModelRulePart(
+    model: Model<unknown>,
+    part: ModelMatcherRulePart,
     depth = 25
 ): boolean {
     switch (part.type) {
@@ -38,11 +46,11 @@ export function matchPart(
             return model.unknownDefinition.constructor === part.constructor;
         case 'or':
             return or(part.rules, (item) =>
-                matchPart(model, item, descend(depth))
+                matchModelRulePart(model, item, descend(depth))
             );
         case 'and':
             return and(part.rules, (item) =>
-                matchPart(model, item, descend(depth))
+                matchModelRulePart(model, item, descend(depth))
             );
         case 'propertyOf':
             if (model.parent?.type !== 'property') {
@@ -54,16 +62,24 @@ export function matchPart(
             ) {
                 return false;
             }
-            return matchPart(model.parent.model, part.match, descend(depth));
+            return matchModelRulePart(
+                model.parent.model,
+                part.match,
+                descend(depth)
+            );
         case 'element':
             if (model.parent?.type !== 'element') {
                 return false;
             }
-            return matchPart(model.parent.model, part.match, descend(depth));
+            return matchModelRulePart(
+                model.parent.model,
+                part.match,
+                descend(depth)
+            );
         case 'ancestor':
             return (
                 traverseAncestors(model, (item) =>
-                    matchPart(item, part.match, descend(depth))
+                    matchModelRulePart(item, part.match, descend(depth))
                 ) !== null
             );
         case 'callback':

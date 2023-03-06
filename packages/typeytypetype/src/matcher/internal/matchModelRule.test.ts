@@ -2,13 +2,13 @@ import { expect, test } from '@jest/globals';
 import { Type } from '../../definitions';
 import { StandardModelFactory } from '../../models';
 import { Rule } from '../Rule.js';
-import { matchPart } from './matchPart.js';
+import { matchModelRulePart } from './matchModelRule.js';
 
 test('label', async () => {
     const factory = new StandardModelFactory();
 
     expect(
-        matchPart(
+        matchModelRulePart(
             await factory.createModel({
                 value: 1,
                 definition: Type.number().withLabels('test-label'),
@@ -17,7 +17,7 @@ test('label', async () => {
         )
     ).toStrictEqual(true);
     expect(
-        matchPart(
+        matchModelRulePart(
             await factory.createModel({
                 value: 1,
                 definition: Type.number().withLabels('test-label'),
@@ -27,7 +27,7 @@ test('label', async () => {
     ).toStrictEqual(true);
 
     expect(
-        matchPart(
+        matchModelRulePart(
             await factory.createModel({
                 value: 1,
                 definition: Type.number().withLabels('label1'),
@@ -36,7 +36,7 @@ test('label', async () => {
         )
     ).toStrictEqual(false);
     expect(
-        matchPart(
+        matchModelRulePart(
             await factory.createModel({
                 value: 1,
                 definition: Type.number(),
@@ -50,7 +50,7 @@ test('attribute', async () => {
     const factory = new StandardModelFactory();
 
     expect(
-        matchPart(
+        matchModelRulePart(
             await factory.createModel({
                 value: 1,
                 definition: Type.number().withAttr('type', 'ham-sandwich'),
@@ -59,7 +59,7 @@ test('attribute', async () => {
         )
     ).toStrictEqual(true);
     expect(
-        matchPart(
+        matchModelRulePart(
             await factory.createModel({
                 value: 1,
                 definition: Type.number(),
@@ -68,7 +68,7 @@ test('attribute', async () => {
         )
     ).toStrictEqual(false);
     expect(
-        matchPart(
+        matchModelRulePart(
             await factory.createModel({
                 value: 1,
                 definition: Type.number()

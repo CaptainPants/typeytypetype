@@ -1,15 +1,14 @@
 import {
-    type MatcherRule,
+    type ModelMatcherRule,
     RigidObjectDefinition,
     Rule,
     StringDefinition,
 } from '@captainpants/typeytypetype';
-import { type EditorProps } from '@captainpants/typeytypetype-react';
-import { type ComponentType } from 'react';
+import { type Editor } from '@captainpants/typeytypetype-react';
 import { MuiRigidObjectEditor } from './editors/MuiRigidObjectEditor.js';
 import { MuiTextEditor } from './editors/MuiTextEditor.js';
 
-export const rules: Array<MatcherRule<ComponentType<EditorProps>>> = [
+export const rules: Array<ModelMatcherRule<Editor>> = [
     {
         matches: Rule.type(RigidObjectDefinition),
         result: MuiRigidObjectEditor,
