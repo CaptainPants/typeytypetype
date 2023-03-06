@@ -23,7 +23,7 @@ export namespace Rule {
     }
 
     export function type(
-        constructor: new (...args: unknown[]) => Definition<unknown>
+        constructor: new (...args: any[]) => Definition<any>
     ): MatcherRulePart {
         return {
             type: 'type',

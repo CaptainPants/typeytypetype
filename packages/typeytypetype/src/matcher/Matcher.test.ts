@@ -9,13 +9,13 @@ test('test', async () => {
     const rules: Array<MatcherRule<number>> = [
         {
             name: 'rule1',
-            parts: [Rule.label('1')],
+            matches: Rule.label('1'),
             priority: 0,
             result: 1,
         },
         {
             name: 'rule2',
-            parts: [Rule.label('2')],
+            matches: Rule.label('2'),
             priority: 0,
             result: 2,
         },
@@ -54,13 +54,13 @@ test('ordered', async () => {
     const rules: Array<MatcherRule<number>> = [
         {
             name: 'rule1',
-            parts: [Rule.label('1')],
+            matches: Rule.label('1'),
             priority: 0,
             result: 1,
         },
         {
             name: 'rule2',
-            parts: [Rule.label('1')],
+            matches: Rule.label('1'),
             priority: 0,
             result: 2,
         },
@@ -87,7 +87,7 @@ function createRule(
 ): MatcherRule<string> {
     return {
         name: `rule-${id}`,
-        parts: [Rule.label(label)],
+        matches: Rule.label(label),
         priority,
         result: id,
     };

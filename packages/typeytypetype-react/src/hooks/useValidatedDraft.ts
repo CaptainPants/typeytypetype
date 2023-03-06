@@ -1,25 +1,21 @@
-import { type Definition } from '@captainpants/typeytypetype';
+import { type Either, type Definition } from '@captainpants/typeytypetype';
 import { type ValidationSingleResult } from '@captainpants/typeytypetype/build/definitions/Validator';
 import { useCallback, useEffect, useState } from 'react';
 import { useAsyncCallback } from './useAsyncCallback.js';
 
-export type UseValidatedDraftResult<TDraft> = [
-    draft: TDraft,
-    setDraft: (value: TDraft) => void,
-    isValidating: boolean,
-    validationResults: ValidationSingleResult[]
-];
+export interface UseValidatedDraftResult<TDraft> {
+    draft: TDraft;
+    setDraft: (value: TDraft) => void;
+    isValidating: boolean;
+    validationErrors: ValidationSingleResult[];
+}
 
 export interface UseValidatedDraftOptions<TModelValue, TDraft> {
     value: TModelValue;
     definition: Definition<TModelValue>;
 
     convertIn: (value: TModelValue) => TDraft;
-    convertOut: (
-        value: TDraft
-    ) =>
-        | { success: true; value: TModelValue }
-        | { success: false; errors: string[] };
+    convertOut: (value: TDraft) => Either<TModelValue, string[]>;
 
     onValid: (value: TModelValue) => void;
 }
@@ -35,7 +31,7 @@ export function useValidatedDraft<T, TInput>({
     onValid,
 }: UseValidatedDraftOptions<T, TInput>): UseValidatedDraftResult<TInput> {
     const [draft, setDraft] = useState<TInput>(() => convertIn(value));
-    const [validationResults, setValidationResults] = useState<
+    const [validationErrors, setValidationResults] = useState<
         ValidationSingleResult[]
     >([]);
 
@@ -49,12 +45,12 @@ export function useValidatedDraft<T, TInput>({
 
             if (!convertResult.success) {
                 setValidationResults(
-                    convertResult.errors.map((x) => ({ message: x }))
+                    convertResult.error.map((x) => ({ message: x }))
                 );
                 return;
             }
 
-            const converted = convertResult.value;
+            const converted = convertResult.result;
 
             const validationResult = await definition.validate(converted, {
                 signal,
@@ -79,5 +75,5 @@ export function useValidatedDraft<T, TInput>({
         [validate]
     );
 
-    return [draft, resultSetDraft, isValidating, validationResults];
+    return { draft, setDraft: resultSetDraft, isValidating, validationErrors };
 }

@@ -41,6 +41,7 @@ export function EditorHost<T>(
 export function EditorHost<T>({
     model,
     replace,
+    propertyName,
 }: Readonly<EditorHostProps<T>>): ReactElement {
     const context = useContext(EditorContext);
 
@@ -52,5 +53,11 @@ export function EditorHost<T>({
 
     // Cheating the type system here a bit
     // we'll need the editors themselves to validate that their models are the right type
-    return <InitialNextEditor model={model} replace={replace as any} />;
+    return (
+        <InitialNextEditor
+            model={model}
+            replace={replace as any}
+            propertyName={propertyName}
+        />
+    );
 }

@@ -2,6 +2,7 @@ import {
     ArrayDefinition,
     BooleanConstantDefinition,
     BooleanDefinition,
+    MapObjectDefinition,
     NullConstantDefinition,
     NumberConstantDefinition,
     NumberDefinition,
@@ -10,6 +11,7 @@ import {
     StringDefinition,
     UndefinedConstantDefinition,
 } from '../definitions';
+import { ObjectDefinition } from '../definitions/ObjectDefinition.js';
 import { type Model, type UnknownModel } from './Model.js';
 
 export function isModel<T>(value: T | Model<T>): value is Model<T>;
@@ -27,7 +29,19 @@ export function isModel(value: unknown): value is Model<unknown> {
 export function isObjectModel(
     model: UnknownModel
 ): model is Model<Record<string, unknown>> {
+    return model.unknownDefinition instanceof ObjectDefinition;
+}
+
+export function isRigidObjectModel(
+    model: UnknownModel
+): model is Model<Record<string, unknown>> {
     return model.unknownDefinition instanceof RigidObjectDefinition;
+}
+
+export function isMapObjectModel(
+    model: UnknownModel
+): model is Model<Record<string, unknown>> {
+    return model.unknownDefinition instanceof MapObjectDefinition;
 }
 
 export function isArrayModel(model: UnknownModel): model is Model<unknown[]> {
@@ -105,7 +119,9 @@ function createAssert<T extends UnknownModel>(
 
 export const assertIsModel = createAssert(isModel);
 export const assertObjectModel = createAssert(isObjectModel);
-export const assertArrayModel = createAssert(isObjectModel);
+export const assertRigidObjectModel = createAssert(isRigidObjectModel);
+export const assertMapObjectModel = createAssert(isMapObjectModel);
+export const assertArrayModel = createAssert(isRigidObjectModel);
 export const assertUnionModel = createAssert(isUnionModel);
 export const assertNumberModel = createAssert(isNumberModel);
 export const assertStringModel = createAssert(isStringModel);

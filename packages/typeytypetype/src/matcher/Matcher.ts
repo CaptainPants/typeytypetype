@@ -1,4 +1,3 @@
-import { and } from '../internal/logical.js';
 import { type Model } from '../models/Model.js';
 import { matchPart } from './internal/matchPart.js';
 import { type MatcherRule } from './types.js';
@@ -48,7 +47,7 @@ export class Matcher<T> {
     }
 
     #doesMatch(model: Model<unknown>, rule: MatcherRule<T>): boolean {
-        return and(rule.parts, (part) => matchPart(model, part));
+        return matchPart(model, rule.matches);
     }
 }
 
