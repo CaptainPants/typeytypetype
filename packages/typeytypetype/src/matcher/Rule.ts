@@ -1,28 +1,22 @@
 import { type Definition } from '../definitions';
-import { type Model } from '../models';
 import { type ModelMatcherRulePart, type Selector } from './types.js';
 
 function flatten(
-    part:
-        | ModelMatcherRulePart<Model<unknown>>
-        | Array<ModelMatcherRulePart<Model<unknown>>>
-): ModelMatcherRulePart<Model<unknown>> {
+    part: ModelMatcherRulePart | ModelMatcherRulePart[]
+): ModelMatcherRulePart {
     return Array.isArray(part) ? { type: 'and', rules: part } : part;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace Rule {
-    export function label(label: string): ModelMatcherRulePart<Model<unknown>> {
+    export function label(label: string): ModelMatcherRulePart {
         return {
             type: 'label',
             label,
         };
     }
 
-    export function attr(
-        name: string,
-        value: unknown
-    ): ModelMatcherRulePart<Model<unknown>> {
+    export function attr(name: string, value: unknown): ModelMatcherRulePart {
         return {
             type: 'attr',
             name,
@@ -32,7 +26,7 @@ export namespace Rule {
 
     export function type(
         constructor: new (...args: any[]) => Definition<any>
-    ): ModelMatcherRulePart<Model<unknown>> {
+    ): ModelMatcherRulePart {
         return {
             type: 'type',
             constructor,
@@ -40,8 +34,8 @@ export namespace Rule {
     }
 
     export function element(
-        match: ModelMatcherRulePart<Model<unknown>> = { type: 'any' }
-    ): ModelMatcherRulePart<Model<unknown>> {
+        match: ModelMatcherRulePart = { type: 'any' }
+    ): ModelMatcherRulePart {
         return {
             type: 'element',
             match,
@@ -50,8 +44,8 @@ export namespace Rule {
 
     export function propertyOf(
         propertyName?: string,
-        match: ModelMatcherRulePart<Model<unknown>> = { type: 'any' }
-    ): ModelMatcherRulePart<Model<unknown>> {
+        match: ModelMatcherRulePart = { type: 'any' }
+    ): ModelMatcherRulePart {
         return {
             type: 'propertyOf',
             propertyName,
@@ -60,26 +54,22 @@ export namespace Rule {
     }
 
     export function ancestor(
-        match: ModelMatcherRulePart<Model<unknown>> = { type: 'any' }
-    ): ModelMatcherRulePart<Model<unknown>> {
+        match: ModelMatcherRulePart = { type: 'any' }
+    ): ModelMatcherRulePart {
         return {
             type: 'ancestor',
             match,
         };
     }
 
-    export function and(
-        args: Array<ModelMatcherRulePart<Model<unknown>>>
-    ): ModelMatcherRulePart<Model<unknown>> {
+    export function and(args: ModelMatcherRulePart[]): ModelMatcherRulePart {
         return {
             type: 'and',
             rules: args,
         };
     }
 
-    export function or(
-        args: Array<ModelMatcherRulePart<Model<unknown>>>
-    ): ModelMatcherRulePart<Model<unknown>> {
+    export function or(args: ModelMatcherRulePart[]): ModelMatcherRulePart {
         return {
             type: 'or',
             rules: args,
@@ -87,8 +77,8 @@ export namespace Rule {
     }
 
     export function selector(
-        ...[top, ...rest]: Selector<ModelMatcherRulePart<Model<unknown>>>
-    ): ModelMatcherRulePart<Model<unknown>> {
+        ...[top, ...rest]: Selector<ModelMatcherRulePart>
+    ): ModelMatcherRulePart {
         let current = top;
 
         for (const step of rest) {

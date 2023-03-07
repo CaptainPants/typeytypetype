@@ -2,14 +2,14 @@ import { expect, test } from '@jest/globals';
 import { Type } from '../definitions/Type.js';
 import { type Model } from '../models/Model.js';
 import { StandardModelFactory } from '../models/StandardModelFactory.js';
-import { createModelMatcher } from './createMatchers.js';
+import { createModelMatcher } from './createModelMatcher.js';
 import { matchModelRule } from './internal/matchModelRule.js';
 import { Matcher } from './Matcher.js';
 import { Rule } from './Rule.js';
 import { type ModelMatcherRule } from './types.js';
 
 test('test', async () => {
-    const rules: Array<ModelMatcherRule<number, Model<unknown>>> = [
+    const rules: Array<ModelMatcherRule<number>> = [
         {
             name: 'rule1',
             matches: Rule.label('1'),
@@ -24,10 +24,10 @@ test('test', async () => {
         },
     ];
 
-    const matcher = new Matcher<
-        ModelMatcherRule<number, Model<unknown>>,
-        Model<unknown>
-    >(rules, matchModelRule);
+    const matcher = new Matcher<ModelMatcherRule<number>, Model<unknown>>(
+        rules,
+        matchModelRule
+    );
 
     const factory = new StandardModelFactory();
     const numModel1 = await factory.createModel({
@@ -57,7 +57,7 @@ test('test', async () => {
 });
 
 test('ordered', async () => {
-    const rules: Array<ModelMatcherRule<number, Model<unknown>>> = [
+    const rules: Array<ModelMatcherRule<number>> = [
         {
             name: 'rule1',
             matches: Rule.label('1'),
@@ -90,7 +90,7 @@ function createRule(
     id: string,
     label: string,
     priority: number
-): ModelMatcherRule<string, Model<unknown>> {
+): ModelMatcherRule<string> {
     return {
         name: `rule-${id}`,
         matches: Rule.label(label),

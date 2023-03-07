@@ -4,7 +4,7 @@ import React, {
     type FunctionComponent,
     type ReactElement,
 } from 'react';
-import { type Model, type ModelMatcherRule } from '@captainpants/typeytypetype';
+import { type ModelMatcherRule } from '@captainpants/typeytypetype';
 import {
     EditorRulesContext,
     type EditorRulesContextType,
@@ -12,7 +12,7 @@ import {
 import { type Editor } from './types.js';
 
 export interface EditorRulesProps {
-    rules: Array<ModelMatcherRule<Editor, Model<unknown>>>;
+    rules: Array<ModelMatcherRule<Editor>>;
     replace?: boolean | undefined;
 
     children?: ReactElement | undefined;
@@ -27,7 +27,7 @@ export const EditorRules: FunctionComponent<EditorRulesProps> = ({
 
     const value: EditorRulesContextType = useMemo(() => {
         return {
-            rules: replace ? existingRules : existingRules.concat(newRules),
+            rules: replace ? newRules : existingRules.concat(newRules),
         };
     }, [existingRules]);
 

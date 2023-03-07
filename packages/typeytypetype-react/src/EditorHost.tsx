@@ -1,6 +1,5 @@
 import {
     createModelMatcher,
-    type Model,
     type ModelMatcherRule,
 } from '@captainpants/typeytypetype';
 import React, {
@@ -19,7 +18,7 @@ import {
 const Last = (): ReactElement => <>No match</>;
 
 function createNextEditor(
-    matches: Array<ModelMatcherRule<Editor, Model<unknown>>>,
+    matches: Array<ModelMatcherRule<Editor>>,
     index: number
 ): FunctionComponent<NextEditorProps> {
     const Editor = matches[index]?.result ?? Last;
