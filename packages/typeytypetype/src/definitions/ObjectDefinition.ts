@@ -7,6 +7,7 @@ import {
     type ValidationSingleResult,
     type ValidationOptions,
 } from '../validation/types.js';
+import { type PropertyDefinition } from './PropertyDefinition.js';
 
 export abstract class ObjectDefinition<
     TObject extends Record<string, unknown>
@@ -15,11 +16,11 @@ export abstract class ObjectDefinition<
         return [];
     }
 
-    public abstract getDefinition<Key extends string>(
+    public abstract getPropertyDefinition<Key extends string>(
         key: Key
-    ): Definition<TObject[Key]> | null;
+    ): PropertyDefinition<TObject[Key]> | null;
 
-    public getExpandoDefinition():
+    public getExpandoTypeDefinition():
         | Definition<ExpandoType<TObject>>
         | undefined {
         return undefined;
@@ -40,10 +41,10 @@ export abstract class ObjectDefinition<
 
         for (const key of keys) {
             const propValue = value[key];
-            const propDefinition = this.getDefinition(key);
+            const propDefinition = this.getPropertyDefinition(key);
 
             const currentPropValidationResult =
-                await propDefinition?.doValidate(
+                await propDefinition?.type.doValidate(
                     propValue,
                     options,
                     descend(depth)

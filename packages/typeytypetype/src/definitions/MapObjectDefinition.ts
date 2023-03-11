@@ -1,16 +1,17 @@
 import { descend } from '../internal/descend.js';
 import { type Definition } from './Definition.js';
 import { ObjectDefinition } from './ObjectDefinition.js';
+import { PropertyDefinition } from './PropertyDefinition.js';
 
 export class MapObjectDefinition<TValue> extends ObjectDefinition<
     Record<string, TValue>
 > {
-    constructor(propertyDefinition: Definition<TValue>) {
+    constructor(entryDefinition: Definition<TValue>) {
         super();
-        this.propertyDefinition = propertyDefinition;
+        this.entryDefinition = new PropertyDefinition(entryDefinition);
     }
 
-    readonly propertyDefinition: Definition<TValue>;
+    readonly entryDefinition: PropertyDefinition<TValue>;
 
     override doMatches(
         value: unknown,
@@ -32,7 +33,7 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
 
             const propertyValue = asRecord[key];
             if (
-                !this.propertyDefinition.doMatches(
+                !this.entryDefinition.type.doMatches(
                     propertyValue,
                     deep,
                     descend(depth)
@@ -48,18 +49,18 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
     }
 
     override doToTypeString(depth: number): string {
-        return `Record<string, ${this.propertyDefinition.doToTypeString(
+        return `Record<string, ${this.entryDefinition.type.doToTypeString(
             descend(depth)
         )}>`;
     }
 
-    public override getDefinition<Key extends string>(
+    public override getPropertyDefinition<Key extends string>(
         key: Key
-    ): Definition<TValue> | null {
-        return this.propertyDefinition;
+    ): PropertyDefinition<TValue> | null {
+        return this.entryDefinition;
     }
 
-    public override getExpandoDefinition(): Definition<TValue> | undefined {
-        return this.propertyDefinition;
+    public override getExpandoTypeDefinition(): Definition<TValue> | undefined {
+        return this.entryDefinition.type;
     }
 }

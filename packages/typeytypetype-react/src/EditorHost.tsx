@@ -24,13 +24,24 @@ function createNextEditor(
     const Editor = matches[index]?.result ?? Last;
 
     // This name is hopefully preserved for viewing in the React developer browser extension
-    const Next: FunctionComponent<NextEditorProps> = ({ model, replace }) => {
+    const Next: FunctionComponent<NextEditorProps> = ({
+        model,
+        replace,
+        propertyDisplayName,
+    }) => {
         // memoize so that the identity stays the same between renders
         const InnerNext = useMemo(() => {
             return createNextEditor(matches, index + 1);
         }, []);
 
-        return <Editor model={model} replace={replace} Next={InnerNext} />;
+        return (
+            <Editor
+                model={model}
+                replace={replace}
+                propertyDisplayName={propertyDisplayName}
+                Next={InnerNext}
+            />
+        );
     };
 
     return Next;
@@ -42,7 +53,7 @@ export function EditorHost<T>(
 export function EditorHost<T>({
     model,
     replace,
-    propertyName,
+    propertyDisplayName: propertyName,
 }: Readonly<EditorHostProps<T>>): ReactElement {
     const { rules } = useContext(EditorRulesContext);
 
@@ -64,7 +75,7 @@ export function EditorHost<T>({
         <InitialNextEditor
             model={model}
             replace={replace as any}
-            propertyName={propertyName}
+            propertyDisplayName={propertyName}
         />
     );
 }

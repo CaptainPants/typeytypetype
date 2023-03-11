@@ -1,7 +1,6 @@
 import { descend } from '../internal/descend.js';
 import { ObjectDefinition } from './ObjectDefinition.js';
 import { type PropertyDefinitions } from './internal/types.js';
-import { type Definition } from './Definition.js';
 import { type PropertyDefinition } from './PropertyDefinition.js';
 
 export class RigidObjectDefinition<
@@ -64,11 +63,11 @@ export class RigidObjectDefinition<
         return Object.keys(this.propertyDefinitions);
     }
 
-    public override getDefinition<Key extends string>(
+    public override getPropertyDefinition<Key extends string>(
         key: Key
-    ): Definition<TObject[Key]> | null {
+    ): PropertyDefinition<TObject[Key]> | null {
         const propertyDef = this.propertyDefinitions[key];
 
-        return propertyDef.type ?? null;
+        return propertyDef ?? null;
     }
 }

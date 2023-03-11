@@ -33,9 +33,9 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         this.#propertyModels = {};
 
         for (const name of Object.keys(value)) {
-            const propertyDef = definition.getDefinition(name);
+            const propertyDef = definition.getPropertyDefinition(name);
 
-            if (propertyDef === undefined) {
+            if (propertyDef === null) {
                 throw new Error(
                     `Unexpected value found at key ${name} when no expando definition provided.`
                 );
@@ -48,7 +48,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
                     property: name,
                 },
                 value: value[name],
-                definition: propertyDef as any,
+                definition: propertyDef.type,
                 depth: descend(depth),
             });
         }
@@ -63,7 +63,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
     }
 
     expandoPropertyDefinition(): Definition<ExpandoType<TObject>> | undefined {
-        return this.definition.getExpandoDefinition();
+        return this.definition.getExpandoTypeDefinition();
     }
 
     unknownGetProperty(key: string): UnknownModel {
@@ -82,7 +82,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         key: string,
         value: unknown
     ): Promise<UnknownModel> {
-        const def = this.definition.getDefinition(key);
+        const def = this.definition.getPropertyDefinition(key);
 
         if (def === null) {
             throw new TypeError(
@@ -90,7 +90,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             );
         }
 
-        const adopted = await validateForAdoption(value, def);
+        const adopted = await validateForAdoption(value, def.type);
 
         const copy = {
             ...this.value,

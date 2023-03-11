@@ -16,6 +16,10 @@ export function MuiRigidObjectEditor({
         <>
             {model.definition.getFixedPropertyNames().map((key) => {
                 const propertyModel = model.getProperty(key);
+                const displayName =
+                    model.definition.getPropertyDefinition(key)?.displayName ??
+                    key;
+
                 const propertyReplace = async (
                     newValue: unknown
                 ): Promise<void> => {
@@ -28,6 +32,7 @@ export function MuiRigidObjectEditor({
 
                 return (
                     <EditorHost<unknown>
+                        propertyDisplayName={displayName}
                         model={propertyModel}
                         replace={propertyReplace}
                     />
