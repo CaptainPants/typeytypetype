@@ -14,7 +14,11 @@ import { UnionDefinition } from './UnionDefinition.js';
 import { DeferredDefinition } from './DeferredDefinition.js';
 import { RigidObjectDefinition } from './RigidObjectDefinition.js';
 import { MapObjectDefinition } from './MapObjectDefinition.js';
-import { type MappedDefinition } from './internal/types.js';
+import {
+    type PropertyDefinitions,
+    type MappedDefinition,
+} from './internal/types.js';
+import { PropertyDefinition } from './PropertyDefinition.js';
 
 function constant(value: string): StringConstantDefinition;
 function constant(value: number): NumberConstantDefinition;
@@ -68,7 +72,7 @@ export const Type = {
     },
 
     object<TObject extends Readonly<Record<string, unknown>>>(
-        propertyDefinitions: MappedDefinition<TObject>
+        propertyDefinitions: PropertyDefinitions<TObject>
     ) {
         return new RigidObjectDefinition<TObject>(propertyDefinitions);
     },
@@ -83,7 +87,11 @@ export const Type = {
         return new ArrayDefinition(elementDefinition);
     },
 
-    named<TType>(name: string): DeferredDefinition<TType> {
+    deferred<TType>(name: string): DeferredDefinition<TType> {
         return new DeferredDefinition<TType>(name);
+    },
+
+    property<TType>(type: Definition<TType>) {
+        return new PropertyDefinition<TType>(type);
     },
 };

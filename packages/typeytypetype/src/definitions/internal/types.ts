@@ -1,8 +1,8 @@
-import { type TypeFromDefinition } from '../../types.js';
 import { type Definition } from '../Definition.js';
+import { type PropertyDefinition } from '../PropertyDefinition.js';
 
-export type MappedTypeFromDefinition<T> = {
-    readonly [TKey in keyof T]: TypeFromDefinition<T[TKey]>;
+export type PropertyDefinitions<TObject extends Record<string, unknown>> = {
+    readonly [TKey in keyof TObject]: PropertyDefinition<TObject[TKey]>;
 };
 
 export type MappedDefinition<T> = {

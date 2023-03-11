@@ -1,18 +1,18 @@
 import { descend } from '../internal/descend.js';
-import { type BaseDefinition } from './BaseDefinition.js';
 import { ObjectDefinition } from './ObjectDefinition.js';
-import { type MappedDefinition } from './internal/types.js';
+import { type PropertyDefinitions } from './internal/types.js';
 import { type Definition } from './Definition.js';
+import { type PropertyDefinition } from './PropertyDefinition.js';
 
 export class RigidObjectDefinition<
     TObject extends Record<string, unknown>
 > extends ObjectDefinition<TObject> {
-    constructor(propertyDefinitions: MappedDefinition<TObject>) {
+    constructor(propertyDefinitions: PropertyDefinitions<TObject>) {
         super();
         this.propertyDefinitions = propertyDefinitions;
     }
 
-    readonly propertyDefinitions: MappedDefinition<TObject>;
+    readonly propertyDefinitions: PropertyDefinitions<TObject>;
 
     override doMatches(
         value: unknown,
@@ -35,7 +35,7 @@ export class RigidObjectDefinition<
             if (typeof property === 'undefined') return true; // this shouldn't happen
 
             const propertyValue = asRecord[key];
-            if (!property.doMatches(propertyValue, deep, descend(depth))) {
+            if (!property.type.doMatches(propertyValue, deep, descend(depth))) {
                 return true;
             }
 
@@ -50,8 +50,8 @@ export class RigidObjectDefinition<
             '{\r\n' +
             Object.entries(this.propertyDefinitions)
                 .map(
-                    ([key, model]: [string, BaseDefinition<unknown>]) =>
-                        `    ${JSON.stringify(key)}: ${model.doToTypeString(
+                    ([key, prop]: [string, PropertyDefinition<unknown>]) =>
+                        `    ${JSON.stringify(key)}: ${prop.type.doToTypeString(
                             descend(depth)
                         )};\r\n`
                 )
@@ -69,6 +69,6 @@ export class RigidObjectDefinition<
     ): Definition<TObject[Key]> | null {
         const propertyDef = this.propertyDefinitions[key];
 
-        return propertyDef ?? null;
+        return propertyDef.type ?? null;
     }
 }

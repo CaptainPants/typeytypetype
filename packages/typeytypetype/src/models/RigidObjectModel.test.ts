@@ -5,8 +5,8 @@ import { StandardModelFactory } from './StandardModelFactory.js';
 
 test('rigid-object', async () => {
     const definition = Type.object({
-        num: Type.number(),
-        str: Type.string(),
+        num: Type.property(Type.number()),
+        str: Type.property(Type.string()),
     });
 
     const value: TypeFromDefinition<typeof definition> = {

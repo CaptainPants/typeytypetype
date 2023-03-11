@@ -56,9 +56,9 @@ test('array', () => {
 
 test('object', () => {
     const definition = Type.object({
-        id: Type.number(),
-        name: Type.string(),
-        roles: Type.array(Type.string()),
+        id: Type.property(Type.number()),
+        name: Type.property(Type.string()),
+        roles: Type.property(Type.array(Type.string())),
     });
 
     expect(
