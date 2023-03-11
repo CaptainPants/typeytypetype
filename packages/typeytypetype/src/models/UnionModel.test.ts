@@ -5,13 +5,13 @@ import { StandardModelFactory } from './StandardModelFactory.js';
 
 test('union', async () => {
     const a = Type.object({
-        type: Type.property(Type.constant('hasNumber')),
-        number: Type.property(Type.number()),
+        type: Type.prop(Type.constant('hasNumber')),
+        number: Type.prop(Type.number()),
     });
 
     const b = Type.object({
-        type: Type.property(Type.constant('hasString')),
-        string: Type.property(Type.string()),
+        type: Type.prop(Type.constant('hasString')),
+        string: Type.prop(Type.string()),
     });
 
     const c = Type.number();

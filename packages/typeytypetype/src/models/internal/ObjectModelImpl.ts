@@ -8,10 +8,12 @@ import {
     type Model,
     type ObjectModel,
     type UnknownModel,
+    type PropertyModel,
 } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 import { validateForAdoption } from './validateForAdoption.js';
 import { ModelImpl } from './ModelImpl.js';
+import { PropertyModelImpl } from './PropertyModelImpl.js';
 
 export class ObjectModelImpl<TObject extends Record<string, unknown>>
     extends ModelImpl<
@@ -41,7 +43,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
                 );
             }
 
-            this.#propertyModels[name] = factory.createUnvalidatedModelPart({
+            const propertyValueModel = factory.createUnvalidatedModelPart({
                 parent: {
                     type: 'property',
                     model: this as any,
@@ -51,12 +53,18 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
                 definition: propertyDef.type,
                 depth: descend(depth),
             });
+
+            this.#propertyModels[name] = new PropertyModelImpl<any>(
+                name,
+                propertyDef,
+                propertyValueModel
+            );
         }
     }
 
     readonly type = 'object';
 
-    #propertyModels: Record<string, Model<unknown>>;
+    #propertyModels: Record<string, PropertyModel<unknown>>;
 
     unknownExpandoPropertyDefinition(): Definition<unknown> | undefined {
         return this.expandoPropertyDefinition();
@@ -66,13 +74,14 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         return this.definition.getExpandoTypeDefinition();
     }
 
-    unknownGetProperty(key: string): UnknownModel {
-        return this.getProperty(key);
+    unknownGetProperty(key: string): PropertyModel<unknown> | undefined {
+        const result = this.#propertyModels[key];
+        return result;
     }
 
     getProperty<TKey extends keyof TObject & string>(
         key: TKey
-    ): Model<TObject[TKey]> {
+    ): PropertyModel<TObject[TKey]> {
         const result = this.#propertyModels[key];
         assert.isNotUndefined(result);
         return result as any;

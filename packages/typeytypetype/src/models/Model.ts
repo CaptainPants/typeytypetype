@@ -10,6 +10,7 @@ import {
 import { type Definition } from '../definitions/Definition.js';
 import { type NumberDefinition } from '../definitions/NumberDefinition.js';
 import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
+import { type PropertyDefinition } from '../definitions/PropertyDefinition.js';
 import { type StringDefinition } from '../definitions/StringDefinition.js';
 import { type ExpandoType, type IsUnion } from '../internal/utilityTypes.js';
 
@@ -94,7 +95,7 @@ export interface UnknownObjectModel
 
     unknownExpandoPropertyDefinition: () => Definition<unknown> | undefined;
 
-    unknownGetProperty: (key: string) => Model<unknown>;
+    unknownGetProperty: (key: string) => PropertyModel<unknown> | undefined;
 
     unknownSetPropertyValue: (
         key: string,
@@ -117,7 +118,7 @@ export interface ObjectModel<TObject extends Record<string, unknown>>
 
     getProperty: <TKey extends keyof TObject & string>(
         key: TKey
-    ) => Model<TObject[TKey]>;
+    ) => PropertyModel<TObject[TKey]>;
 
     setPropertyValue: <TKey extends keyof TObject & string>(
         key: TKey,
@@ -187,3 +188,9 @@ export type Model<T> = IsUnion<T> extends true
 export type ParentRelationship =
     | { type: 'element'; model: Model<unknown>; index: number }
     | { type: 'property'; model: Model<unknown>; property: string };
+
+export interface PropertyModel<TType> {
+    readonly name: string;
+    readonly definition: PropertyDefinition<TType>;
+    readonly valueModel: Model<TType>;
+}

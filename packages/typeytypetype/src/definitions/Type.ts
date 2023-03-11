@@ -91,7 +91,7 @@ export const Type = {
         return new DeferredDefinition<TType>(name);
     },
 
-    property<TType>(type: Definition<TType>) {
+    prop<TType>(type: Definition<TType>) {
         return new PropertyDefinition<TType>(type);
     },
 };

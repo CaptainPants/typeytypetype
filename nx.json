@@ -18,17 +18,16 @@
       "dependsOn": [
         "^build"
       ],
-      "outputs": [
-        "{projectRoot}/build"
-      ]
     },
     "verify": {
       "dependsOn": [
         "^build"
       ],
-      "outputs": [
-        "{projectRoot}/build"
-      ]
+    },
+    "verify:fix": {
+      "dependsOn": [
+        "^build"
+      ],
     },
     "build": {
       "dependsOn": [
