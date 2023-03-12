@@ -45,6 +45,7 @@ export function useAsyncCallback<TArgs extends unknown[], TResult>(
 
             return result;
         },
+        // eslint-disable-next-line @grncdr/react-hooks/exhaustive-deps
         dependencies
     );
 

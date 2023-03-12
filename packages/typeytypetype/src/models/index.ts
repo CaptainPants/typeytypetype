@@ -1,5 +1,4 @@
 export * from './Model.js';
-export * from './types.js';
 export * from './PropertyModel.js';
 export * from './is.js';
 export * from './ModelFactory.js';

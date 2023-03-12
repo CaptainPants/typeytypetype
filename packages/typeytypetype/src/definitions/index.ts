@@ -10,3 +10,4 @@ export * from './DeferredDefinition.js';
 export * from './NumberDefinition.js';
 export * from './StringDefinition.js';
 export * from './UnionDefinition.js';
+export * from './types.js';

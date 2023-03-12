@@ -1,5 +1,21 @@
 import { type Definition } from '../definitions/Definition.js';
-import { type Model } from '../models/Model.js';
+
+export type SelectorStep<TRulePart> =
+    | {
+          $element: TRulePart | TRulePart[];
+      }
+    | {
+          $property: TRulePart | TRulePart[];
+          propertyName?: string | undefined;
+      }
+    | {
+          $descendent: TRulePart | TRulePart[];
+      };
+
+export type Selector<TModelMatcherRulePart> = [
+    top: TModelMatcherRulePart,
+    ...rest: Array<SelectorStep<TModelMatcherRulePart>>
+];
 
 export type ModelMatcherRulePart =
     | {
@@ -19,6 +35,19 @@ export type ModelMatcherRulePart =
           value: unknown;
       }
     | {
+          type: 'element';
+          match: ModelMatcherRulePart;
+      }
+    | {
+          type: 'propertyOf';
+          propertyName?: string | undefined;
+          match: ModelMatcherRulePart;
+      }
+    | {
+          type: 'ancestor';
+          match: ModelMatcherRulePart;
+      }
+    | {
           type: 'or';
           rules: ModelMatcherRulePart[];
       }
@@ -28,7 +57,7 @@ export type ModelMatcherRulePart =
       }
     | {
           type: 'callback';
-          callback: (model: Model<unknown>) => boolean;
+          callback: (definition: Definition<unknown>) => boolean;
       };
 
 export interface ModelMatcherRule<TResult> {

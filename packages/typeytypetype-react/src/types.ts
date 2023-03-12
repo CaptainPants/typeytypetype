@@ -1,32 +1,34 @@
 import { type ComponentType } from 'react';
-import { type Model, type Replacer } from '@captainpants/typeytypetype';
+import {
+    type ParentDefinitionNode,
+    type Model,
+    type Replacer,
+} from '@captainpants/typeytypetype';
 
-export interface EditorProps {
-    model: Model<unknown>;
-    replace: Replacer<unknown>;
+interface EditorLikeProps<T> {
+    model: Model<T>;
+    replace: Replacer<T>;
     propertyDisplayName?: string | undefined;
+    parent: ParentDefinitionNode | undefined;
+}
+
+export interface EditorProps extends EditorLikeProps<unknown> {
     Next: ComponentType<NextEditorProps>;
 }
 
+// export interface ElementEditorProps extends EditorProps {
+//     index: number;
+// }
+
+// export interface MapEntryEditorProps extends EditorProps {
+//     propertyName: string;
+// }
+
+export interface NextEditorProps extends EditorLikeProps<unknown> {}
+
+export interface EditorHostProps extends EditorLikeProps<unknown> {}
+
 export type Editor = ComponentType<EditorProps>;
-
-export interface NextEditorProps {
-    model: Model<unknown>;
-    replace: Replacer<unknown>;
-    propertyDisplayName?: string | undefined;
-}
-
 export type NextEditor = ComponentType<NextEditorProps>;
 
-export interface EditorHostProps<T> {
-    model: Model<T>;
-    replace: Replacer<T>;
-    propertyDisplayName?: string | undefined;
-}
-
-export interface EditorRootProps<T> {
-    model: Model<T>;
-    replace: Replacer<T>;
-}
-
-export type Localizer = (key: string, args: unknown[]) => string;
+export type Localizer = (key: string, args?: unknown[]) => string;

@@ -1,20 +1,36 @@
 import { deepEqual } from 'fast-equals';
+import { type DefinitionNode } from '../../definitions/types.js';
 
 import { descend } from '../../internal/descend.js';
 import { and, or } from '../../internal/logical.js';
-import { type Model } from '../../models';
 import { type ModelMatcherRule, type ModelMatcherRulePart } from '../types.js';
 
-export function matchModelRule<TResult>(
-    model: Model<unknown>,
+function traverseAncestors(
+    node: DefinitionNode,
+    predicate: (node: DefinitionNode) => boolean
+): DefinitionNode | undefined {
+    let current = node.parent;
+    while (current !== undefined) {
+        if (predicate(current)) {
+            return current;
+        }
+
+        current = current.parent;
+    }
+
+    return undefined;
+}
+
+export function matchDefinitionRule<TResult>(
+    model: DefinitionNode,
     part: ModelMatcherRule<TResult>,
     depth = 25
 ): boolean {
-    return matchModelRulePart(model, part.matches, depth);
+    return matchDefinitionRulePart(model, part.matches, depth);
 }
 
-export function matchModelRulePart(
-    model: Model<unknown>,
+export function matchDefinitionRulePart(
+    node: DefinitionNode,
     part: ModelMatcherRulePart,
     depth = 25
 ): boolean {
@@ -22,22 +38,52 @@ export function matchModelRulePart(
         case 'attr':
             return deepEqual(
                 part.value,
-                model.unknownDefinition.getAttribute(part.name)
+                node.definition.getAttribute(part.name)
             );
         case 'label':
-            return model.unknownDefinition.hasLabel(part.label);
+            return node.definition.hasLabel(part.label);
         case 'type':
-            return model.unknownDefinition.constructor === part.constructor;
+            return node.constructor === part.constructor;
         case 'or':
             return or(part.rules, (item) =>
-                matchModelRulePart(model, item, descend(depth))
+                matchDefinitionRulePart(node, item, descend(depth))
             );
         case 'and':
             return and(part.rules, (item) =>
-                matchModelRulePart(model, item, descend(depth))
+                matchDefinitionRulePart(node, item, descend(depth))
+            );
+        case 'propertyOf':
+            if (node.parent?.relationship.type !== 'property') {
+                return false;
+            }
+            if (
+                typeof part.propertyName !== 'undefined' &&
+                part.propertyName !== node.parent.relationship.property
+            ) {
+                return false;
+            }
+            return matchDefinitionRulePart(
+                node.parent,
+                part.match,
+                descend(depth)
+            );
+        case 'element':
+            if (node.parent?.relationship.type !== 'element') {
+                return false;
+            }
+            return matchDefinitionRulePart(
+                node.parent,
+                part.match,
+                descend(depth)
+            );
+        case 'ancestor':
+            return (
+                traverseAncestors(node, (item) =>
+                    matchDefinitionRulePart(item, part.match, descend(depth))
+                ) !== null
             );
         case 'callback':
-            return part.callback(model);
+            return part.callback(node.definition);
     }
 
     throw new Error('Unexpected');

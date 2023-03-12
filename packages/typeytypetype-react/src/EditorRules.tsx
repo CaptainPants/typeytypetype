@@ -29,7 +29,7 @@ export const EditorRules: FunctionComponent<EditorRulesProps> = ({
         return {
             rules: replace ? newRules : existingRules.concat(newRules),
         };
-    }, [existingRules]);
+    }, [existingRules, newRules, replace]);
 
     return (
         <EditorRulesContext.Provider value={value}>

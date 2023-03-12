@@ -1,9 +1,9 @@
 import { expect, test } from '@jest/globals';
 import { Type } from '../definitions/Type.js';
-import { type Model } from '../models/Model.js';
 import { StandardModelFactory } from '../models/StandardModelFactory.js';
-import { createModelMatcher } from './createModelMatcher.js';
-import { matchModelRule } from './internal/matchModelRule.js';
+import { type DefinitionNode } from '../definitions/types.js';
+import { createDefinitionMatcher } from './createModelMatcher.js';
+import { matchDefinitionRule } from './internal/matchModelRule.js';
 import { Matcher } from './Matcher.js';
 import { Rule } from './Rule.js';
 import { type ModelMatcherRule } from './types.js';
@@ -24,28 +24,18 @@ test('test', async () => {
         },
     ];
 
-    const matcher = new Matcher<ModelMatcherRule<number>, Model<unknown>>(
+    const matcher = new Matcher<ModelMatcherRule<number>, DefinitionNode>(
         rules,
-        matchModelRule
+        matchDefinitionRule
     );
 
-    const factory = new StandardModelFactory();
-    const numModel1 = await factory.createModel({
-        value: 2,
-        definition: Type.number().withLabels('2').freeze(),
-    });
-    const numModel2 = await factory.createModel({
-        value: 1,
-        definition: Type.number().withLabels('1').freeze(),
-    });
-    const numModel3 = await factory.createModel({
-        value: 3,
-        definition: Type.number().withLabels('3').freeze(),
-    });
+    const numDefinition1 = Type.number().withLabels('2').freeze();
+    const numDefinition2 = Type.number().withLabels('1').freeze();
+    const numDefinition3 = Type.number().withLabels('3').freeze();
 
-    const match1 = matcher.findBestMatch(numModel1);
-    const match2 = matcher.findBestMatch(numModel2);
-    const match3 = matcher.findBestMatch(numModel3);
+    const match1 = matcher.findBestMatch({ definition: numDefinition1 });
+    const match2 = matcher.findBestMatch({ definition: numDefinition2 });
+    const match3 = matcher.findBestMatch({ definition: numDefinition3 });
 
     expect(match1?.name).toStrictEqual('rule2');
     expect(match1?.result).toStrictEqual(2);
@@ -72,7 +62,7 @@ test('ordered', async () => {
         },
     ];
 
-    const matcher = createModelMatcher(rules);
+    const matcher = createDefinitionMatcher(rules);
 
     const factory = new StandardModelFactory();
     const numModel1 = await factory.createModel({
@@ -111,7 +101,7 @@ test('multiple-ordered', async () => {
         createRule('8', '2', 2),
     ];
 
-    const matcher = createModelMatcher(rules);
+    const matcher = createDefinitionMatcher(rules);
 
     const factory = new StandardModelFactory();
 

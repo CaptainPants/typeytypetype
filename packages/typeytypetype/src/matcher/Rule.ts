@@ -27,6 +27,35 @@ export namespace Rule {
         };
     }
 
+    export function element(
+        match: ModelMatcherRulePart = { type: 'any' }
+    ): ModelMatcherRulePart {
+        return {
+            type: 'element',
+            match,
+        };
+    }
+
+    export function propertyOf(
+        propertyName?: string,
+        match: ModelMatcherRulePart = { type: 'any' }
+    ): ModelMatcherRulePart {
+        return {
+            type: 'propertyOf',
+            propertyName,
+            match,
+        };
+    }
+
+    export function ancestor(
+        match: ModelMatcherRulePart = { type: 'any' }
+    ): ModelMatcherRulePart {
+        return {
+            type: 'ancestor',
+            match,
+        };
+    }
+
     export function and(args: ModelMatcherRulePart[]): ModelMatcherRulePart {
         return {
             type: 'and',

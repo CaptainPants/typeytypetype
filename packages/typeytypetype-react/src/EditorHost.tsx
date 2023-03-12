@@ -1,5 +1,5 @@
 import {
-    createModelMatcher,
+    createDefinitionMatcher,
     type ModelMatcherRule,
 } from '@captainpants/typeytypetype';
 import React, {
@@ -28,6 +28,7 @@ function createNextEditor(
         model,
         replace,
         propertyDisplayName,
+        parent,
     }) => {
         // memoize so that the identity stays the same between renders
         const InnerNext = useMemo(() => {
@@ -39,6 +40,7 @@ function createNextEditor(
                 model={model}
                 replace={replace}
                 propertyDisplayName={propertyDisplayName}
+                parent={parent}
                 Next={InnerNext}
             />
         );
@@ -47,19 +49,23 @@ function createNextEditor(
     return Next;
 }
 
-export function EditorHost<T>(
-    props: Readonly<EditorHostProps<T>>
-): ReactElement;
-export function EditorHost<T>({
+export function EditorHost(props: Readonly<EditorHostProps>): ReactElement;
+export function EditorHost({
     model,
     replace,
-    propertyDisplayName: propertyName,
-}: Readonly<EditorHostProps<T>>): ReactElement {
+    propertyDisplayName,
+    parent,
+}: Readonly<EditorHostProps>): ReactElement {
     const { rules } = useContext(EditorRulesContext);
 
+    const definition = model.unknownDefinition;
+
     const matches = useMemo(
-        () => createModelMatcher<Editor>(rules).findAllMatches(model),
-        [rules, model]
+        () =>
+            createDefinitionMatcher<Editor>(rules).findAllMatches({
+                definition,
+            }),
+        [rules, definition]
     );
 
     // TODO: memoize this based on the array elements
@@ -74,8 +80,9 @@ export function EditorHost<T>({
     return (
         <InitialNextEditor
             model={model}
-            replace={replace as any}
-            propertyDisplayName={propertyName}
+            replace={replace}
+            propertyDisplayName={propertyDisplayName}
+            parent={parent}
         />
     );
 }

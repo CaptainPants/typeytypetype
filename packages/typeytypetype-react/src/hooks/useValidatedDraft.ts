@@ -37,6 +37,7 @@ export function useValidatedDraft<T, TInput>({
 
     useEffect(() => {
         setDraft(convertIn(value));
+        // eslint-disable-next-line @grncdr/react-hooks/exhaustive-deps -- we only want to run when 'value' changes, using the latest version of convertIn
     }, [value]);
 
     const [validate, isValidating] = useAsyncCallback(
