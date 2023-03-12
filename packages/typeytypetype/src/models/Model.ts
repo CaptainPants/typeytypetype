@@ -10,9 +10,9 @@ import {
 import { type Definition } from '../definitions/Definition.js';
 import { type NumberDefinition } from '../definitions/NumberDefinition.js';
 import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
-import { type PropertyDefinition } from '../definitions/PropertyDefinition.js';
 import { type StringDefinition } from '../definitions/StringDefinition.js';
 import { type ExpandoType, type IsUnion } from '../internal/utilityTypes.js';
+import { type PropertyModel } from './PropertyModel.js';
 
 export type ModelType = 'unknown' | 'union' | 'object' | 'array' | 'simple';
 
@@ -183,8 +183,3 @@ export type Model<T> = IsUnion<T> extends true
     : T extends string | number | boolean | null | undefined
     ? SimpleModels<T>
     : UnknownModel;
-export interface PropertyModel<TType> {
-    readonly name: string;
-    readonly definition: PropertyDefinition<TType>;
-    readonly valueModel: Model<TType>;
-}

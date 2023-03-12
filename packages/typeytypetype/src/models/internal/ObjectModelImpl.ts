@@ -3,16 +3,12 @@ import { type Definition } from '../../definitions/Definition.js';
 import { type ObjectDefinition } from '../../definitions/ObjectDefinition.js';
 import { descend } from '../../internal/descend.js';
 import { type ExpandoType } from '../../internal/utilityTypes.js';
-import {
-    type Model,
-    type ObjectModel,
-    type UnknownModel,
-    type PropertyModel,
-} from '../Model.js';
+import { type Model, type ObjectModel, type UnknownModel } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 import { validateForAdoption } from './validateForAdoption.js';
 import { ModelImpl } from './ModelImpl.js';
 import { PropertyModelImpl } from './PropertyModelImpl.js';
+import { type PropertyModel } from '../PropertyModel.js';
 
 export class ObjectModelImpl<TObject extends Record<string, unknown>>
     extends ModelImpl<

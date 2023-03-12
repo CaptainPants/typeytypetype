@@ -1,5 +1,6 @@
 import { type PropertyDefinition } from '../../definitions/PropertyDefinition.js';
-import { type Model, type PropertyModel } from '../Model.js';
+import { type Model } from '../Model.js';
+import { type PropertyModel } from '../PropertyModel.js';
 
 export class PropertyModelImpl<TType> implements PropertyModel<TType> {
     constructor(

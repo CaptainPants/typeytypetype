@@ -17,17 +17,17 @@
     "test": {
       "dependsOn": [
         "^build"
-      ],
+      ]
     },
     "verify": {
       "dependsOn": [
         "^build"
-      ],
+      ]
     },
     "verify:fix": {
       "dependsOn": [
         "^build"
-      ],
+      ]
     },
     "build": {
       "dependsOn": [
