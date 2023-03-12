@@ -1,12 +1,7 @@
 import { type Definition } from '../../definitions/Definition.js';
 import { type UnionDefinition } from '../../definitions/UnionDefinition.js';
 import { descend } from '../../internal/descend.js';
-import {
-    type SpreadModel,
-    type Model,
-    type UnionModel,
-    type ParentRelationship,
-} from '../Model.js';
+import { type SpreadModel, type Model, type UnionModel } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 import { validateForAdoption } from './validateForAdoption.js';
 import { ModelImpl } from './ModelImpl.js';
@@ -16,13 +11,12 @@ export class UnionModelImpl<TUnion>
     implements UnionModel<TUnion>
 {
     constructor(
-        parent: ParentRelationship | null,
         value: TUnion,
         definition: UnionDefinition<TUnion>,
         depth: number,
         factory: ModelFactory
     ) {
-        super(parent, value, definition, depth, factory);
+        super(value, definition, depth, factory);
 
         const match = definition.getDefinition(value);
 
@@ -31,7 +25,6 @@ export class UnionModelImpl<TUnion>
         }
 
         this.resolved = factory.createUnvalidatedModelPart<TUnion>({
-            parent,
             value,
             definition: match,
             depth: descend(depth),
@@ -46,7 +39,6 @@ export class UnionModelImpl<TUnion>
         const adopted = await validateForAdoption(value, this.definition);
 
         const model = this.factory.createUnvalidatedModelPart({
-            parent: this.parent,
             value: adopted,
             definition: this.definition,
             depth: descend(this.depth),

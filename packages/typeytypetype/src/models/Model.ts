@@ -17,7 +17,6 @@ import { type ExpandoType, type IsUnion } from '../internal/utilityTypes.js';
 export type ModelType = 'unknown' | 'union' | 'object' | 'array' | 'simple';
 
 export interface UnknownBaseModel<TUnknownType = unknown> {
-    readonly parent: ParentRelationship | null;
     readonly unknownValue: TUnknownType;
     readonly unknownDefinition: Definition<unknown>;
 }
@@ -184,11 +183,6 @@ export type Model<T> = IsUnion<T> extends true
     : T extends string | number | boolean | null | undefined
     ? SimpleModels<T>
     : UnknownModel;
-
-export type ParentRelationship =
-    | { type: 'element'; model: Model<unknown>; index: number }
-    | { type: 'property'; model: Model<unknown>; property: string };
-
 export interface PropertyModel<TType> {
     readonly name: string;
     readonly definition: PropertyDefinition<TType>;

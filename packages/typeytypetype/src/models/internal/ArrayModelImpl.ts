@@ -3,7 +3,6 @@ import { type Definition } from '../../definitions/Definition.js';
 import { descend } from '../../internal/descend.js';
 import { mapAsync } from '../../internal/mapAsync.js';
 import {
-    type ParentRelationship,
     type ArrayModel,
     type Model,
     type UnknownModel,
@@ -18,19 +17,17 @@ export class ArrayModelImpl<TElement>
     implements ArrayModel<TElement>
 {
     constructor(
-        parent: ParentRelationship | null,
         value: TElement[],
         definition: ArrayDefinition<TElement>,
         depth: number,
         factory: ModelFactory
     ) {
-        super(parent, value, definition, depth, factory);
+        super(value, definition, depth, factory);
 
         this.#elementDefinition = definition.getElementDefinition();
 
         this.#elementModels = value.map((item, index) =>
             factory.createUnvalidatedModelPart({
-                parent: { type: 'element', model: this as any, index },
                 value: item,
                 definition: this.#elementDefinition,
                 depth: descend(depth),
@@ -77,7 +74,6 @@ export class ArrayModelImpl<TElement>
         await this.definition.validateAndThrow(copy, { deep: false });
 
         return this.factory.createUnvalidatedModelPart<TElement[]>({
-            parent: this.parent,
             value: copy,
             definition: this.definition,
             depth: this.depth,

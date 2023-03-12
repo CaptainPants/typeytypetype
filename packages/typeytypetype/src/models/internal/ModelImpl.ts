@@ -1,5 +1,5 @@
 import { type Definition } from '../../definitions/Definition.js';
-import { type ParentRelationship, type BaseModel } from '../Model.js';
+import { type BaseModel } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 
 export class ModelImpl<
@@ -9,20 +9,17 @@ export class ModelImpl<
 > implements BaseModel<T, TDefinition, TUnknownType>
 {
     constructor(
-        parent: ParentRelationship | null,
         value: T,
         definition: TDefinition,
         depth: number,
         factory: ModelFactory
     ) {
-        this.parent = parent;
         this.value = value;
         this.definition = definition;
         this.depth = depth;
         this.factory = factory;
     }
 
-    public readonly parent: ParentRelationship | null;
     public readonly value: T;
     public readonly definition: TDefinition;
     public readonly depth: number;

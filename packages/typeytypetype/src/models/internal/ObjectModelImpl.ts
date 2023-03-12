@@ -4,7 +4,6 @@ import { type ObjectDefinition } from '../../definitions/ObjectDefinition.js';
 import { descend } from '../../internal/descend.js';
 import { type ExpandoType } from '../../internal/utilityTypes.js';
 import {
-    type ParentRelationship,
     type Model,
     type ObjectModel,
     type UnknownModel,
@@ -24,13 +23,12 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
     implements ObjectModel<TObject>
 {
     constructor(
-        parent: ParentRelationship | null,
         value: TObject,
         definition: ObjectDefinition<TObject>,
         depth: number,
         factory: ModelFactory
     ) {
-        super(parent, value, definition, depth, factory);
+        super(value, definition, depth, factory);
 
         this.#propertyModels = {};
 
@@ -44,11 +42,6 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             }
 
             const propertyValueModel = factory.createUnvalidatedModelPart({
-                parent: {
-                    type: 'property',
-                    model: this as any,
-                    property: name,
-                },
                 value: value[name],
                 definition: propertyDef.type,
                 depth: descend(depth),
@@ -109,7 +102,6 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         await this.definition.validateAndThrow(copy, { deep: false });
 
         return this.factory.createUnvalidatedModelPart<TObject>({
-            parent: this.parent,
             value: copy,
             definition: this.definition,
             depth: this.depth,
@@ -136,7 +128,6 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         delete copy[key];
 
         return this.factory.createUnvalidatedModelPart<TObject>({
-            parent: this.parent,
             value: copy,
             definition: this.definition,
             depth: this.depth,

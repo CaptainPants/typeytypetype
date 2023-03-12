@@ -4,7 +4,7 @@ import { UnionDefinition } from '../definitions/UnionDefinition.js';
 import { descend } from '../internal/descend.js';
 import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
 import { ObjectModelImpl } from './internal/ObjectModelImpl.js';
-import { type ParentRelationship, type Model } from './Model.js';
+import { type Model } from './Model.js';
 import {
     type ModelFactory,
     type CreateUnvalidatedModelPartArgs,
@@ -29,7 +29,6 @@ import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 // eslint-disable-next-line @typescript-eslint/ban-types -- Used as a key to identify the actual type of a Definition object
 type ConstructorFunction = Function;
 type ModelFactoryMethod = (
-    parent: ParentRelationship | null,
     value: unknown,
     definition: Definition<any>,
     depth: number,
@@ -42,9 +41,8 @@ const defaults: Array<
 > = [
     [
         UnionDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new UnionModelImpl<any>(
-                parent,
                 value,
                 definition as UnionDefinition<any>,
                 depth,
@@ -53,9 +51,8 @@ const defaults: Array<
     ],
     [
         ArrayDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new ArrayModelImpl<any>(
-                parent,
                 value as unknown[],
                 definition as ArrayDefinition<any>,
                 depth,
@@ -64,9 +61,8 @@ const defaults: Array<
     ],
     [
         RigidObjectDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new ObjectModelImpl<any>(
-                parent,
                 value,
                 definition as ObjectDefinition<any>,
                 depth,
@@ -75,9 +71,8 @@ const defaults: Array<
     ],
     [
         MapObjectDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new ObjectModelImpl<any>(
-                parent,
                 value,
                 definition as ObjectDefinition<any>,
                 depth,
@@ -86,14 +81,13 @@ const defaults: Array<
     ],
     [
         StringConstantDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new SimpleModelImpl<
                 string,
                 StringConstantDefinition,
                 'string-constant'
             >(
                 'string-constant',
-                parent,
                 value as string,
                 definition as StringConstantDefinition,
                 depth,
@@ -102,10 +96,9 @@ const defaults: Array<
     ],
     [
         StringDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new SimpleModelImpl<string, StringDefinition, 'string'>(
                 'string',
-                parent,
                 value as string,
                 definition as StringDefinition,
                 depth,
@@ -114,14 +107,13 @@ const defaults: Array<
     ],
     [
         NumberConstantDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new SimpleModelImpl<
                 number,
                 NumberConstantDefinition,
                 'number-constant'
             >(
                 'number-constant',
-                parent,
                 value as number,
                 definition as NumberConstantDefinition,
                 depth,
@@ -130,10 +122,9 @@ const defaults: Array<
     ],
     [
         NumberDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new SimpleModelImpl<number, NumberDefinition, 'number'>(
                 'number',
-                parent,
                 value as number,
                 definition as NumberDefinition,
                 depth,
@@ -142,14 +133,13 @@ const defaults: Array<
     ],
     [
         BooleanConstantDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new SimpleModelImpl<
                 boolean,
                 BooleanConstantDefinition,
                 'boolean-constant'
             >(
                 'boolean-constant',
-                parent,
                 value as boolean,
                 definition as BooleanConstantDefinition,
                 depth,
@@ -158,10 +148,9 @@ const defaults: Array<
     ],
     [
         BooleanDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new SimpleModelImpl<boolean, BooleanDefinition, 'boolean'>(
                 'boolean',
-                parent,
                 value as boolean,
                 definition as BooleanDefinition,
                 depth,
@@ -170,10 +159,9 @@ const defaults: Array<
     ],
     [
         NullConstantDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new SimpleModelImpl<null, NullConstantDefinition, 'null'>(
                 'null',
-                parent,
                 value as null,
                 definition as NullConstantDefinition,
                 depth,
@@ -182,14 +170,13 @@ const defaults: Array<
     ],
     [
         UndefinedConstantDefinition,
-        (parent, value, definition, depth, factory) =>
+        (value, definition, depth, factory) =>
             new SimpleModelImpl<
                 undefined,
                 UndefinedConstantDefinition,
                 'undefined'
             >(
                 'undefined',
-                parent,
                 value as undefined,
                 definition as UndefinedConstantDefinition,
                 depth,
@@ -232,7 +219,6 @@ export class StandardModelFactory implements ModelFactory {
     }
 
     #doCreateModelPart<T>({
-        parent = null,
         value,
         definition,
         depth,
@@ -244,7 +230,7 @@ export class StandardModelFactory implements ModelFactory {
             );
         }
 
-        return match(parent, value, definition, descend(depth), this);
+        return match(value, definition, descend(depth), this);
     }
 
     static readonly defaultMaxDepth = 25;
