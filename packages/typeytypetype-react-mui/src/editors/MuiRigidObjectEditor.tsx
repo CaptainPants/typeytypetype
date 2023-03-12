@@ -2,14 +2,14 @@ import React, { type ReactElement } from 'react';
 
 import {
     type EditorProps,
-    RigidObjectEditor,
+    BaseRigidObjectEditor,
 } from '@captainpants/typeytypetype-react';
 
 export function MuiRigidObjectEditor(
     props: Readonly<EditorProps>
 ): ReactElement {
     return (
-        <RigidObjectEditor
+        <BaseRigidObjectEditor
             {...props}
             renderProperty={({ renderEditor }) => renderEditor()}
         />

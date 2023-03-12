@@ -68,6 +68,10 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         return result;
     }
 
+    unknownGetProperties(): Array<PropertyModel<unknown>> {
+        return Object.values(this.#propertyModels);
+    }
+
     getProperty<TKey extends keyof TObject & string>(
         key: TKey
     ): PropertyModel<TObject[TKey]> {

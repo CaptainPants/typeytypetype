@@ -96,6 +96,8 @@ export interface UnknownObjectModel
 
     unknownGetProperty: (key: string) => PropertyModel<unknown> | undefined;
 
+    unknownGetProperties: () => Array<PropertyModel<unknown>>;
+
     unknownSetPropertyValue: (
         key: string,
         value: unknown

@@ -5,8 +5,8 @@ import {
     type Replacer,
 } from '@captainpants/typeytypetype';
 import React, { useCallback, useMemo, type ReactElement } from 'react';
-import { EditorHost } from './EditorHost.js';
-import { useLocalizer } from './hooks';
+import { EditorHost } from '../EditorHost.js';
+import { useLocalizer } from '../hooks';
 
 export interface PropertyEditorProps {
     parentModel: Model<unknown>;

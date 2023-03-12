@@ -4,4 +4,4 @@ export * from './EditorRoot.js';
 export * from './EditorHost.js';
 export * from './EditorRules.js';
 
-export * from './RigidObjectEditor.js';
+export * from './editors/index.js';
