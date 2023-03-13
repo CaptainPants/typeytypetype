@@ -1,11 +1,11 @@
 import { descend } from '../internal/descend.js';
-import { ObjectDefinition } from './ObjectDefinition.js';
+import { ObjectType } from './ObjectType.js';
 import { type PropertyDefinitions } from './internal/types.js';
 import { type PropertyDefinition } from './PropertyDefinition.js';
 
-export class RigidObjectDefinition<
+export class RigidObjectType<
     TObject extends Record<string, unknown>
-> extends ObjectDefinition<TObject> {
+> extends ObjectType<TObject> {
     constructor(propertyDefinitions: PropertyDefinitions<TObject>) {
         super();
         this.propertyDefinitions = propertyDefinitions;

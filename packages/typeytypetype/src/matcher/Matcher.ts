@@ -2,19 +2,19 @@ interface Rule {
     priority: number;
 }
 
-export class Matcher<TRule extends Rule, TDefinition> {
+export class Matcher<TRule extends Rule, TTypeType> {
     constructor(
         rules: TRule[],
-        match: (definition: TDefinition, rule: TRule) => boolean
+        match: (type: TTypeType, rule: TRule) => boolean
     ) {
         this.rules = rules;
         this.match = match;
     }
 
     public readonly rules: TRule[];
-    public readonly match: (model: TDefinition, rule: TRule) => boolean;
+    public readonly match: (model: TTypeType, rule: TRule) => boolean;
 
-    public findBestMatch(definition: TDefinition): TRule | null {
+    public findBestMatch(type: TTypeType): TRule | null {
         let bestCandidateRule: TRule | null = null;
 
         for (let i = this.rules.length - 1; i >= 0; --i) {
@@ -23,7 +23,7 @@ export class Matcher<TRule extends Rule, TDefinition> {
             if (
                 (bestCandidateRule === null ||
                     bestCandidateRule.priority < rule.priority) &&
-                this.#doesMatch(definition, rule)
+                this.#doesMatch(type, rule)
             ) {
                 bestCandidateRule = rule;
             }
@@ -32,13 +32,13 @@ export class Matcher<TRule extends Rule, TDefinition> {
         return bestCandidateRule;
     }
 
-    public findAllMatches(definition: TDefinition): TRule[] {
+    public findAllMatches(type: TTypeType): TRule[] {
         const matches: Array<[rule: TRule, index: number]> = [];
 
         for (let i = this.rules.length - 1; i >= 0; --i) {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             const rule = this.rules[i]!;
-            if (this.#doesMatch(definition, rule)) {
+            if (this.#doesMatch(type, rule)) {
                 matches.push([rule, i]);
             }
         }
@@ -51,8 +51,8 @@ export class Matcher<TRule extends Rule, TDefinition> {
         return matches.map(([rule, _index]) => rule);
     }
 
-    #doesMatch(definition: TDefinition, rule: TRule): boolean {
-        return this.match(definition, rule);
+    #doesMatch(type: TTypeType, rule: TRule): boolean {
+        return this.match(type, rule);
     }
 }
 

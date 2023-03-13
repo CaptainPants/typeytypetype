@@ -1,6 +1,6 @@
-import { ArrayDefinition } from '../definitions/ArrayDefinition.js';
-import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
-import { UnionDefinition } from '../definitions/UnionDefinition.js';
+import { ArrayType } from '../types/ArrayType.js';
+import { type ObjectType } from '../types/ObjectType.js';
+import { UnionType } from '../types/UnionType.js';
 import { descend } from '../internal/descend.js';
 import { ArrayModelImpl } from './internal/ArrayModelImpl.js';
 import { ObjectModelImpl } from './internal/ObjectModelImpl.js';
@@ -12,25 +12,25 @@ import {
 } from './ModelFactory.js';
 import { UnionModelImpl } from './internal/UnionModelImpl.js';
 import {
-    BooleanConstantDefinition,
-    BooleanDefinition,
-    type Definition,
-    MapObjectDefinition,
-    NullConstantDefinition,
-    NumberConstantDefinition,
-    NumberDefinition,
-    RigidObjectDefinition,
-    StringConstantDefinition,
-    StringDefinition,
-    UndefinedConstantDefinition,
-} from '../definitions/index.js';
+    BooleanConstantType,
+    BooleanType,
+    type Type,
+    MapObjectType,
+    NullConstantType,
+    NumberConstantType,
+    NumberType,
+    RigidObjectType,
+    StringConstantType,
+    StringType,
+    UndefinedConstantType,
+} from '../types/index.js';
 import { SimpleModelImpl } from './internal/SimpleModelImpl.js';
 
 // eslint-disable-next-line @typescript-eslint/ban-types -- Used as a key to identify the actual type of a Definition object
 type ConstructorFunction = Function;
 type ModelFactoryMethod = (
     value: unknown,
-    definition: Definition<any>,
+    type: Type<any>,
     depth: number,
     factory: ModelFactory
 ) => Model<any>;
@@ -40,145 +40,133 @@ const defaults: Array<
     [constructor: ConstructorFunction, factoryMethod: ModelFactoryMethod]
 > = [
     [
-        UnionDefinition,
-        (value, definition, depth, factory) =>
+        UnionType,
+        (value, type, depth, factory) =>
             new UnionModelImpl<any>(
                 value,
-                definition as UnionDefinition<any>,
+                type as UnionType<any>,
                 depth,
                 factory
             ),
     ],
     [
-        ArrayDefinition,
-        (value, definition, depth, factory) =>
+        ArrayType,
+        (value, type, depth, factory) =>
             new ArrayModelImpl<any>(
                 value as unknown[],
-                definition as ArrayDefinition<any>,
+                type as ArrayType<any>,
                 depth,
                 factory
             ),
     ],
     [
-        RigidObjectDefinition,
-        (value, definition, depth, factory) =>
+        RigidObjectType,
+        (value, type, depth, factory) =>
             new ObjectModelImpl<any>(
                 value,
-                definition as ObjectDefinition<any>,
+                type as ObjectType<any>,
                 depth,
                 factory
             ),
     ],
     [
-        MapObjectDefinition,
-        (value, definition, depth, factory) =>
+        MapObjectType,
+        (value, type, depth, factory) =>
             new ObjectModelImpl<any>(
                 value,
-                definition as ObjectDefinition<any>,
+                type as ObjectType<any>,
                 depth,
                 factory
             ),
     ],
     [
-        StringConstantDefinition,
-        (value, definition, depth, factory) =>
-            new SimpleModelImpl<
-                string,
-                StringConstantDefinition,
-                'string-constant'
-            >(
+        StringConstantType,
+        (value, type, depth, factory) =>
+            new SimpleModelImpl<string, StringConstantType, 'string-constant'>(
                 'string-constant',
                 value as string,
-                definition as StringConstantDefinition,
+                type as StringConstantType,
                 depth,
                 factory
             ),
     ],
     [
-        StringDefinition,
-        (value, definition, depth, factory) =>
-            new SimpleModelImpl<string, StringDefinition, 'string'>(
+        StringType,
+        (value, type, depth, factory) =>
+            new SimpleModelImpl<string, StringType, 'string'>(
                 'string',
                 value as string,
-                definition as StringDefinition,
+                type as StringType,
                 depth,
                 factory
             ),
     ],
     [
-        NumberConstantDefinition,
-        (value, definition, depth, factory) =>
-            new SimpleModelImpl<
-                number,
-                NumberConstantDefinition,
-                'number-constant'
-            >(
+        NumberConstantType,
+        (value, type, depth, factory) =>
+            new SimpleModelImpl<number, NumberConstantType, 'number-constant'>(
                 'number-constant',
                 value as number,
-                definition as NumberConstantDefinition,
+                type as NumberConstantType,
                 depth,
                 factory
             ),
     ],
     [
-        NumberDefinition,
-        (value, definition, depth, factory) =>
-            new SimpleModelImpl<number, NumberDefinition, 'number'>(
+        NumberType,
+        (value, type, depth, factory) =>
+            new SimpleModelImpl<number, NumberType, 'number'>(
                 'number',
                 value as number,
-                definition as NumberDefinition,
+                type as NumberType,
                 depth,
                 factory
             ),
     ],
     [
-        BooleanConstantDefinition,
-        (value, definition, depth, factory) =>
+        BooleanConstantType,
+        (value, type, depth, factory) =>
             new SimpleModelImpl<
                 boolean,
-                BooleanConstantDefinition,
+                BooleanConstantType,
                 'boolean-constant'
             >(
                 'boolean-constant',
                 value as boolean,
-                definition as BooleanConstantDefinition,
+                type as BooleanConstantType,
                 depth,
                 factory
             ),
     ],
     [
-        BooleanDefinition,
-        (value, definition, depth, factory) =>
-            new SimpleModelImpl<boolean, BooleanDefinition, 'boolean'>(
+        BooleanType,
+        (value, type, depth, factory) =>
+            new SimpleModelImpl<boolean, BooleanType, 'boolean'>(
                 'boolean',
                 value as boolean,
-                definition as BooleanDefinition,
+                type as BooleanType,
                 depth,
                 factory
             ),
     ],
     [
-        NullConstantDefinition,
-        (value, definition, depth, factory) =>
-            new SimpleModelImpl<null, NullConstantDefinition, 'null'>(
+        NullConstantType,
+        (value, type, depth, factory) =>
+            new SimpleModelImpl<null, NullConstantType, 'null'>(
                 'null',
                 value as null,
-                definition as NullConstantDefinition,
+                type as NullConstantType,
                 depth,
                 factory
             ),
     ],
     [
-        UndefinedConstantDefinition,
-        (value, definition, depth, factory) =>
-            new SimpleModelImpl<
-                undefined,
-                UndefinedConstantDefinition,
-                'undefined'
-            >(
+        UndefinedConstantType,
+        (value, type, depth, factory) =>
+            new SimpleModelImpl<undefined, UndefinedConstantType, 'undefined'>(
                 'undefined',
                 value as undefined,
-                definition as UndefinedConstantDefinition,
+                type as UndefinedConstantType,
                 depth,
                 factory
             ),
@@ -199,13 +187,13 @@ export class StandardModelFactory implements ModelFactory {
     createModel<T>(args: CreateModelArgs<T>): Promise<Model<T>>;
     async createModel<T>({
         value,
-        definition,
+        type,
     }: CreateModelArgs<T>): Promise<Model<T>> {
-        const typed = await definition.validateAndThrow(value);
+        const typed = await type.validateAndThrow(value);
 
         return this.createUnvalidatedModelPart<T>({
             value: typed,
-            definition,
+            type,
             depth: StandardModelFactory.defaultMaxDepth,
         });
     }
@@ -220,17 +208,15 @@ export class StandardModelFactory implements ModelFactory {
 
     #doCreateModelPart<T>({
         value,
-        definition,
+        type,
         depth,
     }: CreateUnvalidatedModelPartArgs<T>): any {
-        const match = this.#map.get(definition.constructor);
+        const match = this.#map.get(type.constructor);
         if (match === undefined) {
-            throw new TypeError(
-                `Unrecognised definition type ${definition.constructor.name}.`
-            );
+            throw new TypeError(`Unrecognised type ${type.constructor.name}.`);
         }
 
-        return match(value, definition, descend(depth), this);
+        return match(value, type, descend(depth), this);
     }
 
     static readonly defaultMaxDepth = 25;

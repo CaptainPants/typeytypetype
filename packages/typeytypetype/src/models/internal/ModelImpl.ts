@@ -1,27 +1,27 @@
-import { type Definition } from '../../definitions/Definition.js';
+import { type Type } from '../../types/Type.js';
 import { type BaseModel } from '../Model.js';
 import { type ModelFactory } from '../ModelFactory.js';
 
 export class ModelImpl<
     T,
-    TDefinition extends Definition<T> = Definition<T>,
+    TTypeType extends Type<T> = Type<T>,
     TUnknownType = unknown
-> implements BaseModel<T, TDefinition, TUnknownType>
+> implements BaseModel<T, TTypeType, TUnknownType>
 {
     constructor(
         value: T,
-        definition: TDefinition,
+        type: TTypeType,
         depth: number,
         factory: ModelFactory
     ) {
         this.value = value;
-        this.definition = definition;
+        this.type = type;
         this.depth = depth;
         this.factory = factory;
     }
 
     public readonly value: T;
-    public readonly definition: TDefinition;
+    public readonly type: TTypeType;
     public readonly depth: number;
     public readonly factory: ModelFactory;
 
@@ -29,7 +29,7 @@ export class ModelImpl<
         return this.value as any;
     }
 
-    public get unknownDefinition(): Definition<unknown> {
-        return this.definition;
+    public get unknownType(): Type<unknown> {
+        return this.type;
     }
 }

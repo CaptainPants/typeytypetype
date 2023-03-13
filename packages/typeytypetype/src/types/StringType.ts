@@ -1,6 +1,6 @@
-import { BaseDefinition } from './BaseDefinition.js';
+import { BaseType } from './BaseType.js';
 
-export class StringDefinition extends BaseDefinition<string> {
+export class StringType extends BaseType<string> {
     override doMatches(
         value: unknown,
         _deep: boolean,

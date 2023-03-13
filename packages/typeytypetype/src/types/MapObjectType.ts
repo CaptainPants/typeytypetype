@@ -1,12 +1,10 @@
 import { descend } from '../internal/descend.js';
-import { type Definition } from './Definition.js';
-import { ObjectDefinition } from './ObjectDefinition.js';
+import { type Type } from './Type.js';
+import { ObjectType } from './ObjectType.js';
 import { PropertyDefinition } from './PropertyDefinition.js';
 
-export class MapObjectDefinition<TValue> extends ObjectDefinition<
-    Record<string, TValue>
-> {
-    constructor(entryDefinition: Definition<TValue>) {
+export class MapObjectType<TValue> extends ObjectType<Record<string, TValue>> {
+    constructor(entryDefinition: Type<TValue>) {
         super();
         this.entryDefinition = new PropertyDefinition(entryDefinition);
     }
@@ -60,7 +58,7 @@ export class MapObjectDefinition<TValue> extends ObjectDefinition<
         return this.entryDefinition;
     }
 
-    public override getExpandoTypeDefinition(): Definition<TValue> | undefined {
+    public override getExpandoTypeDefinition(): Type<TValue> | undefined {
         return this.entryDefinition.type;
     }
 }

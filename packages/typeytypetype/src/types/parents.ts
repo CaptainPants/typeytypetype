@@ -1,4 +1,4 @@
-import { type Definition } from './Definition.js';
+import { type Type } from './Type.js';
 
 export type ParentRelationship =
     | {
@@ -13,7 +13,7 @@ export type ParentRelationship =
       };
 
 export interface DefinitionNode {
-    definition: Definition<unknown>;
+    type: Type<unknown>;
     parent?: ParentDefinitionNode | undefined;
 }
 export interface ParentDefinitionNode extends DefinitionNode {

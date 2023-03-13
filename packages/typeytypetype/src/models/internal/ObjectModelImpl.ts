@@ -1,6 +1,6 @@
 import * as assert from 'typed-assert';
-import { type Definition } from '../../definitions/Definition.js';
-import { type ObjectDefinition } from '../../definitions/ObjectDefinition.js';
+import { type Type } from '../../types/Type.js';
+import { type ObjectType } from '../../types/ObjectType.js';
 import { descend } from '../../internal/descend.js';
 import { type ExpandoType } from '../../internal/utilityTypes.js';
 import { type Model, type ObjectModel, type UnknownModel } from '../Model.js';
@@ -11,35 +11,31 @@ import { PropertyModelImpl } from './PropertyModelImpl.js';
 import { type PropertyModel } from '../PropertyModel.js';
 
 export class ObjectModelImpl<TObject extends Record<string, unknown>>
-    extends ModelImpl<
-        TObject,
-        ObjectDefinition<TObject>,
-        Record<string, unknown>
-    >
+    extends ModelImpl<TObject, ObjectType<TObject>, Record<string, unknown>>
     implements ObjectModel<TObject>
 {
     constructor(
         value: TObject,
-        definition: ObjectDefinition<TObject>,
+        type: ObjectType<TObject>,
         depth: number,
         factory: ModelFactory
     ) {
-        super(value, definition, depth, factory);
+        super(value, type, depth, factory);
 
         this.#propertyModels = {};
 
         for (const name of Object.keys(value)) {
-            const propertyDef = definition.getPropertyDefinition(name);
+            const propertyDef = type.getPropertyDefinition(name);
 
             if (propertyDef === null) {
                 throw new Error(
-                    `Unexpected value found at key ${name} when no expando definition provided.`
+                    `Unexpected value found at key ${name} when no expando type provided.`
                 );
             }
 
             const propertyValueModel = factory.createUnvalidatedModelPart({
                 value: value[name],
-                definition: propertyDef.type,
+                type: propertyDef.type,
                 depth: descend(depth),
             });
 
@@ -51,16 +47,16 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         }
     }
 
-    readonly type = 'object';
+    readonly archetype = 'object';
 
     #propertyModels: Record<string, PropertyModel<unknown>>;
 
-    unknownExpandoPropertyDefinition(): Definition<unknown> | undefined {
-        return this.expandoPropertyDefinition();
+    unknownExpandoPropertyType(): Type<unknown> | undefined {
+        return this.expandoPropertyType();
     }
 
-    expandoPropertyDefinition(): Definition<ExpandoType<TObject>> | undefined {
-        return this.definition.getExpandoTypeDefinition();
+    expandoPropertyType(): Type<ExpandoType<TObject>> | undefined {
+        return this.type.getExpandoTypeDefinition();
     }
 
     unknownGetProperty(key: string): PropertyModel<unknown> | undefined {
@@ -84,11 +80,11 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
         key: string,
         value: unknown
     ): Promise<UnknownModel> {
-        const def = this.definition.getPropertyDefinition(key);
+        const def = this.type.getPropertyDefinition(key);
 
         if (def === null) {
             throw new TypeError(
-                `Could not assign to property ${key} as no definition found.`
+                `Could not assign to property ${key} as no type found.`
             );
         }
 
@@ -99,11 +95,11 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
             [key]: adopted,
         };
 
-        await this.definition.validateAndThrow(copy, { deep: false });
+        await this.type.validateAndThrow(copy, { deep: false });
 
         return this.factory.createUnvalidatedModelPart<TObject>({
             value: copy,
-            definition: this.definition,
+            type: this.type,
             depth: this.depth,
         });
     }
@@ -119,7 +115,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
     }
 
     async unknownDeleteProperty(key: string): Promise<UnknownModel> {
-        if (!this.definition.supportsDelete()) {
+        if (!this.type.supportsDelete()) {
             throw new TypeError('Delete not supported.');
         }
 
@@ -129,7 +125,7 @@ export class ObjectModelImpl<TObject extends Record<string, unknown>>
 
         return this.factory.createUnvalidatedModelPart<TObject>({
             value: copy,
-            definition: this.definition,
+            type: this.type,
             depth: this.depth,
         });
     }

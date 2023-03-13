@@ -1,14 +1,14 @@
-import { type Definition } from '../definitions/Definition.js';
+import { type Type } from '../types/Type.js';
 import { type Model } from './Model.js';
 
 export interface CreateModelArgs<T> {
     value: unknown;
-    definition: Definition<T>;
+    type: Type<T>;
 }
 
 export interface CreateUnvalidatedModelPartArgs<T> {
     value: T;
-    definition: Definition<T>;
+    type: Type<T>;
     depth: number;
 }
 

@@ -1,25 +1,25 @@
 import {
-    ArrayDefinition,
-    BooleanConstantDefinition,
-    BooleanDefinition,
-    MapObjectDefinition,
-    NullConstantDefinition,
-    NumberConstantDefinition,
-    NumberDefinition,
-    RigidObjectDefinition,
-    StringConstantDefinition,
-    StringDefinition,
-    UndefinedConstantDefinition,
-} from '../definitions';
-import { ObjectDefinition } from '../definitions/ObjectDefinition.js';
+    ArrayType,
+    BooleanConstantType,
+    BooleanType,
+    MapObjectType,
+    NullConstantType,
+    NumberConstantType,
+    NumberType,
+    RigidObjectType,
+    StringConstantType,
+    StringType,
+    UndefinedConstantType,
+} from '../types/index.js';
+import { ObjectType } from '../types/ObjectType.js';
 import { type Model, type UnknownModel } from './Model.js';
 
 export function isModel<T>(value: T | Model<T>): value is Model<T>;
 export function isModel(value: unknown): value is Model<unknown>;
 export function isModel(value: unknown): value is Model<unknown> {
     return (
-        typeof (value as Model<unknown>).type === 'string' &&
-        typeof (value as Model<unknown>).unknownDefinition !== 'undefined' &&
+        typeof (value as Model<unknown>).unknownType === 'string' &&
+        typeof (value as Model<unknown>).unknownType !== 'undefined' &&
         // unknown value may be undefined, but should be present
         Object.prototype.hasOwnProperty.call(value, 'unknownValue') &&
         Object.prototype.hasOwnProperty.call(value, 'parent')
@@ -29,64 +29,64 @@ export function isModel(value: unknown): value is Model<unknown> {
 export function isObjectModel(
     model: UnknownModel
 ): model is Model<Record<string, unknown>> {
-    return model.unknownDefinition instanceof ObjectDefinition;
+    return model.unknownType instanceof ObjectType;
 }
 
 export function isRigidObjectModel(
     model: UnknownModel
 ): model is Model<Record<string, unknown>> {
-    return model.unknownDefinition instanceof RigidObjectDefinition;
+    return model.unknownType instanceof RigidObjectType;
 }
 
 export function isMapObjectModel(
     model: UnknownModel
 ): model is Model<Record<string, unknown>> {
-    return model.unknownDefinition instanceof MapObjectDefinition;
+    return model.unknownType instanceof MapObjectType;
 }
 
 export function isArrayModel(model: UnknownModel): model is Model<unknown[]> {
-    return model.unknownDefinition instanceof ArrayDefinition;
+    return model.unknownType instanceof ArrayType;
 }
 
 export function isUnionModel(model: UnknownModel): model is Model<unknown> {
-    return model.unknownDefinition instanceof RigidObjectDefinition;
+    return model.unknownType instanceof RigidObjectType;
 }
 
 export function isNumberModel(model: UnknownModel): model is Model<number> {
-    return model.unknownDefinition instanceof NumberDefinition;
+    return model.unknownType instanceof NumberType;
 }
 
 export function isStringModel(model: UnknownModel): model is Model<string> {
-    return model.unknownDefinition instanceof StringDefinition;
+    return model.unknownType instanceof StringType;
 }
 
 export function isBooleanModel(model: UnknownModel): model is Model<boolean> {
-    return model.unknownDefinition instanceof BooleanDefinition;
+    return model.unknownType instanceof BooleanType;
 }
 
 export function isNumberConstantModel(
     model: UnknownModel
 ): model is Model<number> {
-    return model.unknownDefinition instanceof NumberConstantDefinition;
+    return model.unknownType instanceof NumberConstantType;
 }
 
 export function isStringConstantModel(
     model: UnknownModel
 ): model is Model<string> {
-    return model.unknownDefinition instanceof StringConstantDefinition;
+    return model.unknownType instanceof StringConstantType;
 }
 export function isBooleanConstantModel(
     model: UnknownModel
 ): model is Model<boolean> {
-    return model.unknownDefinition instanceof BooleanConstantDefinition;
+    return model.unknownType instanceof BooleanConstantType;
 }
 
 export function isNullModel(model: UnknownModel): model is Model<null> {
-    return model.unknownDefinition instanceof NullConstantDefinition;
+    return model.unknownType instanceof NullConstantType;
 }
 
 export function isUndefinedModel(model: UnknownModel): model is Model<null> {
-    return model.unknownDefinition instanceof UndefinedConstantDefinition;
+    return model.unknownType instanceof UndefinedConstantType;
 }
 
 export function isConstantModel(

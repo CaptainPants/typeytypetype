@@ -1,32 +1,32 @@
 import { expect, test } from '@jest/globals';
-import { Type } from '../../definitions';
-import { Rule } from '../Rule.js';
+import { Types } from '../../types/index.js';
+import { Rules } from '../Rules.js';
 import { matchDefinitionRulePart } from './matchModelRule.js';
 
 test('label', async () => {
     expect(
         matchDefinitionRulePart(
-            { definition: Type.number().withLabels('test-label') },
-            Rule.label('test-label')
+            { type: Types.number().withLabels('test-label') },
+            Rules.label('test-label')
         )
     ).toStrictEqual(true);
     expect(
         matchDefinitionRulePart(
-            { definition: Type.number().withLabels('test-label') },
-            Rule.label('test-label')
+            { type: Types.number().withLabels('test-label') },
+            Rules.label('test-label')
         )
     ).toStrictEqual(true);
 
     expect(
         matchDefinitionRulePart(
-            { definition: Type.number().withLabels('label1') },
-            Rule.label('label1-suffix')
+            { type: Types.number().withLabels('label1') },
+            Rules.label('label1-suffix')
         )
     ).toStrictEqual(false);
     expect(
         matchDefinitionRulePart(
-            { definition: Type.number() },
-            Rule.label('test-label')
+            { type: Types.number() },
+            Rules.label('test-label')
         )
     );
 });
@@ -34,24 +34,24 @@ test('label', async () => {
 test('attribute', async () => {
     expect(
         matchDefinitionRulePart(
-            { definition: Type.number().withAttr('type', 'ham-sandwich') },
-            Rule.attr('type', 'ham-sandwich')
+            { type: Types.number().withAttr('type', 'ham-sandwich') },
+            Rules.attr('type', 'ham-sandwich')
         )
     ).toStrictEqual(true);
     expect(
         matchDefinitionRulePart(
-            { definition: Type.number() },
-            Rule.attr('type', 'ham-sandwich')
+            { type: Types.number() },
+            Rules.attr('type', 'ham-sandwich')
         )
     ).toStrictEqual(false);
     expect(
         matchDefinitionRulePart(
             {
-                definition: Type.number()
+                type: Types.number()
                     .withAttr('type', 'ham-sandwich')
                     .withAttr('other', 'thing'),
             },
-            Rule.attr('type', 'ham-sandwich')
+            Rules.attr('type', 'ham-sandwich')
         )
     ).toStrictEqual(true);
 });

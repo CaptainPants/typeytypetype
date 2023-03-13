@@ -1,7 +1,7 @@
 import { deepFreeze } from '../internal/deepFreeze.js';
 import { descend } from '../internal/descend.js';
 import { stringForError } from '../internal/stringForError.js';
-import { type Definition } from './Definition.js';
+import { type Type } from './Type.js';
 import {
     type Validator,
     type ValidationResult,
@@ -10,13 +10,13 @@ import {
 } from '../validation/types.js';
 import { flattenValidatorResultsToStrings } from '../validation/flattenValidatorResultsToStrings.js';
 
-export abstract class BaseDefinition<T> implements Definition<T> {
+export abstract class BaseType<T> implements Type<T> {
     readonly validators: Array<Validator<T>> = [];
     readonly labels: string[] = [];
     readonly attributes: Map<string, unknown> = new Map<string, unknown>();
 
     /**
-     * Calls the callback on the current definition, then freezes the definition.
+     * Calls the callback on the current type, then freezes the type.
      * @param callback
      * @returns
      */

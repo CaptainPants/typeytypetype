@@ -1,17 +1,17 @@
-import { combineDefinitionPath } from '../internal/combineDefinitionPath.js';
+import { combineTypeDefinitionPath } from '../internal/combineTypeDefinitionPath.js';
 import { descend } from '../internal/descend.js';
 import { type ExpandoType } from '../internal/utilityTypes.js';
-import { BaseDefinition } from './BaseDefinition.js';
-import { type Definition } from './Definition.js';
+import { BaseType } from './BaseType.js';
+import { type Type } from './Type.js';
 import {
     type ValidationSingleResult,
     type ValidationOptions,
 } from '../validation/types.js';
 import { type PropertyDefinition } from './PropertyDefinition.js';
 
-export abstract class ObjectDefinition<
+export abstract class ObjectType<
     TObject extends Record<string, unknown>
-> extends BaseDefinition<TObject> {
+> extends BaseType<TObject> {
     public getFixedPropertyNames(): string[] {
         return [];
     }
@@ -20,9 +20,7 @@ export abstract class ObjectDefinition<
         key: Key
     ): PropertyDefinition<TObject[Key]> | null;
 
-    public getExpandoTypeDefinition():
-        | Definition<ExpandoType<TObject>>
-        | undefined {
+    public getExpandoTypeDefinition(): Type<ExpandoType<TObject>> | undefined {
         return undefined;
     }
 
@@ -53,7 +51,7 @@ export abstract class ObjectDefinition<
             if (currentPropValidationResult !== undefined) {
                 res.push(
                     ...currentPropValidationResult.map((item) => ({
-                        path: combineDefinitionPath(key, item.path),
+                        path: combineTypeDefinitionPath(key, item.path),
                         message: item.message,
                     }))
                 );

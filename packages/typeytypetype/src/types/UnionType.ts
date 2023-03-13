@@ -1,25 +1,25 @@
 import { descend } from '../internal/descend.js';
-import { type SpreadDefinition } from './internal/types.js';
-import { BaseDefinition } from './BaseDefinition.js';
+import { type SpreadUnionType } from './internal/types.js';
+import { BaseType } from './BaseType.js';
 import {
     type ValidationSingleResult,
     type ValidationOptions,
 } from '../validation/types.js';
-import { combineDefinitionPath } from '../internal/combineDefinitionPath.js';
+import { combineTypeDefinitionPath } from '../internal/combineTypeDefinitionPath.js';
 import { Queue } from '@datastructures-js/queue';
 
-export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
-    constructor(definitions: Array<SpreadDefinition<TUnion>>) {
+export class UnionType<TUnion> extends BaseType<TUnion> {
+    constructor(types: Array<SpreadUnionType<TUnion>>) {
         super();
-        this.definitions = definitions;
+        this.types = types;
     }
 
-    readonly definitions: Array<SpreadDefinition<TUnion>>;
+    readonly types: Array<SpreadUnionType<TUnion>>;
 
-    getDefinition(value: TUnion): SpreadDefinition<TUnion> | null {
-        const queue = new Queue<SpreadDefinition<TUnion>>();
+    getDefinition(value: TUnion): SpreadUnionType<TUnion> | null {
+        const queue = new Queue<SpreadUnionType<TUnion>>();
 
-        for (const item of this.definitions) {
+        for (const item of this.types) {
             queue.enqueue(item);
         }
 
@@ -28,8 +28,8 @@ export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
 
             if (current.matches(value)) {
                 return current;
-            } else if (current instanceof UnionDefinition) {
-                for (const inner of current.definitions) {
+            } else if (current instanceof UnionType) {
+                for (const inner of current.types) {
                     queue.enqueue(inner as any);
                 }
             }
@@ -44,14 +44,14 @@ export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
         depth: number
     ): value is TUnion {
         return (
-            this.definitions.findIndex((model) =>
+            this.types.findIndex((model) =>
                 model.doMatches(value, deep, descend(depth))
             ) >= 0
         );
     }
 
     override doToTypeString(depth: number): string {
-        return this.definitions
+        return this.types
             .map((item) => `(${item.doToTypeString(descend(depth))}})`)
             .join(' | ');
     }
@@ -65,7 +65,7 @@ export class UnionDefinition<TUnion> extends BaseDefinition<TUnion> {
 
         return (await def?.doValidate(value, options, descend(depth)))?.map(
             (item) => ({
-                path: combineDefinitionPath('$', item.path),
+                path: combineTypeDefinitionPath('|', item.path),
                 message: item.message,
             })
         );

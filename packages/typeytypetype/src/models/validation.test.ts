@@ -1,8 +1,8 @@
 import { expect, test } from '@jest/globals';
-import { Type } from '../definitions/Type.js';
+import { Types } from '../types/Types.js';
 
 test('test', async () => {
-    const num = Type.number().withValidator(function* (value) {
+    const num = Types.number().withValidator(function* (value) {
         if (value < 3) {
             yield 'Value must be greater than or equal to 3';
         }

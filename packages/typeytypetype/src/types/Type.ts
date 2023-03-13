@@ -3,7 +3,7 @@ import {
     type ValidationResult,
 } from '../validation/types.js';
 
-export interface Definition<T> {
+export interface Type<T> {
     matches: (value: unknown) => value is T;
 
     doMatches: (value: unknown, deep: boolean, depth: number) => value is T;

@@ -1,13 +1,13 @@
-import { type Definition } from './Definition.js';
+import { type Type } from './Type.js';
 
 export class PropertyDefinition<TType> {
-    constructor(type: Definition<TType>) {
+    constructor(type: Type<TType>) {
         this.type = type;
     }
 
     public displayName?: string;
     public category?: string;
-    public type: Definition<TType>;
+    public type: Type<TType>;
 
     public withDisplayName(displayName: string): this {
         this.displayName = displayName;

@@ -1,29 +1,27 @@
-import { type Definition } from '../definitions/Definition.js';
+import { type ParentDefinitionNode } from '../types/parents.js';
+import { type Type } from '../types/Type.js';
 
-export type SelectorStep<TRulePart> =
+export type SelectorStep =
     | {
-          $element: TRulePart | TRulePart[];
+          $element: TypeMatcherRulePart | TypeMatcherRulePart[];
       }
     | {
-          $property: TRulePart | TRulePart[];
+          $property: TypeMatcherRulePart | TypeMatcherRulePart[];
           propertyName?: string | undefined;
       }
     | {
-          $descendent: TRulePart | TRulePart[];
+          $descendent: TypeMatcherRulePart | TypeMatcherRulePart[];
       };
 
-export type Selector<TModelMatcherRulePart> = [
-    top: TModelMatcherRulePart,
-    ...rest: Array<SelectorStep<TModelMatcherRulePart>>
-];
+export type Selector = [top: TypeMatcherRulePart, ...rest: SelectorStep[]];
 
-export type ModelMatcherRulePart =
+export type TypeMatcherRulePart =
     | {
           type: 'any';
       }
     | {
           type: 'type';
-          constructor: new (...args: unknown[]) => Definition<unknown>;
+          constructor: new (...args: unknown[]) => Type<unknown>;
       }
     | {
           type: 'label';
@@ -36,33 +34,36 @@ export type ModelMatcherRulePart =
       }
     | {
           type: 'element';
-          match: ModelMatcherRulePart;
+          match: TypeMatcherRulePart;
       }
     | {
           type: 'propertyOf';
           propertyName?: string | undefined;
-          match: ModelMatcherRulePart;
+          match: TypeMatcherRulePart;
       }
     | {
           type: 'ancestor';
-          match: ModelMatcherRulePart;
+          match: TypeMatcherRulePart;
       }
     | {
           type: 'or';
-          rules: ModelMatcherRulePart[];
+          rules: TypeMatcherRulePart[];
       }
     | {
           type: 'and';
-          rules: ModelMatcherRulePart[];
+          rules: TypeMatcherRulePart[];
       }
     | {
           type: 'callback';
-          callback: (definition: Definition<unknown>) => boolean;
+          callback: (
+              type: Type<unknown>,
+              parent: ParentDefinitionNode | undefined
+          ) => boolean;
       };
 
-export interface ModelMatcherRule<TResult> {
+export interface TypeMatcherRule<TResult> {
     name?: string;
-    matches: ModelMatcherRulePart;
+    matches: TypeMatcherRulePart;
     priority: number;
     result: TResult;
 }

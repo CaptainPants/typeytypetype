@@ -1,20 +1,20 @@
 import { descend } from '../internal/descend.js';
-import { BaseDefinition } from './BaseDefinition.js';
-import { type Definition } from './Definition.js';
+import { BaseType } from './BaseType.js';
+import { type Type } from './Type.js';
 
-export class DeferredDefinition<T> extends BaseDefinition<T> {
+export class DeferredType<T> extends BaseType<T> {
     constructor(name: string) {
         super();
         this.name = name;
-        this.definition = null;
+        this.type = null;
     }
 
     public readonly name: string;
-    public definition: Definition<T> | null;
+    public type: Type<T> | null;
 
-    getDefinition(): Definition<T> {
-        if (this.definition === null) throw new Error('Model not provided.');
-        return this.definition;
+    getDefinition(): Type<T> {
+        if (this.type === null) throw new Error('Model not provided.');
+        return this.type;
     }
 
     override doMatches(

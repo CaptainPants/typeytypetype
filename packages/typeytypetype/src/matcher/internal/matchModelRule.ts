@@ -1,9 +1,9 @@
 import { deepEqual } from 'fast-equals';
-import { type DefinitionNode } from '../../definitions/types.js';
+import { type DefinitionNode } from '../../types/parents.js';
 
 import { descend } from '../../internal/descend.js';
 import { and, or } from '../../internal/logical.js';
-import { type ModelMatcherRule, type ModelMatcherRulePart } from '../types.js';
+import { type TypeMatcherRule, type TypeMatcherRulePart } from '../types.js';
 
 function traverseAncestors(
     node: DefinitionNode,
@@ -23,7 +23,7 @@ function traverseAncestors(
 
 export function matchDefinitionRule<TResult>(
     model: DefinitionNode,
-    part: ModelMatcherRule<TResult>,
+    part: TypeMatcherRule<TResult>,
     depth = 25
 ): boolean {
     return matchDefinitionRulePart(model, part.matches, depth);
@@ -31,17 +31,14 @@ export function matchDefinitionRule<TResult>(
 
 export function matchDefinitionRulePart(
     node: DefinitionNode,
-    part: ModelMatcherRulePart,
+    part: TypeMatcherRulePart,
     depth = 25
 ): boolean {
     switch (part.type) {
         case 'attr':
-            return deepEqual(
-                part.value,
-                node.definition.getAttribute(part.name)
-            );
+            return deepEqual(part.value, node.type.getAttribute(part.name));
         case 'label':
-            return node.definition.hasLabel(part.label);
+            return node.type.hasLabel(part.label);
         case 'type':
             return node.constructor === part.constructor;
         case 'or':
@@ -83,7 +80,7 @@ export function matchDefinitionRulePart(
                 ) !== null
             );
         case 'callback':
-            return part.callback(node.definition);
+            return part.callback(node.type, node.parent);
     }
 
     throw new Error('Unexpected');

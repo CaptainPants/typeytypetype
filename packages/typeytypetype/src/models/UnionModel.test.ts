@@ -1,24 +1,24 @@
 import { expect, test } from '@jest/globals';
-import { Type } from '../definitions/Type.js';
+import { Types } from '../types/Types.js';
 import { type TypeFromDefinition } from '../types.js';
 import { StandardModelFactory } from './StandardModelFactory.js';
 
 test('union', async () => {
-    const a = Type.object({
-        type: Type.prop(Type.constant('hasNumber')),
-        number: Type.prop(Type.number()),
+    const a = Types.object({
+        type: Types.prop(Types.constant('hasNumber')),
+        number: Types.prop(Types.number()),
     });
 
-    const b = Type.object({
-        type: Type.prop(Type.constant('hasString')),
-        string: Type.prop(Type.string()),
+    const b = Types.object({
+        type: Types.prop(Types.constant('hasString')),
+        string: Types.prop(Types.string()),
     });
 
-    const c = Type.number();
+    const c = Types.number();
 
-    const definition = Type.union(a, b, c);
+    const type = Types.union(a, b, c);
 
-    const value: TypeFromDefinition<typeof definition> = {
+    const value: TypeFromDefinition<typeof type> = {
         type: 'hasString',
         string: '$abc245',
     };
@@ -27,12 +27,12 @@ test('union', async () => {
 
     const model = await factory.createModel({
         value,
-        definition,
+        type,
     });
 
     const resolved = model.resolved;
 
-    expect(resolved.type).toStrictEqual('object');
+    expect(resolved.archetype).toStrictEqual('object');
 
     expect(model.as(a)).toStrictEqual(null);
     expect(model.as(b)).not.toStrictEqual(null);

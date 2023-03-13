@@ -1,9 +1,7 @@
-import { type Definition } from './definitions/Definition.js';
+import { type Type } from './types/Type.js';
 import { type Model } from './models/Model.js';
 
-export type TypeFromDefinition<TDefinition> = TDefinition extends Definition<
-    infer T
->
+export type TypeFromDefinition<TDefinition> = TDefinition extends Type<infer T>
     ? T
     : TDefinition;
 

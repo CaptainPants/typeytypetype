@@ -1,6 +1,6 @@
-import { BaseDefinition } from './BaseDefinition.js';
+import { BaseType } from './BaseType.js';
 
-export class NumberDefinition extends BaseDefinition<number> {
+export class NumberType extends BaseType<number> {
     override doMatches(
         value: unknown,
         _deep: boolean,

@@ -29,7 +29,7 @@ export function categorizeProperties(
 
     const map = groupBy(
         properties,
-        (item) => item.definition.category ?? 'Misc'
+        (item) => item.type.category ?? 'Misc'
     );
 
     const keys = [...map.keys()];

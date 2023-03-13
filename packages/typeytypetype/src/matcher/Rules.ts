@@ -1,16 +1,16 @@
-import { type Definition } from '../definitions';
-import { type ModelMatcherRulePart } from './types.js';
+import { type Type } from '../types/index.js';
+import { type TypeMatcherRulePart } from './types.js';
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
-export namespace Rule {
-    export function label(label: string): ModelMatcherRulePart {
+export namespace Rules {
+    export function label(label: string): TypeMatcherRulePart {
         return {
             type: 'label',
             label,
         };
     }
 
-    export function attr(name: string, value: unknown): ModelMatcherRulePart {
+    export function attr(name: string, value: unknown): TypeMatcherRulePart {
         return {
             type: 'attr',
             name,
@@ -19,8 +19,8 @@ export namespace Rule {
     }
 
     export function type(
-        constructor: new (...args: any[]) => Definition<any>
-    ): ModelMatcherRulePart {
+        constructor: new (...args: any[]) => Type<any>
+    ): TypeMatcherRulePart {
         return {
             type: 'type',
             constructor,
@@ -28,8 +28,8 @@ export namespace Rule {
     }
 
     export function element(
-        match: ModelMatcherRulePart = { type: 'any' }
-    ): ModelMatcherRulePart {
+        match: TypeMatcherRulePart = { type: 'any' }
+    ): TypeMatcherRulePart {
         return {
             type: 'element',
             match,
@@ -38,8 +38,8 @@ export namespace Rule {
 
     export function propertyOf(
         propertyName?: string,
-        match: ModelMatcherRulePart = { type: 'any' }
-    ): ModelMatcherRulePart {
+        match: TypeMatcherRulePart = { type: 'any' }
+    ): TypeMatcherRulePart {
         return {
             type: 'propertyOf',
             propertyName,
@@ -48,22 +48,22 @@ export namespace Rule {
     }
 
     export function ancestor(
-        match: ModelMatcherRulePart = { type: 'any' }
-    ): ModelMatcherRulePart {
+        match: TypeMatcherRulePart = { type: 'any' }
+    ): TypeMatcherRulePart {
         return {
             type: 'ancestor',
             match,
         };
     }
 
-    export function and(args: ModelMatcherRulePart[]): ModelMatcherRulePart {
+    export function and(args: TypeMatcherRulePart[]): TypeMatcherRulePart {
         return {
             type: 'and',
             rules: args,
         };
     }
 
-    export function or(args: ModelMatcherRulePart[]): ModelMatcherRulePart {
+    export function or(args: TypeMatcherRulePart[]): TypeMatcherRulePart {
         return {
             type: 'or',
             rules: args,

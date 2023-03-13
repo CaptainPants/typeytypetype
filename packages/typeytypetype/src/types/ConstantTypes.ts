@@ -1,9 +1,9 @@
-import { BaseDefinition } from './BaseDefinition.js';
-import { BooleanDefinition } from './BooleanDefinition.js';
-import { NumberDefinition } from './NumberDefinition.js';
-import { StringDefinition } from './StringDefinition.js';
+import { BaseType } from './BaseType.js';
+import { BooleanType } from './BooleanType.js';
+import { NumberType } from './NumberType.js';
+import { StringType } from './StringType.js';
 
-abstract class ConstantBaseDefinition<T> extends BaseDefinition<T> {
+abstract class ConstantBaseType<T> extends BaseType<T> {
     constructor(value: T) {
         super();
         this.value = value;
@@ -24,21 +24,21 @@ abstract class ConstantBaseDefinition<T> extends BaseDefinition<T> {
     }
 }
 
-export class UndefinedConstantDefinition extends ConstantBaseDefinition<undefined> {
+export class UndefinedConstantType extends ConstantBaseType<undefined> {
     constructor() {
         super(undefined);
     }
 }
 
-export class NullConstantDefinition extends ConstantBaseDefinition<null> {
+export class NullConstantType extends ConstantBaseType<null> {
     constructor() {
         super(null);
     }
 }
 
-// == Slightly unpleasant duplication here because we want our constants to subclass their general definitions
+// == Slightly unpleasant duplication here because we want our constants to subclass their general types
 
-export class StringConstantDefinition extends StringDefinition {
+export class StringConstantType extends StringType {
     constructor(value: string) {
         super();
         this.value = value;
@@ -59,7 +59,7 @@ export class StringConstantDefinition extends StringDefinition {
     }
 }
 
-export class NumberConstantDefinition extends NumberDefinition {
+export class NumberConstantType extends NumberType {
     constructor(value: number) {
         super();
         this.value = value;
@@ -80,7 +80,7 @@ export class NumberConstantDefinition extends NumberDefinition {
     }
 }
 
-export class BooleanConstantDefinition extends BooleanDefinition {
+export class BooleanConstantType extends BooleanType {
     constructor(value: boolean) {
         super();
         this.value = value;

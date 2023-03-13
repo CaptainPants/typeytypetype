@@ -1,17 +1,17 @@
 import { expect, test } from '@jest/globals';
-import { Type } from '../definitions/Type.js';
+import { Types } from '../types/Types.js';
 import { type TypeFromDefinition } from '../types.js';
 import { createModel } from './createModel.js';
 
 test('map-object', async () => {
-    const definition = Type.map(Type.number());
+    const type = Types.map(Types.number());
 
-    const value: TypeFromDefinition<typeof definition> = {
+    const value: TypeFromDefinition<typeof type> = {
         a: 1,
         b: 2,
     };
 
-    const model = await createModel(value, definition);
+    const model = await createModel(value, type);
 
     const updated = await model.setPropertyValue('c', 3);
 

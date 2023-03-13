@@ -1,4 +1,4 @@
-export function combineDefinitionPath(
+export function combineTypeDefinitionPath(
     addToLeft: number | string,
     path: string | undefined
 ): string {

@@ -1,5 +1,5 @@
-import { type ArrayDefinition } from '../../definitions/ArrayDefinition.js';
-import { type Definition } from '../../definitions/Definition.js';
+import { type ArrayType } from '../../types/ArrayType.js';
+import { type Type } from '../../types/Type.js';
 import { descend } from '../../internal/descend.js';
 import { mapAsync } from '../../internal/mapAsync.js';
 import {
@@ -13,38 +13,38 @@ import { validateForAdoption } from './validateForAdoption.js';
 import { ModelImpl } from './ModelImpl.js';
 
 export class ArrayModelImpl<TElement>
-    extends ModelImpl<TElement[], ArrayDefinition<TElement>, unknown[]>
+    extends ModelImpl<TElement[], ArrayType<TElement>, unknown[]>
     implements ArrayModel<TElement>
 {
     constructor(
         value: TElement[],
-        definition: ArrayDefinition<TElement>,
+        type: ArrayType<TElement>,
         depth: number,
         factory: ModelFactory
     ) {
-        super(value, definition, depth, factory);
+        super(value, type, depth, factory);
 
-        this.#elementDefinition = definition.getElementDefinition();
+        this.#elementDefinition = type.getElementDefinition();
 
         this.#elementModels = value.map((item, index) =>
             factory.createUnvalidatedModelPart({
                 value: item,
-                definition: this.#elementDefinition,
+                type: this.#elementDefinition,
                 depth: descend(depth),
             })
         );
     }
 
-    readonly type = 'array';
+    readonly archetype = 'array';
 
-    #elementDefinition: Definition<TElement>;
+    #elementDefinition: Type<TElement>;
     #elementModels: Array<Model<TElement>>;
 
-    unknownElementDefinition(): Definition<unknown> {
+    unknownElementType(): Type<unknown> {
         return this.#elementDefinition;
     }
 
-    elementDefinition(): Definition<TElement> {
+    elementType(): Type<TElement> {
         return this.#elementDefinition;
     }
 
@@ -63,7 +63,7 @@ export class ArrayModelImpl<TElement>
     ): Promise<UnknownArrayModel> {
         const copy = [...this.value];
 
-        const eleDefinition = this.elementDefinition();
+        const eleDefinition = this.elementType();
 
         const typed = await mapAsync(newElements, async (item) => {
             return await validateForAdoption(item, eleDefinition);
@@ -71,11 +71,11 @@ export class ArrayModelImpl<TElement>
 
         copy.splice(start, deleteCount, ...typed);
 
-        await this.definition.validateAndThrow(copy, { deep: false });
+        await this.type.validateAndThrow(copy, { deep: false });
 
         return this.factory.createUnvalidatedModelPart<TElement[]>({
             value: copy,
-            definition: this.definition,
+            type: this.type,
             depth: this.depth,
         });
     }

@@ -1,9 +1,9 @@
 import { expect, test } from '@jest/globals';
-import { Type } from '../definitions/Type.js';
+import { Types } from '../types/Types.js';
 import { StandardModelFactory } from './StandardModelFactory.js';
 
 test('array', async () => {
-    const definition = Type.array(Type.number());
+    const type = Types.array(Types.number());
 
     const factory = new StandardModelFactory();
 
@@ -11,7 +11,7 @@ test('array', async () => {
 
     const model = await factory.createModel({
         value: input,
-        definition,
+        type,
     });
 
     const result = await model.spliceElements(1, 0, [6, 7]);

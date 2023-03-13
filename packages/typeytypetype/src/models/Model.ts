@@ -1,16 +1,16 @@
-import { type ArrayDefinition } from '../definitions/ArrayDefinition.js';
-import { type BooleanDefinition } from '../definitions/BooleanDefinition.js';
+import { type ArrayType } from '../types/ArrayType.js';
+import { type BooleanType } from '../types/BooleanType.js';
 import {
-    type BooleanConstantDefinition,
-    type NullConstantDefinition,
-    type NumberConstantDefinition,
-    type StringConstantDefinition,
-    type UndefinedConstantDefinition,
-} from '../definitions/ConstantDefinition.js';
-import { type Definition } from '../definitions/Definition.js';
-import { type NumberDefinition } from '../definitions/NumberDefinition.js';
-import { type ObjectDefinition } from '../definitions/ObjectDefinition.js';
-import { type StringDefinition } from '../definitions/StringDefinition.js';
+    type BooleanConstantType,
+    type NullConstantType,
+    type NumberConstantType,
+    type StringConstantType,
+    type UndefinedConstantType,
+} from '../types/ConstantTypes.js';
+import { type Type } from '../types/Type.js';
+import { type NumberType } from '../types/NumberType.js';
+import { type ObjectType } from '../types/ObjectType.js';
+import { type StringType } from '../types/StringType.js';
 import { type ExpandoType, type IsUnion } from '../internal/utilityTypes.js';
 import { type PropertyModel } from './PropertyModel.js';
 
@@ -18,52 +18,48 @@ export type ModelType = 'unknown' | 'union' | 'object' | 'array' | 'simple';
 
 export interface UnknownBaseModel<TUnknownType = unknown> {
     readonly unknownValue: TUnknownType;
-    readonly unknownDefinition: Definition<unknown>;
+    readonly unknownType: Type<unknown>;
 }
 
 export interface BaseModel<
     T,
-    TDefinition extends Definition<T> = Definition<T>,
+    TTypeType extends Type<T> = Type<T>,
     TUnknownType = unknown
 > extends UnknownBaseModel<TUnknownType> {
     readonly value: Readonly<T>;
-    readonly definition: TDefinition;
+    readonly type: TTypeType;
 }
 
 export interface SimpleModel<
     T,
-    TDefinition extends Definition<T>,
-    TType extends string
-> extends BaseModel<T, TDefinition> {
-    readonly type: TType;
+    TTypeType extends Type<T>,
+    TArchetype extends string
+> extends BaseModel<T, TTypeType> {
+    readonly archetype: TArchetype;
 }
 
 export interface StringConstantModel
-    extends SimpleModel<string, StringConstantDefinition, 'string-constant'> {}
+    extends SimpleModel<string, StringConstantType, 'string-constant'> {}
 export interface StringModel
-    extends SimpleModel<string, StringDefinition, 'string'> {}
+    extends SimpleModel<string, StringType, 'string'> {}
 export interface NumberConstantModel
-    extends SimpleModel<number, NumberConstantDefinition, 'number-constant'> {}
+    extends SimpleModel<number, NumberConstantType, 'number-constant'> {}
 export interface NumberModel
-    extends SimpleModel<number, NumberDefinition, 'number'> {}
+    extends SimpleModel<number, NumberType, 'number'> {}
 export interface BooleanConstantModel
-    extends SimpleModel<
-        boolean,
-        BooleanConstantDefinition,
-        'boolean-constant'
-    > {}
+    extends SimpleModel<boolean, BooleanConstantType, 'boolean-constant'> {}
 export interface BooleanModel
-    extends SimpleModel<boolean, BooleanDefinition, 'boolean'> {}
+    extends SimpleModel<boolean, BooleanType, 'boolean'> {}
 
 export interface NullModel
-    extends SimpleModel<null, NullConstantDefinition, 'null'> {}
+    extends SimpleModel<null, NullConstantType, 'null'> {}
 export interface UndefinedModel
-    extends SimpleModel<undefined, UndefinedConstantDefinition, 'undefined'> {}
+    extends SimpleModel<undefined, UndefinedConstantType, 'undefined'> {}
 
 export interface UnknownArrayModel extends UnknownBaseModel<unknown[]> {
-    type: 'array';
+    archetype: 'array';
 
-    unknownElementDefinition: () => Definition<unknown>;
+    unknownElementType: () => Type<unknown>;
 
     unknownGetElement: (index: number) => Model<unknown> | undefined;
 
@@ -75,9 +71,9 @@ export interface UnknownArrayModel extends UnknownBaseModel<unknown[]> {
 }
 
 export interface ArrayModel<TElement>
-    extends BaseModel<TElement[], ArrayDefinition<TElement>, unknown[]>,
+    extends BaseModel<TElement[], ArrayType<TElement>, unknown[]>,
         UnknownArrayModel {
-    elementDefinition: () => Definition<TElement>;
+    elementType: () => Type<TElement>;
 
     getElement: (index: number) => Model<TElement> | undefined;
 
@@ -90,9 +86,9 @@ export interface ArrayModel<TElement>
 
 export interface UnknownObjectModel
     extends UnknownBaseModel<Record<string, unknown>> {
-    type: 'object';
+    archetype: 'object';
 
-    unknownExpandoPropertyDefinition: () => Definition<unknown> | undefined;
+    unknownExpandoPropertyType: () => Type<unknown> | undefined;
 
     unknownGetProperty: (key: string) => PropertyModel<unknown> | undefined;
 
@@ -107,15 +103,9 @@ export interface UnknownObjectModel
 }
 
 export interface ObjectModel<TObject extends Record<string, unknown>>
-    extends BaseModel<
-            TObject,
-            ObjectDefinition<TObject>,
-            Record<string, unknown>
-        >,
+    extends BaseModel<TObject, ObjectType<TObject>, Record<string, unknown>>,
         UnknownObjectModel {
-    expandoPropertyDefinition?: () =>
-        | Definition<ExpandoType<TObject>>
-        | undefined;
+    expandoPropertyType?: () => Type<ExpandoType<TObject>> | undefined;
 
     getProperty: <TKey extends keyof TObject & string>(
         key: TKey
@@ -132,9 +122,9 @@ export interface ObjectModel<TObject extends Record<string, unknown>>
 }
 
 export interface UnknownUnionModel extends UnknownBaseModel {
-    type: 'union';
+    archetype: 'union';
 
-    as: <TAs>(definition: Definition<TAs>) => Model<TAs> | null;
+    as: <TAs>(type: Type<TAs>) => Model<TAs> | null;
 
     unknownReplace: (value: unknown) => Promise<Model<unknown>>;
 }

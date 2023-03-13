@@ -1,4 +1,4 @@
-import { type PropertyDefinition } from '../../definitions/PropertyDefinition.js';
+import { type PropertyDefinition } from '../../types/PropertyDefinition.js';
 import { type Model } from '../Model.js';
 import { type PropertyModel } from '../PropertyModel.js';
 

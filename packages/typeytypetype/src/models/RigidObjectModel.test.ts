@@ -1,15 +1,15 @@
 import { expect, test } from '@jest/globals';
-import { Type } from '../definitions/Type.js';
+import { Types } from '../types/Types.js';
 import { type TypeFromDefinition } from '../types.js';
 import { StandardModelFactory } from './StandardModelFactory.js';
 
 test('rigid-object', async () => {
-    const definition = Type.object({
-        num: Type.prop(Type.number()),
-        str: Type.prop(Type.string()),
+    const type = Types.object({
+        num: Types.prop(Types.number()),
+        str: Types.prop(Types.string()),
     });
 
-    const value: TypeFromDefinition<typeof definition> = {
+    const value: TypeFromDefinition<typeof type> = {
         num: 1,
         str: 'banana',
     };
@@ -18,7 +18,7 @@ test('rigid-object', async () => {
 
     const model = await factory.createModel({
         value,
-        definition,
+        type,
     });
 
     const updated = await model.setPropertyValue('num', 2);

@@ -1,19 +1,19 @@
-import { combineDefinitionPath } from '../internal/combineDefinitionPath.js';
+import { combineTypeDefinitionPath } from '../internal/combineTypeDefinitionPath.js';
 import { descend } from '../internal/descend.js';
-import { BaseDefinition } from './BaseDefinition.js';
-import { type Definition } from './Definition.js';
+import { BaseType } from './BaseType.js';
+import { type Type } from './Type.js';
 import {
     type ValidationSingleResult,
     type ValidationOptions,
 } from '../validation/types.js';
 
-export class ArrayDefinition<TElement> extends BaseDefinition<TElement[]> {
-    constructor(elementDefinition: Definition<TElement>) {
+export class ArrayType<TElement> extends BaseType<TElement[]> {
+    constructor(elementDefinition: Type<TElement>) {
         super();
         this.elementDefinition = elementDefinition;
     }
 
-    public readonly elementDefinition: Definition<TElement>;
+    public readonly elementDefinition: Type<TElement>;
 
     override doMatches(
         value: unknown,
@@ -45,7 +45,7 @@ export class ArrayDefinition<TElement> extends BaseDefinition<TElement[]> {
         )}>`;
     }
 
-    getElementDefinition(): Definition<TElement> {
+    getElementDefinition(): Type<TElement> {
         return this.elementDefinition;
     }
 
@@ -67,7 +67,7 @@ export class ArrayDefinition<TElement> extends BaseDefinition<TElement[]> {
 
             res.push(
                 ...itemResult.map((item) => ({
-                    path: combineDefinitionPath(i, item.path),
+                    path: combineTypeDefinitionPath(i, item.path),
                     message: item.message,
                 }))
             );

@@ -1,17 +1,17 @@
-import { type Definition } from '../../definitions';
+import { type Type } from '../../types/Type.js';
 import { isModel } from '../is.js';
 
 export async function validateForAdoption<T>(
     valueOrModel: unknown,
-    definition: Definition<T>
+    type: Type<T>
 ): Promise<T> {
     if (isModel(valueOrModel)) {
-        if (valueOrModel.unknownDefinition === definition) {
+        if (valueOrModel.unknownType === type) {
             return valueOrModel as T;
         } else {
-            return await definition.validateAndThrow(valueOrModel);
+            return await type.validateAndThrow(valueOrModel);
         }
     } else {
-        return await definition.validateAndThrow(valueOrModel);
+        return await type.validateAndThrow(valueOrModel);
     }
 }
