@@ -11,7 +11,8 @@ export function MuiRigidObjectEditor(
     return (
         <BaseRigidObjectEditor
             {...props}
-            renderProperty={({ renderEditor }) => renderEditor()}
+            renderCategory={({ renderCategory }) => renderCategory()}
+            renderProperty={({ renderProperty }) => renderProperty()}
         />
     );
 }
