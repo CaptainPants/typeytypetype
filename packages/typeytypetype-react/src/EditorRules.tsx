@@ -4,7 +4,7 @@ import React, {
     type FunctionComponent,
     type ReactElement,
 } from 'react';
-import { type ModelMatcherRule } from '@captainpants/typeytypetype';
+import { type TypeMatcherRule } from '@captainpants/typeytypetype';
 import {
     EditorRulesContext,
     type EditorRulesContextType,
@@ -12,7 +12,7 @@ import {
 import { type Editor } from './types.js';
 
 export interface EditorRulesProps {
-    rules: Array<ModelMatcherRule<Editor>>;
+    rules: Array<TypeMatcherRule<Editor>>;
     replace?: boolean | undefined;
 
     children?: ReactElement | undefined;

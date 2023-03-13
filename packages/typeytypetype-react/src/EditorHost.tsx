@@ -1,6 +1,6 @@
 import {
-    createDefinitionMatcher,
-    type ModelMatcherRule,
+    createTypeMatcher,
+    type TypeMatcherRule,
 } from '@captainpants/typeytypetype';
 import React, {
     type ReactElement,
@@ -18,7 +18,7 @@ import {
 const Last = (): ReactElement => <>No match</>;
 
 function createNextEditor(
-    matches: Array<ModelMatcherRule<Editor>>,
+    matches: Array<TypeMatcherRule<Editor>>,
     index: number
 ): FunctionComponent<NextEditorProps> {
     const Editor = matches[index]?.result ?? Last;
@@ -58,14 +58,14 @@ export function EditorHost({
 }: Readonly<EditorHostProps>): ReactElement {
     const { rules } = useContext(EditorRulesContext);
 
-    const definition = model.unknownDefinition;
+    const type = model.unknownType;
 
     const matches = useMemo(
         () =>
-            createDefinitionMatcher<Editor>(rules).findAllMatches({
-                definition,
+            createTypeMatcher<Editor>(rules).findAllMatches({
+                type,
             }),
-        [rules, definition]
+        [rules, type]
     );
 
     // TODO: memoize this based on the array elements

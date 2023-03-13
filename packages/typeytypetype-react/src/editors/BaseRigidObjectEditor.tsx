@@ -31,7 +31,7 @@ export interface BaseRigidObjectEditorProps extends EditorProps {
     ) => ReactNode;
 }
 
-// TODO: categories and ordering
+// TODO: ordering
 
 export function BaseRigidObjectEditor(
     props: BaseRigidObjectEditorProps

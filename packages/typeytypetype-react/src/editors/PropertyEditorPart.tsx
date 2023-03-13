@@ -32,7 +32,7 @@ export function PropertyEditorPart({
 
     const parent: ParentDefinitionNode = useMemo(() => {
         const res: ParentDefinitionNode = {
-            definition: propertyDefinition.type,
+            type: propertyDefinition.type,
             relationship: { type: 'property', property: propertyName },
             parent: parentOfParent,
         };

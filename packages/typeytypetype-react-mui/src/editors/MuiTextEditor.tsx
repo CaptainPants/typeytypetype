@@ -19,7 +19,7 @@ export function MuiTextEditor({
 
     const { draft, setDraft, validationErrors } = useValidatedDraft({
         value: model.value,
-        definition: model.definition,
+        type: model.type,
         convertIn: (val) => val,
         convertOut: (val) => ({ success: true, result: val }),
         onValid: (validated) => {

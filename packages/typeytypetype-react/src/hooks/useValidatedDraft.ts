@@ -1,5 +1,8 @@
-import { type Either, type Definition } from '@captainpants/typeytypetype';
-import { type ValidationSingleResult } from '@captainpants/typeytypetype/build/definitions/Validator';
+import {
+    type Either,
+    type Type,
+    type ValidationSingleResult,
+} from '@captainpants/typeytypetype';
 import { useCallback, useEffect, useState } from 'react';
 import { useAsyncCallback } from './useAsyncCallback.js';
 
@@ -12,7 +15,7 @@ export interface UseValidatedDraftResult<TDraft> {
 
 export interface UseValidatedDraftOptions<TModelValue, TDraft> {
     value: TModelValue;
-    definition: Definition<TModelValue>;
+    type: Type<TModelValue>;
 
     convertIn: (value: TModelValue) => TDraft;
     convertOut: (value: TDraft) => Either<TModelValue, string[]>;
@@ -25,7 +28,7 @@ export function useValidatedDraft<TModelValue, TDraft>(
 ): UseValidatedDraftResult<TDraft>;
 export function useValidatedDraft<T, TInput>({
     value,
-    definition,
+    type,
     convertIn,
     convertOut,
     onValid,
@@ -53,7 +56,7 @@ export function useValidatedDraft<T, TInput>({
 
             const converted = convertResult.result;
 
-            const validationResult = await definition.validate(converted, {
+            const validationResult = await type.validate(converted, {
                 signal,
             });
 
@@ -63,7 +66,7 @@ export function useValidatedDraft<T, TInput>({
                 onValid(converted);
             }
         },
-        [convertOut, definition, onValid]
+        [convertOut, type, onValid]
     );
 
     const resultSetDraft = useCallback(

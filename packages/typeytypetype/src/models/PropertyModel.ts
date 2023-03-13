@@ -3,6 +3,6 @@ import { type Model } from './Model.js';
 
 export interface PropertyModel<TType> {
     readonly name: string;
-    readonly type: PropertyDefinition<TType>;
+    readonly definition: PropertyDefinition<TType>;
     readonly valueModel: Model<TType>;
 }
