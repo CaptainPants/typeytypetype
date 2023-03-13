@@ -40,8 +40,8 @@ export function BaseRigidObjectEditor({
     model,
     replace,
     parent,
-    renderCategory,
-    renderProperty,
+    renderCategory: renderCategoryProp,
+    renderProperty: renderPropertyProp,
 }: BaseRigidObjectEditorProps): ReactElement {
     assertRigidObjectModel(model);
 
@@ -68,7 +68,7 @@ export function BaseRigidObjectEditor({
                                     );
                                 };
 
-                                return renderProperty({
+                                return renderPropertyProp({
                                     propertyModel: property,
                                     renderProperty: renderPropertyCallback,
                                 });
@@ -77,7 +77,7 @@ export function BaseRigidObjectEditor({
                     );
                 };
 
-                return renderCategory({
+                return renderCategoryProp({
                     category: group.category,
                     renderCategory: renderCategoryCallback,
                 });

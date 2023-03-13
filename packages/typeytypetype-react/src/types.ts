@@ -31,4 +31,7 @@ export interface EditorHostProps extends EditorLikeProps<unknown> {}
 export type Editor = ComponentType<EditorProps>;
 export type NextEditor = ComponentType<NextEditorProps>;
 
-export type Localizer = (key: string, args?: unknown[]) => string;
+export type Localizer = (
+    key?: string | undefined | null,
+    args?: unknown[]
+) => string;

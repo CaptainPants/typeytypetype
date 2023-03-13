@@ -4,6 +4,9 @@ import {
 } from '../validation/types.js';
 
 export interface Type<T> {
+    readonly name: string | null;
+    readonly displayName: string | null;
+
     matches: (value: unknown) => value is T;
 
     doMatches: (value: unknown, deep: boolean, depth: number) => value is T;

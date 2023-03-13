@@ -9,10 +9,9 @@ export class DeferredType<T> extends BaseType<T> {
         this.type = null;
     }
 
-    public readonly name: string;
     public type: Type<T> | null;
 
-    getDefinition(): Type<T> {
+    getUnderlyingType(): Type<T> {
         if (this.type === null) throw new Error('Model not provided.');
         return this.type;
     }
@@ -22,10 +21,10 @@ export class DeferredType<T> extends BaseType<T> {
         deep: boolean,
         depth: number
     ): value is T {
-        return this.getDefinition().doMatches(value, deep, descend(depth));
+        return this.getUnderlyingType().doMatches(value, deep, descend(depth));
     }
 
     override doToTypeString(depth: number): string {
-        return this.name;
+        return this.name ?? '<unknown>';
     }
 }

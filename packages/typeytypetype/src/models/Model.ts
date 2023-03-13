@@ -63,10 +63,12 @@ export interface UnknownArrayModel extends UnknownBaseModel<unknown[]> {
 
     unknownGetElement: (index: number) => Model<unknown> | undefined;
 
+    unknownGetElements: () => ReadonlyArray<Model<unknown>>;
+
     unknownSpliceElements: (
         start: number,
         deleteCount: number,
-        newElements: unknown[]
+        newElements: readonly unknown[]
     ) => Promise<UnknownArrayModel>;
 }
 
@@ -77,10 +79,12 @@ export interface ArrayModel<TElement>
 
     getElement: (index: number) => Model<TElement> | undefined;
 
+    getElements: () => ReadonlyArray<Model<TElement>>;
+
     spliceElements: (
         start: number,
         deleteCount: number,
-        newElements: TElement[]
+        newElements: ReadonlyArray<TElement | Model<TElement>>
     ) => Promise<Model<TElement[]>>;
 }
 

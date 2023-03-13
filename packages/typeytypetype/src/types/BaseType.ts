@@ -11,6 +11,9 @@ import {
 import { flattenValidatorResultsToStrings } from '../validation/flattenValidatorResultsToStrings.js';
 
 export abstract class BaseType<T> implements Type<T> {
+    public displayName: string | null = null;
+    public name: string | null = null;
+
     readonly validators: Array<Validator<T>> = [];
     readonly labels: string[] = [];
     readonly attributes: Map<string, unknown> = new Map<string, unknown>();
@@ -28,6 +31,16 @@ export abstract class BaseType<T> implements Type<T> {
 
     freeze(): this {
         deepFreeze(this);
+        return this;
+    }
+
+    withName(name: string): this {
+        this.name = name;
+        return this;
+    }
+
+    withDisplayName(displayName: string): this {
+        this.displayName = displayName;
         return this;
     }
 

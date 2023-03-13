@@ -18,7 +18,7 @@ export class UnionModelImpl<TUnion>
     ) {
         super(value, type, depth, factory);
 
-        const match = type.getDefinition(value);
+        const match = type.getTypeForValue(value);
 
         if (match === null) {
             throw new Error(`Could not find matching type for value.`);

@@ -24,7 +24,7 @@ export class ArrayModelImpl<TElement>
     ) {
         super(value, type, depth, factory);
 
-        this.#elementDefinition = type.getElementDefinition();
+        this.#elementDefinition = type.getElementType();
 
         this.#elementModels = value.map((item, index) =>
             factory.createUnvalidatedModelPart({
@@ -38,7 +38,7 @@ export class ArrayModelImpl<TElement>
     readonly archetype = 'array';
 
     #elementDefinition: Type<TElement>;
-    #elementModels: Array<Model<TElement>>;
+    #elementModels: ReadonlyArray<Model<TElement>>;
 
     unknownElementType(): Type<unknown> {
         return this.#elementDefinition;
@@ -56,10 +56,18 @@ export class ArrayModelImpl<TElement>
         return this.#elementModels[index];
     }
 
+    unknownGetElements(): ReadonlyArray<Model<unknown>> {
+        return this.#elementModels;
+    }
+
+    getElements(): ReadonlyArray<Model<TElement>> {
+        return this.#elementModels;
+    }
+
     async unknownSpliceElements(
         start: number,
         deleteCount: number,
-        newElements: unknown[]
+        newElements: readonly unknown[]
     ): Promise<UnknownArrayModel> {
         const copy = [...this.value];
 
@@ -83,7 +91,7 @@ export class ArrayModelImpl<TElement>
     async spliceElements(
         start: number,
         deleteCount: number,
-        newElements: Array<TElement | Model<TElement>>
+        newElements: ReadonlyArray<TElement | Model<TElement>>
     ): Promise<Model<TElement[]>> {
         return (await this.unknownSpliceElements(
             start,

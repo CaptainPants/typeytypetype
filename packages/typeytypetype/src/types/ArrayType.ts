@@ -10,10 +10,10 @@ import {
 export class ArrayType<TElement> extends BaseType<TElement[]> {
     constructor(elementDefinition: Type<TElement>) {
         super();
-        this.elementDefinition = elementDefinition;
+        this.#elementType = elementDefinition;
     }
 
-    public readonly elementDefinition: Type<TElement>;
+    #elementType: Type<TElement>;
 
     override doMatches(
         value: unknown,
@@ -30,7 +30,7 @@ export class ArrayType<TElement> extends BaseType<TElement[]> {
         return (
             value.findIndex(
                 (itemValue: unknown) =>
-                    !this.elementDefinition.doMatches(
+                    !this.#elementType.doMatches(
                         itemValue,
                         deep,
                         descend(depth)
@@ -40,13 +40,13 @@ export class ArrayType<TElement> extends BaseType<TElement[]> {
     }
 
     override doToTypeString(depth: number): string {
-        return `Array<${this.elementDefinition.doToTypeString(
+        return `Array<${this.#elementType.doToTypeString(
             descend(depth)
         )}>`;
     }
 
-    getElementDefinition(): Type<TElement> {
-        return this.elementDefinition;
+    getElementType(): Type<TElement> {
+        return this.#elementType;
     }
 
     protected override async doValidateChildren(
@@ -59,7 +59,7 @@ export class ArrayType<TElement> extends BaseType<TElement[]> {
         for (let i = 0; i < value.length; ++i) {
             const item = value[i];
 
-            const itemResult = await this.elementDefinition.doValidate(
+            const itemResult = await this.#elementType.doValidate(
                 item,
                 options,
                 descend(depth)
