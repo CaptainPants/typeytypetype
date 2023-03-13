@@ -8,20 +8,23 @@ import React, { useCallback, useMemo, type ReactElement } from 'react';
 import { EditorHost } from '../EditorHost.js';
 import { useLocalizer } from '../hooks';
 
-export interface PropertyEditorProps {
+export interface PropertyEditorPartProps {
     parentModel: Model<unknown>;
     parentReplacer: Replacer<unknown>;
-    parentOfParent?: ParentDefinitionNode | undefined;
+    grandParent: ParentDefinitionNode | undefined;
+
     propertyName: string;
 }
 
-export function PropertyEditor(props: PropertyEditorProps): ReactElement;
-export function PropertyEditor({
+export function PropertyEditorPart(
+    props: PropertyEditorPartProps
+): ReactElement;
+export function PropertyEditorPart({
     parentModel,
     parentReplacer,
-    parentOfParent,
+    grandParent: parentOfParent,
     propertyName,
-}: PropertyEditorProps): ReactElement {
+}: PropertyEditorPartProps): ReactElement {
     assertRigidObjectModel(parentModel);
 
     const { definition: propertyDefinition, valueModel: propertyValue } =

@@ -1,2 +1,2 @@
 export * from './BaseRigidObjectEditor.js';
-export * from './PropertyEditor.js';
+export * from './PropertyEditorPart.js';
